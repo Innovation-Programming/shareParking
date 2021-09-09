@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div style="font-family:넥슨 고딕;">
+    <h3 class="my-3 border-bottom pb-2" style="padding: 10px; color:#58C9B9; font-family:넥슨 고딕 bold; ">주차권 결제</h3>
+    <form method="post" class="post-form my-3" >
+        <div style="text-align:center;margin-top:25px !important;">
+            {% csrf_token %}
+            <!-- 오류표시 Start -->
+            {% if form.errors %}
+                <div class="alert alert-danger" role="alert">
+                {% for field in form %}
+                    {% if field.errors %}
+                    <strong>{{ field.label }}</strong>
+                    {{ field.errors }}
+                    {% endif %}
+                {% endfor %}
+                </div>
+            {% endif %}
+            <div style="display:inline-block; border-radius:20px; background-color:#58C9B9; color:white; width:85%; height:auto; padding:10px;">
+                <div class="mb-3 row" id="info-row" style="min-width:100%;">
+                    <span style="font-family:넥슨 고딕 bold; font-size:24px;"> {{ parking_lot.name }}</span>
+                </div>
+                
+                <div class="mb-3 row" id="info-row" style="min-width:100%;">
+                    <label class="col-4" style="font-size:13px;">입차시각</label>
+                    <div class="col-8" style="position:relative">
+                        <select class="timepicker" id="start-time-picker" dir="rtl">
+                            <option selected>시간 선택</option>
+                            <option value="9">09:00</option>
+                            <option value="10">10:00</option>
+                            <option value="11">11:00</option>
+                            <option value="12">12:00</option>
+                            <option value="13">13:00</option>
+                            <option value="14">14:00</option>
+                            <option value="15">15:00</option>
+                            <option value="16">16:00</option>
+                            <option value="17">17:00</option>
+                            <option value="18">18:00</option>
+                            <option value="19">19:00</option>
+                            <option value="20">20:00</option>
+                            <option value="21">21:00</option>
+                            <option value="22">22:00</option>
+                        </select>
+
+                        <script>
+                        </script>
+                    </div>
+                </div>
+                <div class="mb-3 row" id="info-row" style="min-width:100%;">
+                    <label class="col-4" style="font-size:13px;">주차시간</label>
+                    <div class="col-8" style="text-align:right;">
+                        <select class="timepicker" id="ParkingTime" dir="rtl">
+                            <option selected>시간 선택</option>
+                            <option value="1">1시간</option>
+                            <option value="2">2시간</option>
+                            <option value="3">3시간</option>
+                            <option value="4">4시간</option>
+                            <option value="5">5시간</option>
+                            <option value="6">6시간</option>
+                            <option value="7">7시간</option>
+                            <option value="8">8시간</option>
+                            <option value="9">9시간</option>
+                            <option value="10">10시간</option>
+                            <option value="11">11시간</option>
+                            <option value="12">12시간</option>
+                        </select>
+
+                    </div>
+                </div>
+            </div>
+            
+        
+            <div style="padding:20px; color:#7e7e7e; font-family:넥슨 고딕; font-size:18px;">
+                <div class="mb-3 row"style=" color:#7e7e7e">
+                    <label class="col-4" >포인트</label>
+                    <div class="col-8">
+                        <input type="number" class="form-control" placeholder="사용할 포인트" style="text-align: right;">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div id="footer" style="margin-left:0px !important" >
+            <div style="text-align: left; margin-top: 20px; padding: 0px 20px;font-family:넥슨 고딕;">
+                <div class="mb-3 row"style="font-size:18px; color:#7e7e7e">
+                    <label class="col-4" style="font-size:18px; color:#7e7e7e">주차요금</label>
+                    <div class="col-8" style="text-align:right;">
+                        {{parking_lot.fee}} 원 / 시간당
+                    </div>
+                    
+                </div>
+                <div class="mb-3 row"style="font-size:18px; color:#7e7e7e;">
+                    <label class="col-5" style="font-size:18px; color:#7e7e7e">총 결제요금</label>
+                    <div class="col-7" id="total_fee" style="text-align:right;">
+                        원
+                    </div>
+                </div>
+            </div>
+        
+        
+            <button type="submit"id="btn-pri"
+                style="background-color:#58C9B9; color:white; width:100%; height:50px;border:none; font-family:넥슨 고딕 bold; font-size:21px;">
+                    결   제   하   기
+                </button>
+        </div>
+        <input type="hidden" id="inputValidStart" name="vaild_start" value="{{ form.vaild_start.value | default_if_none:'' }}"/>
+        <input type="hidden" id="inputValidEnd" name="vaild_end" value="{{ form.vaild_end.value | default_if_none:'' }}"/>
+        
+    </form>
+</div>
+        
+
+<script>
+    $('#start-time-picker').change(function() {
+        let time = parseInt($('#start-time-picker').val())
+        
+        $("#inputValidStart").attr('value', time + ":00");
+    })
+
+    $('#ParkingTime').change(function() {
+        let strTime = parseInt($('#start-time-picker').val())
+        let time =  parseInt($('#ParkingTime').val())
+        let fee = parseInt("{{parking_lot.fee}}");
+        let endTime = (strTime + time)
+
+        if(endTime > 24) {
+            endTime -= 24;
+        }
+        console.log(fee)
+        $("#total_fee").text(time * fee);
+        $("#inputValidEnd").attr('value', endTime + ":00");
+
+    })
+</script>
+{% endblock %}

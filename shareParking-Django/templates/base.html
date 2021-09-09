@@ -1,0 +1,831 @@
+{% load static %}
+{% include 'navbar.html' %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="target-densitydpi=device-dpi, user-scalable=0, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, width=device-width" />
+
+<!-- google material icons -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<title>simpleMap</title>
+
+
+<!-- JQuery -->
+<script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+
+<!-- T Map API CDN -->
+<script src="https://apis.openapi.sk.com/tmap/jsv2?version=1&appKey=l7xx11758ec4b63349209fb3d9357d90b85e"></script>
+
+<!-- JQuery and popper CDN -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+<!-- BootStrap CDN -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+<!-- Bootstrap Tempus Dominus CDN -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" />
+<!-- Tempus Dominus Icon font -->
+<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css" />
+
+<script src="{% static 'js/tmap.js' %}"></script>
+<style>
+    @font-face {
+        font-family: '넥슨 고딕';
+        src: url("{% static 'font/NEXONLv1GothicRegular.ttf' %}");
+        font-weight: normal;
+        font-style: normal;
+    }
+    @font-face {
+        font-family: '넥슨 고딕 bold';
+        src: url("{% static 'font/NEXONLv1GothicBold.ttf' %}");
+        font-weight: normal;
+        font-style: normal;
+    }
+    .editor-datetime {
+      position: relative;
+   }
+   
+    #zoom {
+        position: absolute;
+        top: 140px;
+        right: 20px;
+        z-index: 1;
+    }
+
+    #research {
+        font-family: '넥슨 고딕';
+        position: absolute;
+        top: 50px;
+        left: 50%;
+        transform:translate(-50%, 0%);
+        z-index: 1;
+        max-width:100%;
+    }
+
+    #ctr_btn {
+        width:110%;
+        box-shadow: 0 2px 1px 0 rgb(0 0 0 / 10%), 0 0 3px 0 rgb(0 0 0 / 32%);
+    }
+
+    #ctr_btn_small {
+        width: 50px;
+        height: 50px;
+        box-shadow: 0 2px 1px 0 rgb(0 0 0 / 10%), 0 0 3px 0 rgb(0 0 0 / 32%);
+    }
+
+    #ctr_btn {
+        box-shadow: 0 2px 1px 0 rgb(0 0 0 / 10%), 0 0 3px 0 rgb(0 0 0 / 32%);
+    }
+
+    #my_location {
+        position: absolute;
+        top: 300px;
+        right: 20px;
+        z-index: 1;
+    }
+
+    #ctr_icon_font {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #545454;
+    }
+
+    .offcanvas-header {
+        height: auto !important;
+    }
+
+    .offcanvas-bottom {
+        left:50%;
+        transform:translateX(-50%) !important;
+        font-family: '넥슨 고딕';
+        border-radius: 20px 20px 0px 0px !important;
+        height: auto !important;
+        width: 420px;
+    }
+
+    #offcanvas-info {
+        background-color: gray;
+    }
+
+
+    #info_body {
+        border-radius: 5px;
+    }
+
+    #info_address {
+        text-align: left;
+    }
+
+    #info_line {
+        margin: 0;
+    }
+
+    .offcanvas-body {
+        padding-top: 10px !important;
+    }
+
+    #map_div {
+        width: 100wh;
+        height: 100%;
+        height: calc(var(--vh, 1vh) * 100);
+    }
+
+    .navi_button {
+        border: none;
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+    }
+
+    #find_way {
+        position:absolute; top:10px; right:10px;  border:none; background:none;
+    }
+
+    ol { 
+        padding-left: 0px !important;
+    }
+
+    li {
+        list-style: none; 
+    }
+
+    /* form에 들어가는 tmap */
+    #tmap-form {
+        position: relative;
+        width: 100%;
+        height: 30vh;
+        margin-bottom: 20px;
+        border-radius: 5px;
+    }
+
+    .btn-outline-secondary {
+        background-color: #58C9B9;
+        color: white;
+        border-color:#58C9B9;
+    }
+
+    #center-marker {
+        max-width:56;
+        height:auto;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform:translate(-50%, -50%);
+        z-index: 1;
+    }
+
+    .timepicker {
+        background-color:#58C9B9;
+        border:none;
+        font-family: 넥슨 고딕 bold;
+        color:white;
+        font-size: 18px;
+        text-align-last: right;
+        padding: 0px;
+        padding-right: 10px;
+        width:100%; height:30px;
+    }
+    #footer {
+        position:absolute;
+        bottom:62px;
+        width:100%;
+        height:auto;   
+
+        background:#EDEDF2;
+
+        }
+</style>
+<script>
+    markers = [];
+    infoWindows = [];
+    // 현위치 마커
+    curtMarker = null;
+
+    // touch와 click 이벤트 동시 등록(모바일, PC 환경 고려)
+    clickEvent = (function() {
+        if ('ontouchstart' in document.documentElement === true) {
+            return 'touchstart';
+        } else {
+            return 'mousedown';
+    } })();
+
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty("--vh", `${vh}px`);
+    // 페이지가 로딩이 된 후 호출하는 함수입니다.
+    function initTmap(divId){
+        // map 생성
+        // Tmapv2.Map을 이용하여, 지도가 들어갈 div, 넓이, 높이를 설정합니다.
+        map = new Tmapv2.Map(divId, { // 지도가 생성될 div
+            // center: new Tmapv2.LatLng(36.652409154699555, 127.49531475945504),
+            httpsMode : true,
+            zoomControl: false,
+            zoom: 15
+        });
+        setCurtCenter(true);
+        
+        mapDiv = document.getElementById('map_div');
+
+        map.addListener(clickEvent, detectMove);
+
+    }
+
+    function initTmapForm(divId){
+        // map 생성
+        // Tmapv2.Map을 이용하여, 지도가 들어갈 div, 넓이, 높이를 설정합니다.
+        map = new Tmapv2.Map(divId, { // 지도가 생성될 div
+            // center: new Tmapv2.LatLng(36.652409154699555, 127.49531475945504),
+            httpsMode : true,
+            zoomControl: false,
+            zoom: 15
+        });
+        setCurtCenter(false);
+        map.setOptions({ draggable: false });
+        map._data.options.scrollwheel = false; 
+    }
+
+
+    function addSharePark() {
+        let id, name, lat, lon, tel, type, startTime, EndTime, fee, locInfo;
+
+        "{% for park in parking_lot_list %}"
+            user = "{{ park.user }}"
+            id = "{{ park.id }}"
+            name = "{{ park.name }}";
+            lat = "{{ park.latitude }}";
+            lon = "{{ park.longitude }}";
+            fee = "{{ park.fee }}"
+            startTime = "{{ park.start_time }}"
+            EndTime = "{{ park.end_time }}"
+            type = "공유"
+
+            locInfo = {
+                user : user,
+                id: id,
+                title: name,//마커 라벨 text 설정
+                type: type,
+                lonlat:new Tmapv2.LatLng(lat,lon),//마커 라벨 좌표 설정
+                time: startTime + " ~ " + EndTime,
+                fee: fee + "포인트 / 시간당"
+            };
+            addMarker(locInfo);
+        "{% endfor %}"
+    }
+
+
+    // 맵의 이동을 감지해주는 함수
+    function detectMove(e) {
+        
+        let newCenter = map.getCenter();
+        // 위치 달라지면 (소수점 9자리까지)
+        lat_change = Math.abs(center.latitude() - newCenter.latitude());
+        lon_change = Math.abs(center.longitude() - newCenter.longitude());
+        
+        if(lat_change > 0.01 || lon_change > 0.01) {
+            center = newCenter;
+            // 현 센터위치 갱신
+            $('#research').css("display", "inline");
+        }
+    }
+
+
+    function getCurtLoc() {
+        // Simple wrapper
+        return new Promise((res, rej) => {
+            navigator.geolocation.getCurrentPosition(res, rej);
+        });
+    }
+
+    function setCurtCenter(isAddMarker) {
+        
+        // get current location
+        getCurtLoc().then(function(result) {
+            let lat = result.coords.latitude;
+            let lon = result.coords.longitude;
+            let curtLatLng = new Tmapv2.LatLng(lat, lon);
+            map.setCenter(curtLatLng);
+            center = curtLatLng;
+            if(isAddMarker == true) {
+                curtMarker = new Tmapv2.Marker({
+                    position: curtLatLng, 
+                    icon: "{% static 'icon/marker_current.png' %}",
+                    map: map
+                });
+            }
+            
+        });
+    }
+
+    //마커의 옵션을 설정해주는 함수입니다.
+    function addMarker(locInfo){
+        // 현위치 받아오기
+        getCurtLoc().then(function(result) {
+            let curt_lat = result.coords.latitude;
+            let curt_lon = result.coords.longitude;
+            let curt_latLng = new Tmapv2.LatLng(curt_lat, curt_lon);
+            let marker_icon;
+           
+            if(locInfo.type == "공유") {
+                marker_icon = "{% static 'icon/marker_share.png' %}";
+            } else {
+                marker_icon = "{% static 'icon/marker_exist.png' %}";
+            }
+            // 마커 생성
+            let marker = new Tmapv2.Marker({
+                position: new Tmapv2.LatLng(locInfo.lonlat.latitude(),locInfo.lonlat.longitude()), //Marker의 중심좌표 설정.
+                // icon: "{% static 'icon/marker_icon2.png' %}",
+                map: map, //Marker가 표시될 Map 설정..
+                icon: marker_icon
+            }); 
+
+            
+            myOffcanvas = document.getElementById('offcanvasBottom')
+            let indexPtr = markers.length;
+            let infoWndowId = 'infoWindow-' + indexPtr;
+            
+            // info창 생성을 위해 기존 info 복사 후 추가
+            let infoWindow = $('#offcanvasBottom').clone().attr('id',  infoWndowId);
+            
+            infoWindows.push(infoWindow);
+
+            
+            let showInfoWindow = function() {
+                marker.animate(Tmapv2.MarkerOptions.ANIMATE_BOUNCE);
+                infoWindows[indexPtr].appendTo('body')
+
+                let myOffcanvas = document.getElementById( infoWndowId)
+                let bsOffcanvas = new bootstrap.Offcanvas(myOffcanvas)
+
+                let user = locInfo.user;
+                let title = locInfo.title;
+                let distance = getDistance(locInfo.lonlat, curt_latLng);
+                let address = getAddress(locInfo.lonlat);
+                let time = locInfo.time;
+                let fee = locInfo.fee;
+                let type = locInfo.type;
+                
+                $('#' + infoWndowId).find('#info_title').text(title);
+                $('#' + infoWndowId).find('#info_address').text(address);
+                $('#' + infoWndowId).find('#info_type').text(type);
+                $('#' + infoWndowId).find('#info_distance').text(distance);
+                $('#' + infoWndowId).find('#info_time').text(time);
+                $('#' + infoWndowId).find('#info_fee').text(fee);
+                $('#' + infoWndowId).find('#info_btn_chat').val(user);
+                
+
+                // T map 버튼 연동
+                $('#' + infoWndowId).find('#info_btn_navi').click(function() {
+                    window.open("https://apis.openapi.sk.com/tmap/app/routes?appKey=l7xx11758ec4b63349209fb3d9357d90b85e&lon=" + locInfo.lonlat.longitude() + "&" + "lat=" + locInfo.lonlat.latitude())
+                })
+                bsOffcanvas.show();
+                // set draggable false
+                map.setOptions({ draggable: false }); 
+                
+
+                if(type == "공유") {
+                    let id = locInfo.id;
+                    let urlTag = "{% url 'map:ticket_create' parking_lot_id=9999 %}"
+                    let urlTag2 = "{% url 'chat:room' room_name='sihyun' %}"
+                    
+                    console.log(id)
+                    $('#' + infoWndowId).find('#info_a_pay').attr('href', urlTag.replace(/9999/, id))
+                    $('#' + infoWndowId).find('#info_a_chat').attr('href', urlTag2.replace(/aaaa/, user))
+                } else {
+                    $('#' + infoWndowId).find('#info_btn_pay').attr("disabled","disabled");
+                    $('#' + infoWndowId).find('#info_btn_chat').attr("disabled","disabled");
+                }
+
+                // infoWnidow 빠져나오면 드래그 허용 
+                $('.modal-backdrop').mousedown(function() {
+                    map.setOptions({ draggable: true }); 
+                    $('#' + title).remove();
+                    marker.stopAnimation();
+                });
+            }
+
+            // 모바일 환경 리스너
+            marker.addListener(clickEvent, showInfoWindow);
+
+            markers.push(marker)
+        });
+        
+    }
+
+ 
+
+    // 모든 마커를 제거하는 함수입니다.
+    function removeMarkers() {
+        for (var i = 0; i < markers.length; i++) {
+            markers[i].setMap(null);
+        }
+        markers = [];
+        infoWindows = [];
+    }
+
+    function researchPOI() {
+        $('#research').css('display', 'none');
+        removeMarkers();
+        searchPOI();
+        addSharePark();
+    }
+    
+</script>
+
+<!-- T map api 검색 사용하는 script -->
+<script>
+
+    // 교통정보 기준 거리 return
+    function getDistance(startLatLng, endLatLng) {
+        $.ajax({
+            type : "POST",
+            url : "https://apis.openapi.sk.com/tmap/routes?version=1&format=json&callback=result",
+            async : false,
+            data : {
+                "appKey" : "l7xx11758ec4b63349209fb3d9357d90b85e",
+                "startX" : startLatLng.longitude(),
+                "startY" : startLatLng.latitude(),
+                "endX" : endLatLng.longitude(),
+                "endY" : endLatLng.latitude(),
+                "reqCoordType" : "WGS84GEO",
+                "resCoordType" : "EPSG3857",
+            },
+            success : function(response) {
+
+                var resultData = response.features;
+
+                tDistance = (resultData[0].properties.totalDistance / 1000).toFixed(1) + "km";
+            },
+            error : function(request, status, error) {
+                console.log("code:"
+                        + request.status + "\n"
+                        + "message:"
+                        + request.responseText
+                        + "\n" + "error:" + error);
+                
+                return 0;
+            }
+        });
+        return tDistance;
+        
+    }
+
+    // 해당 위치의 주소를 표시
+    function getAddress(latLng) {
+        $.ajax({
+            method : "GET",
+            url : "https://apis.openapi.sk.com/tmap/geo/reversegeocoding?version=1&format=json&callback=result",
+            async : false,
+            data : {
+                "appKey" : "l7xx11758ec4b63349209fb3d9357d90b85e",
+                "coordType" : "WGS84GEO",
+                "addressType" : "A10",
+                "lon" : latLng.longitude(),
+                "lat" : latLng.latitude()
+            },
+            success : function(response) {
+                // 3. json에서 주소 파싱
+                let arrResult = response.addressInfo;
+
+                //법정동 마지막 문자
+                let lastLegal = arrResult.legalDong
+                        .charAt(arrResult.legalDong.length - 1);
+
+                // 새주소
+                newRoadAddr = arrResult.city_do + ' '
+                        + arrResult.gu_gun + ' ';
+
+                if (arrResult.eup_myun == ''
+                        && (lastLegal == "읍" || lastLegal == "면")) {//읍면
+                    newRoadAddr += arrResult.legalDong;
+                } else {
+                    newRoadAddr += arrResult.eup_myun;
+                }
+                newRoadAddr += ' ' + arrResult.roadName + ' '
+                        + arrResult.buildingIndex;
+
+                // 새주소 법정동& 건물명 체크
+                if (arrResult.legalDong != ''
+                        && (lastLegal != "읍" && lastLegal != "면")) {//법정동과 읍면이 같은 경우
+
+                    if (arrResult.buildingName != '') {//빌딩명 존재하는 경우
+                        newRoadAddr += (' (' + arrResult.legalDong
+                                + ', ' + arrResult.buildingName + ') ');
+                    } else {
+                        newRoadAddr += (' (' + arrResult.legalDong + ')');
+                    }
+                } else if (arrResult.buildingName != '') {//빌딩명만 존재하는 경우
+                    newRoadAddr += (' (' + arrResult.buildingName + ') ');
+                }
+
+                // 구주소
+                jibunAddr = arrResult.city_do + ' '
+                        + arrResult.gu_gun + ' '
+                        + arrResult.legalDong + ' ' + arrResult.ri
+                        + ' ' + arrResult.bunji;
+                //구주소 빌딩명 존재
+                if (arrResult.buildingName != '') {//빌딩명만 존재하는 경우
+                    jibunAddr += (' ' + arrResult.buildingName);
+                }
+
+                result = "새주소 : " + newRoadAddr + "</br>";
+                result += "지번주소 : " + jibunAddr + "</br>";
+            },
+            error : function(request, status, error) {
+                console.log("code:" + request.status + "\n"
+                        + "message:" + request.responseText + "\n"
+                        + "error:" + error);
+                return 0;
+            }
+        });
+        return newRoadAddr;
+    }
+
+    //특정 장소를 검색하는 함수입니다.
+    function searchPOI() {
+        
+        getCurtLoc().then(function(result) {
+            var curtCenter = map.getCenter();//map의 중심 좌표 값을 받아 옵니다.
+            var optionObj = {
+                reqCoordType:"WGS84GEO", //요청 좌표계 옵셥 설정입니다.
+                resCoordType:"WGS84GEO",  //응답 좌표계 옵셥 설정입니다.
+                // 현재위치 중심좌표 설정
+                count:200,
+                centerLon:curtCenter.longitude(), //POI검색시 중앙좌표의 경도입니다.
+                centerLat:curtCenter.latitude()	//POI검색시 중앙좌표의 위도입니다. 
+            };
+            var params = {
+                onComplete:onComplete,
+                onProgress:onProgress,
+                onError:onError
+            };
+            var tData = new Tmapv2.extension.TData();
+            tData.getPOIDataFromSearchJson(encodeURIComponent("주차장"),optionObj,params);//encodeURIComponent함수로 해당 파라메터 값을 처리합니다.
+        });
+        //POI검색
+        let onComplete = function() {
+            
+            console.log(this._responseData); //json로 데이터를 받은 정보들을 콘솔창에서 확인할 수 있습니다.
+            
+            if(this._responseData.searchPoiInfo.pois.poi != ''){
+                jQuery(this._responseData.searchPoiInfo.pois.poi).each(function(){//결과를 each문으로 돌려 마커를 등록합니다.
+                    //response 데이터중 원하는 값을 find 함수로 찾습니다.
+                    let name = this.name;
+                    let lon = this.frontLon;
+                    let lat = this.frontLat;
+                    let type = this.detailBizName;
+                    let tel = this.telNo;
+
+                    let lonlatoption = {
+                        title: name,//마커 라벨 text 설정
+                        type: type,
+                        lonlat:new Tmapv2.LatLng(lat,lon),//마커 라벨 좌표 설정
+                        tel: tel
+                    };
+
+                    if(type=="민영" || type=="공영") {
+                        addMarker(lonlatoption);//마커를 추가하는 함수입니다.
+                    } 
+                    
+                });
+            }else {
+                alert('검색결과가 없습니다.');
+            }
+        }
+
+        //데이터 로드중 실행하는 함수입니다.
+        let onProgress = function (){
+            
+        }
+
+        //데이터 로드 중 에러가 발생시 실행하는 함수입니다.
+        let onError = function(){
+            alert("onError");
+        }
+    }
+
+    // 주소에 맞춰 지도의 center 표시해주기
+    function setCenterByAddr(fullAddr) {
+
+        $.ajax({
+            method : "GET",
+            url : "https://apis.openapi.sk.com/tmap/geo/fullAddrGeo?version=1&format=json&callback=result",
+            async : false,
+            data : {
+                "appKey" : "l7xx11758ec4b63349209fb3d9357d90b85e",
+                "coordType" : "WGS84GEO",
+                "fullAddr" : fullAddr
+            },
+            success : function(response) {
+
+                var resultInfo = response.coordinateInfo; // .coordinate[0];
+                console.log(resultInfo);
+                
+                // 검색 결과 정보가 없을 때 처리
+                if (resultInfo.coordinate.length == 0) {
+                    alert("주소 검색 결과가 없습니다.");
+                } else {
+                    var lon, lat;
+                    var resultCoordinate = resultInfo.coordinate[0];
+                    if (resultCoordinate.lon.length > 0) {
+                        // 구주소
+                        lon = resultCoordinate.lon;
+                        lat = resultCoordinate.lat;
+                    } else { 
+                        // 신주소
+                        lon = resultCoordinate.newLon;
+                        lat = resultCoordinate.newLat
+                    }
+                
+                    var lonEntr, latEntr;
+                    
+                    if (resultCoordinate.lonEntr == undefined && resultCoordinate.newLonEntr == undefined) {
+                        lonEntr = 0;
+                        latEntr = 0;
+                    } else {
+                        if (resultCoordinate.lonEntr.length > 0) {
+                            lonEntr = resultCoordinate.lonEntr;
+                            latEntr = resultCoordinate.latEntr;
+                        } else {
+                            lonEntr = resultCoordinate.newLonEntr;
+                            latEntr = resultCoordinate.newLatEntr;
+                        }
+                    }
+                        
+                    var markerPosition = new Tmapv2.LatLng(Number(lat),Number(lon));
+                    
+                    $('#inputLat').attr('value', Number(lat));
+                    $('#inputLng').attr('value', Number(lon));
+
+                    map.setCenter(markerPosition);
+                    
+                    // 검색 결과 표출
+                    var matchFlag, newMatchFlag;
+                    // 검색 결과 주소를 담을 변수
+                    var address = '', newAddress = '';
+                    var city, gu_gun, eup_myun, legalDong, adminDong, ri, bunji;
+                    var buildingName, buildingDong, newRoadName, newBuildingIndex, newBuildingName, newBuildingDong;
+                    var resultDiv = document.getElementById('inputAddr');
+                    // 새주소일 때 검색 결과 표출
+                    // 새주소인 경우 matchFlag가 아닌
+                    // newMatchFlag가 응답값으로
+                    // 온다
+                    if (resultCoordinate.newMatchFlag.length > 0) {
+                        // 새(도로명) 주소 좌표 매칭
+                        // 구분 코드
+                        newMatchFlag = resultCoordinate.newMatchFlag;
+                        
+                        // 시/도 명칭
+                        if (resultCoordinate.city_do.length > 0) {
+                            city = resultCoordinate.city_do;
+                            newAddress += city + " ";
+                        }
+                        
+                        // 군/구 명칭
+                        if (resultCoordinate.gu_gun.length > 0) {
+                            gu_gun = resultCoordinate.gu_gun;
+                            newAddress += gu_gun + " ";
+                        }
+                        
+                        // 읍면동 명칭
+                        if (resultCoordinate.eup_myun.length > 0) {
+                            eup_myun = resultCoordinate.eup_myun;
+                            newAddress += eup_myun + " ";
+                        } else {
+                            // 출력 좌표에 해당하는
+                            // 법정동 명칭
+                            if (resultCoordinate.legalDong.length > 0) {
+                                legalDong = resultCoordinate.legalDong;
+                                newAddress += legalDong + " ";
+                            }
+                            // 출력 좌표에 해당하는
+                            // 행정동 명칭
+                            if (resultCoordinate.adminDong.length > 0) {
+                                adminDong = resultCoordinate.adminDong;
+                                newAddress += adminDong + " ";
+                            }
+                        }
+                        // 출력 좌표에 해당하는 리 명칭
+                        if (resultCoordinate.ri.length > 0) {
+                            ri = resultCoordinate.ri;
+                            newAddress += ri + " ";
+                        }
+                        // 출력 좌표에 해당하는 지번 명칭
+                        if (resultCoordinate.bunji.length > 0) {
+                            bunji = resultCoordinate.bunji;
+                            newAddress += bunji + " ";
+                        }
+                        // 새(도로명)주소 매칭을 한
+                        // 경우, 길 이름을 반환
+                        if (resultCoordinate.newRoadName.length > 0) {
+                            newRoadName = resultCoordinate.newRoadName;
+                            newAddress += newRoadName + " ";
+                        }
+                        // 새(도로명)주소 매칭을 한
+                        // 경우, 건물 번호를 반환
+                        if (resultCoordinate.newBuildingIndex.length > 0) {
+                            newBuildingIndex = resultCoordinate.newBuildingIndex;
+                            newAddress += newBuildingIndex + " ";
+                        }
+                        // 새(도로명)주소 매칭을 한
+                        // 경우, 건물 이름를 반환
+                        if (resultCoordinate.newBuildingName.length > 0) {
+                            newBuildingName = resultCoordinate.newBuildingName;
+                            newAddress += newBuildingName + " ";
+                        }
+                        // 새주소 건물을 매칭한 경우
+                        // 새주소 건물 동을 반환
+                        if (resultCoordinate.newBuildingDong.length > 0) {
+                            newBuildingDong = resultCoordinate.newBuildingDong;
+                            newAddress += newBuildingDong + " ";
+                        }
+                        $('#inputAddr').attr('value', newAddress);
+                    }
+                    
+                    // 구주소일 때 검색 결과 표출
+                    // 구주소인 경우 newMatchFlag가
+                    // 아닌 MatchFlag가 응닶값으로
+                    // 온다
+                    if (resultCoordinate.matchFlag.length > 0) {
+                        // 매칭 구분 코드
+                        matchFlag = resultCoordinate.matchFlag;
+                    
+                        // 시/도 명칭
+                        if (resultCoordinate.city_do.length > 0) {
+                            city = resultCoordinate.city_do;
+                            address += city + "\n";
+                        }
+                        // 군/구 명칭
+                        if (resultCoordinate.gu_gun.length > 0) {
+                            gu_gun = resultCoordinate.gu_gun;
+                            address += gu_gun+ "\n";
+                        }
+                        // 읍면동 명칭
+                        if (resultCoordinate.eup_myun.length > 0) {
+                            eup_myun = resultCoordinate.eup_myun;
+                            address += eup_myun + "\n";
+                        }
+                        // 출력 좌표에 해당하는 법정동
+                        // 명칭
+                        if (resultCoordinate.legalDong.length > 0) {
+                            legalDong = resultCoordinate.legalDong;
+                            address += legalDong + "\n";
+                        }
+                        // 출력 좌표에 해당하는 행정동
+                        // 명칭
+                        if (resultCoordinate.adminDong.length > 0) {
+                            adminDong = resultCoordinate.adminDong;
+                            address += adminDong + "\n";
+                        }
+                        // 출력 좌표에 해당하는 리 명칭
+                        if (resultCoordinate.ri.length > 0) {
+                            ri = resultCoordinate.ri;
+                            address += ri + "\n";
+                        }
+                        // 출력 좌표에 해당하는 지번 명칭
+                        if (resultCoordinate.bunji.length > 0) {
+                            bunji = resultCoordinate.bunji;
+                            address += bunji + "\n";
+                        }
+                        // 출력 좌표에 해당하는 건물 이름
+                        // 명칭
+                        if (resultCoordinate.buildingName.length > 0) {
+                            buildingName = resultCoordinate.buildingName;
+                            address += buildingName + "\n";
+                        }
+                        // 출력 좌표에 해당하는 건물 동을
+                        // 명칭
+                        if (resultCoordinate.buildingDong.length > 0) {
+                            buildingDong = resultCoordinate.buildingDong;
+                            address += buildingDong + "\n";
+                        }
+                        
+                        $('#inputAddr').attr('value', address);
+                    }
+                }
+            },
+            error : function(request, status, error) {
+                console.log(request);
+                console.log("code:"+request.status + "\n message:" + request.responseText +"\n error:" + error);
+                // 에러가 발생하면 맵을 초기화함
+                // markerStartLayer.clearMarkers();
+                // 마커초기화
+            
+            }
+        });
+    }
+    
+</script>
+<!-- script end -->
+
+</head>
+<body style="margin:0px"><!-- 맵 생성 실행 -->
+{% block content %}
+{% endblock %}
+</body>
+</html>

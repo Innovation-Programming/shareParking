@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div style="display:table; width:100%; background-color:#58C9B9; height:50px; color:white">
+    <span style="display: table-cell; vertical-align:middle; width:100%; font-family:넥슨 고딕 bold; font-size:24px;">
+        &nbsp&nbsp주차장 등록
+    </span>
+</div>
+<div class="container" style="font-family: '넥슨 고딕';">
+    
+    <form method="post" class="post-form my-3">
+        {% csrf_token %}
+        <!-- 오류표시 Start -->
+        {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+            {% for field in form %}
+                {% if field.errors %}
+                <strong>{{ field.label }}</strong>
+                {{ field.errors }}
+                {% endif %}
+            {% endfor %}
+            </div>
+        {% endif %}
+        <!-- 오류표시 End -->
+        
+        <!-- 주초 검색창 -->
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="주차장 주소 입력" id="searchAddr">
+            <button class="btn btn-outline-secondary" onclick="setCenterByAddr(document.getElementById('searchAddr').value)" type="button" id="btn-find-addr">길찾기</button>
+        </div>
+        <!-- t map 영역 -->
+        <div id="tmap-form">
+            <image src="{% static 'icon/marker_current.png' %}" id="center-marker"></image>
+        </div>
+        <script>
+            initTmapForm('tmap-form')
+        </script>
+
+        <div class="mb-3 row">
+            <label class="col-3 col-form-label">주    소</label>
+            <div class="col-9">
+                <input type="text" class="form-control" id="inputAddr" name="address" 
+                    value="{{ form.address.value | default_if_none:'' }}" readonly>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label class="col-3 col-form-label">이    름</label>
+            <div class="col-9">
+                <input type="text" class="form-control" id="inputName" name="name" 
+                        value="{{ form.name.value | default_if_none:'' }}">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label class="col-3 col-form-label">이용요금</label>
+            <div class="col-5" style="padding-right:0px !important;">
+                <input type="number" class="form-control" id="inputFee" name="fee"
+                        value="{{ form.fee.value | default_if_none:'' }}">
+            </div>
+            <div class="col-4">
+                <select class="form-select" aria-label="Default select example">
+                    <option selected>시간당</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="mb-3 row">
+            <label class="col-3 col-form-label">사    진</label>
+            <div class="col-9">
+                <input type="file" accept="image/*" class="form-control" id="inputImage">
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label class="col-3 col-form-label">운영시간</label>
+            <div class="col-4" style="position:relative">
+                <input type="text" class="form-control" id="inputStartTime" name="start_time" 
+                        value="{{ form.start_time.value | default_if_none:'' }}">
+                <!-- <input type="text" class="form-control datetimepicker-input" id="inputStartTime"
+                        data-toggle="datetimepicker" data-target="#inputStartTime" name="start_time"
+                        value="{{ form.start_time.value | default_if_none:'' }}"/> -->
+            </div>
+            <div class="col-1" style="vertical-align:middle; text-align:center; font-size:24px; font-family:'넥슨 고딕';">
+                ~
+            </div>
+            <div class="col-4" style="position:relative">
+                <input type="text" class="form-control" id="inputEndTime" name="end_time" 
+                        value="{{ form.end_time.value | default_if_none:'' }}">
+                <!-- <input type="text" class="form-control datetimepicker-input" id="inputEndTime"
+                        data-toggle="datetimepicker" data-target="#inputEndTime" name="end_time"
+                        value="{{ form.end_time.value | default_if_none:'' }}"/> -->
+                
+            </div>
+            <!-- end input창 자바스크립트 -->
+            <script type="text/javascript">
+                $(function () {
+                    $('#inputEndTime').datetimepicker({
+                        format: 'LT'
+                    });
+                });
+            </script>
+        </div>
+        <input type="hidden" id="inputLat" value="{{ form.latitude.value | default_if_none:'' }}" name="latitude"> 
+        <input type="hidden" id="inputLng" value="{{ form.longitude.value | default_if_none:'' }}" name="longitude">
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn" id="btn-pri"
+            style="background-color:#58C9B9; color:white; font-family:넥슨 고딕 bold; font-size:21px;">
+                저  장  하  기
+            </button>
+        </div>
+        
+    </form>
+</div>
+{% endblock %} 

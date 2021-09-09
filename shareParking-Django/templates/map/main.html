@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+{% include 'navbar.html' %}
+{% block content %}
+<div id="map_div">
+	<script>
+		initTmap('map_div')
+	</script>
+	<!-- 현위치에서 다시 찾기 -->
+	<div id="research">
+		<button id="ctr_btn" onclick="researchPOI()" class="btn btn-light" type="button">
+			<span class="material-icons" style="line-height:25px; vertical-align:middle;">
+				refresh</span> 현 지도 위치에서 검색
+		</button>
+	</div>
+
+	<!-- 줌컨트롤 -->
+	<div id="zoom" class="btn-group-vertical" role="group" >
+		<button id="ctr_btn_small" onclick="map.zoomIn()" class="btn btn-light" type="button">
+			<span class="material-icons" id="ctr_icon_font">add</span>
+		</button>
+		<button id="ctr_btn_small" onclick="map.zoomOut()" class="btn btn-light" type="button">
+			<span class="material-icons" id="ctr_icon_font">remove</span>
+		</button>
+	</div>
+
+	<!-- 현위치 버튼 -->
+	<div id="my_location">
+		<button id="ctr_btn_small" onclick="setCurtCenter()" class="btn btn-light" type="button">
+			<span class="material-icons" id="ctr_icon_font">my_location</span>
+		</button>
+	</div>
+	
+
+</div>
+
+
+<!-- parking info windows(offCanvas) -->
+<div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
+	
+	
+	<div class="offcanvas-header">
+		<form method="post" class="post-form my-3" style="margin:0px!important; padding:0px;  font-family:넥슨 고딕;">
+			<div class="mb-3 row" id="info-row" style="min-width:100%;">
+				<div>
+					<text class="offcanvas-title" id="info_title" style="color:#58c9b9;font-size:20px;font-family:넥슨 고딕 bold;"></text>
+					<span class="badge rounded-pill bg-secondary" id="info_type" style="height:auto; background-color:#4C4C4C;"></span>
+				</div>
+				<br><text style="font-size:12px; color:#4C4C4C;" id="info_address"></text>
+			</div>
+			<hr>
+			<div class="mb-3 row" id="info-row" style="min-width:100%;">
+				<label class="col-3" style="font-size:12px; color:#4C4C4C">주차요금</label>
+				<div class="col-9" style="text-align:right;">
+					<text style="font-size:14px; color:black;" id="info_fee">+ 정보 추가하기</text>
+				</div>
+			</div>
+			<div class="mb-3 row" id="info-row" style="min-width:100%;">
+				<label class="col-3" style="font-size:12px; color:#4C4C4C">운영시간</label>
+				<div class="col-9" style="text-align:right;">
+					<text style="font-size:14px; color:black;" id="info_time">+ 정보 추가하기</text>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-4" style="padding:0px 3px;">
+					<a href="#" id="info_a_pay">
+						<button type="button" class="btn"  id="info_btn_pay" style="background-color:#58c9b9; color:white; width:100%; font-family:넥슨 고딕 bold;">
+							주차권 결제
+						</button>
+					</a>
+					
+				</div>
+				<div class="col-4" style="padding:0px 3px;">
+					<a href="#" id="info_a_chat">
+						<button type="button" value="" class="btn" id="info_btn_chat" style="background-color:#58c9b9; color:white; width:100%; font-family:넥슨 고딕 bold;">
+							채팅하기 
+						</button>
+					</a>
+					
+				</div>
+				<div class="col-4" style="padding:0px 3px;">
+					<button type="button" class="btn" id="info_btn_navi" style="background-color:#58c9b9; color:white; width:100%; font-family:넥슨 고딕 bold;">
+						길찾기
+					</button>
+				</div>
+				
+			</div>
+			
+		</form>
+</div>
+
+{% endblock %}

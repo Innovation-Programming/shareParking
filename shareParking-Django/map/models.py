@@ -1,0 +1,41 @@
+from django.db import models
+from django.contrib.auth.models import User
+
+# Create your models here.
+# Create your models here.
+class ParkingLot(models.Model):
+    name = models.CharField(max_length=50)
+    # user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE,null=True,blank=True)
+    address = models.CharField(max_length=100)
+    start_time = models.CharField(max_length=10)
+    end_time = models.CharField(max_length=10)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+    fee = models.IntegerField()
+
+class Ticket(models.Model):
+    parking_lot = models.ForeignKey(ParkingLot, on_delete=models.CASCADE)
+    # user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE,null=True,blank=True)
+    vaild_start = models.CharField(max_length=10)
+    vaild_end = models.CharField(max_length=10)
+
+
+#회원정보모델
+class Personal(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE,null=True,blank=True)
+    # username = models.CharField(max_length=100)
+    # password1 = models.CharField(max_length=100)
+    nickname = models.CharField(max_length=100)
+    phone = models.IntegerField(max_length=20)
+
+#SMS인증 모델
+class Authentication(models.Model):
+    phone_number = models.CharField('휴대폰 번호', max_length=30)
+    auth_number = models.CharField('인증번호', max_length=30)
+
+    class Meta:
+        db_table = 'authentications' # DB 테이블명
+        verbose_name_plural = "휴대폰인증 관리 페이지" # Admin 페이지에서 나타나는 설명
+
