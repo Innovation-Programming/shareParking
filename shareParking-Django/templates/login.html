@@ -96,20 +96,21 @@
         }
     </script> -->
     <main class="form-signin" style="height:100%; text-align: center; margin-bottom: 0px;">
-        <img src="/static/icon/주차나라_로고.png" style="max-width:600px; width:85%; height:auto; margin-top:100px; margin-bottom:50px;">
+        <img src="/static/icon/주차나라_로고.png" id="logo" style="max-width:600px; width:80%; height:auto; margin-top:100px;">
         <form method="post" class="post-form" style="margin-left: 50px; margin-right: 50px;">
             {% csrf_token %}
             {% include "form_errors.html" %}
-            <div style=" width:75%; max-width:400px; position:absolute;bottom:30px;left:50%;transform:translate(-50%, 0%);">
+            <div id="input-form" style=" width:75%; max-width:400px; position:absolute;bottom:30px;left:50%;transform:translate(-50%, 0%);  ">
+                
                 <div class="mb-3 row" style="margin-bottom: 10px !important;">
                     <!-- <input type="text" class="form-control" name="username" id="username"
                         placeholder="ID" value="{{ form.username.value|default_if_none:'' }}"> -->
-                    <input type="text" class="form-control" name="username" id="username" placeholder="ID">
+                    <input type="text" class="form-control" name="username" id="username" placeholder="ID" autocomplete='off'>
                 </div>
                 <div class="mb-3 row">
                     <!-- <input type="password" class="form-control" name="password" id="password"
                         placeholder="Password" value="{{ form.password.value|default_if_none:'' }}"> -->
-                    <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+                    <input type="password" class="form-control" name="password" id="password" placeholder="Password" autocomplete='off'>
                 </div>
             
                 <div class="mb-3 row">
@@ -137,6 +138,19 @@
     
     
 </body>
+<script>
+    
+    window.addEventListener('resize', function() {
+        var windowHeight = window.outerHeight;
+        var logoHeight = $("#logo").height() + 200;
+        var formHeight = $("#input-form").height();
+        if(windowHeight < (logoHeight + formHeight)) {
+            $('#logo').css("display", "none");
+        } else {
+            $('#logo').show();
+        }
+    }, true);
+</script>
 <!-- <script>
 
     $("button[type='submit']").click(function(e){
