@@ -23,7 +23,7 @@
 
     <!-- <link rel="icon" href="/static/images/favicon.ico">/ -->
 
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"><!--ㅇㅣㅍㅏㅇㅣㄹ ㅇㅓㅂㅅㅇㅡㅁ-->
     <!-- jQuery -->
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
     <!-- iamport.payment.js -->
@@ -151,7 +151,7 @@
         }
     }, true);
 </script>
-<!-- <script>
+<script>
 
     $("button[type='submit']").click(function(e){
             e.preventDefault()
@@ -163,6 +163,7 @@
                 data: $(".post-form").serialize(),
                 success : function(response){ // 서버에서 응답받으면 이함수 실행, 여기 main fragment 이동할거야
                     if(response.error == undefined){ //로그인 성공시
+                        consol.log(response.username)
                         android.goMain(response.username);
                     }
                     
@@ -175,4 +176,4 @@
     })
 
     
-</script> -->
+</script>

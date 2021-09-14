@@ -38,7 +38,7 @@ public class MapFragment extends Fragment {
         View myView = inflater.inflate(R.layout.activity_map, container, false);
 
         WebView myWebView = myView.findViewById(R.id.webVw_map);
-//        myWebView.setWebViewClient(new WebViewClient());
+        myWebView.setWebViewClient(new WebViewClient());
         WebSettings webSettings = myWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setGeolocationEnabled(true);
@@ -52,7 +52,7 @@ public class MapFragment extends Fragment {
         });
 
 
-        myWebView.loadUrl("http://222.232.60.152:90/main");
+        myWebView.loadUrl("https://ad32-175-112-37-166.ngrok.io/map/main");
         return myView;
     }
 //    @Override
