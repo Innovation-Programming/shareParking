@@ -21,9 +21,7 @@
     <!-- Mobile Metas -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- <link rel="icon" href="/static/images/favicon.ico">/ -->
-
-    <!-- jQuery -->
+<!-- jQuery -->
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
     <!-- iamport.payment.js -->
     <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
@@ -150,7 +148,7 @@
         }
     }, true);
 </script>
-<!-- <script>
+<script>
 
     $("button[type='submit']").click(function(e){
             e.preventDefault()
@@ -162,6 +160,7 @@
                 data: $(".post-form").serialize(),
                 success : function(response){ // 서버에서 응답받으면 이함수 실행, 여기 main fragment 이동할거야
                     if(response.error == undefined){ //로그인 성공시
+                        consol.log(response.username)
                         android.goMain(response.username);
                     }
                     
@@ -174,4 +173,4 @@
     })
 
     
-</script> -->
+</script>

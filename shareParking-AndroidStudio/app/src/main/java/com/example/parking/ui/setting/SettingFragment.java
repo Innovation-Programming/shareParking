@@ -28,7 +28,7 @@ public class SettingFragment extends Fragment {
         myWebView.setWebViewClient(new WebViewClient());
         WebSettings webSettings = myWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
-        myWebView.loadUrl("http://222.232.60.152:90/setting");
+        myWebView.loadUrl("https://ad32-175-112-37-166.ngrok.io/map/setting");
 //        return root;
         return myView;
     }

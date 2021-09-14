@@ -3,9 +3,12 @@ package com.example.parking;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.http.SslError;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.webkit.JavascriptInterface;
+import android.webkit.SslErrorHandler;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -24,14 +27,24 @@ public class Signin extends AppCompatActivity {
         setContentView(R.layout.activity_signin);
 
         WebView webView = (WebView) findViewById(R.id.webvw);
-        webView.setWebViewClient(new WebViewClient());
+        webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+                handler.proceed();
+            }
+
+        });
 
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
+
         webView.addJavascriptInterface(new AndroidBridge(), "android");
         SharedPreferences sf = getSharedPreferences("sFile",MODE_PRIVATE);
-        webView.loadUrl("http://222.232.60.152:90/");
 
+
+//        webView.getSettings().setDomStorageEnabled(true);
+        webView.loadUrl("https://shareparking.kr");
+//        webView.loadUrl("https://shareparking.kr/");
     }
 
     class AndroidBridge {
