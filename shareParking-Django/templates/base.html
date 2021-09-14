@@ -210,7 +210,7 @@
 
     // touch와 click 이벤트 동시 등록(모바일, PC 환경 고려)
     clickEvent = (function() {
-        if ('ontouchstart' in document.documentElement === true) {
+        if ('ontouchstart' in document.documentElement == true) {
             return 'touchstart';
         } else {
             return 'mousedown';
@@ -252,7 +252,7 @@
 
 
     function addSharePark() {
-        let id, name, lat, lon, tel, type, startTime, EndTime, fee, locInfo;
+        let id, name, lat, lon, tel, type, startTime, EndTime, fee, locInfo, image;
 
         "{% for park in parking_lot_list %}"
             user = "{{ park.user }}"
@@ -261,10 +261,10 @@
             lat = "{{ park.latitude }}";
             lon = "{{ park.longitude }}";
             fee = "{{ park.fee }}"
+            image = "{{ park.image.url }}"
             startTime = "{{ park.start_time }}"
             EndTime = "{{ park.end_time }}"
             type = "공유"
-
             locInfo = {
                 user : user,
                 id: id,
@@ -272,7 +272,8 @@
                 type: type,
                 lonlat:new Tmapv2.LatLng(lat,lon),//마커 라벨 좌표 설정
                 time: startTime + " ~ " + EndTime,
-                fee: fee + "포인트 / 시간당"
+                fee: fee + "포인트 / 시간당",
+                image: image
             };
             addMarker(locInfo);
         "{% endfor %}"
@@ -330,7 +331,7 @@
             let curt_lon = result.coords.longitude;
             let curt_latLng = new Tmapv2.LatLng(curt_lat, curt_lon);
             let marker_icon;
-           
+            
             if(locInfo.type == "공유") {
                 marker_icon = "{% static 'icon/marker_share.png' %}";
             } else {
@@ -343,7 +344,6 @@
                 map: map, //Marker가 표시될 Map 설정..
                 icon: marker_icon
             }); 
-
             
             myOffcanvas = document.getElementById('offcanvasBottom')
             let indexPtr = markers.length;
@@ -355,10 +355,9 @@
             infoWindows.push(infoWindow);
 
             
-            let showInfoWindow = function() {
-                marker.animate(Tmapv2.MarkerOptions.ANIMATE_BOUNCE);
+            let showInfoWindow = function(e) {
                 infoWindows[indexPtr].appendTo('body')
-
+                aa = e;
                 let myOffcanvas = document.getElementById( infoWndowId)
                 let bsOffcanvas = new bootstrap.Offcanvas(myOffcanvas)
 
@@ -369,13 +368,15 @@
                 let time = locInfo.time;
                 let fee = locInfo.fee;
                 let type = locInfo.type;
-                
+                let image = locInfo.image;
+
                 $('#' + infoWndowId).find('#info_title').text(title);
                 $('#' + infoWndowId).find('#info_address').text(address);
                 $('#' + infoWndowId).find('#info_type').text(type);
                 $('#' + infoWndowId).find('#info_distance').text(distance);
                 $('#' + infoWndowId).find('#info_time').text(time);
                 $('#' + infoWndowId).find('#info_fee').text(fee);
+                $('#' + infoWndowId).find('#info_image').attr("src", image);
                 $('#' + infoWndowId).find('#info_btn_chat').val(user);
                 
 
@@ -386,7 +387,6 @@
                 bsOffcanvas.show();
                 // set draggable false
                 map.setOptions({ draggable: false }); 
-                
 
                 if(type == "공유") {
                     let id = locInfo.id;
@@ -405,13 +405,11 @@
                 $('.modal-backdrop').mousedown(function() {
                     map.setOptions({ draggable: true }); 
                     $('#' + title).remove();
-                    marker.stopAnimation();
                 });
             }
 
             // 모바일 환경 리스너
             marker.addListener(clickEvent, showInfoWindow);
-
             markers.push(marker)
         });
         

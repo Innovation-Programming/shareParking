@@ -41,13 +41,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'sslserver'
+    'sslserver'
 ]
 
 STATIC_URL = '/static/'
+
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
+
+# 각 media file에 대한 URL prefix
+MEDIA_URL = '/media/'
+# 미디어 파일을 관리할 루트 media 디렉터리
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

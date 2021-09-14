@@ -82,11 +82,11 @@ def index(request):
 
 @login_required(login_url='login')
 def parking_lot_create(request):
-    # pybo 질문 등록
     if request.method == 'POST':
-        print(request.POST)
-        print(request.user)
+        # print(request.POST)
+        # print(request.user)
 
+        
         form = ParkingLotForm(request.POST or None)
         name = request.POST['name']
         address = request.POST['address']
@@ -95,12 +95,25 @@ def parking_lot_create(request):
         end_time = request.POST['end_time']
         latitude = request.POST['latitude']
         longitude = request.POST['longitude']
+        image = request.FILES['image']
         user = request.user
-        
+
+        # park = ParkingLot()
+        # park.name = request.POST['name']
+        # park.address = request.POST['address']
+        # park.fee = request.POST['fee']
+        # park.start_time = request.POST['start_time']
+        # park.end_time = request.POST['end_time']
+        # park.latitude = request.POST['latitude']
+        # park.longitude = request.POST['longitude']
+        # park.image = request.FILES['image']
+        # park.user = request.user
+
         ParkingLot.objects.create(
             user = user,
             name = name,
             address = address,
+            image = image,
             start_time = start_time,
             end_time = end_time,
             latitude = latitude,

@@ -2,6 +2,58 @@
 {% load static %}
 {% include 'navbar.html' %}
 {% block content %}
+
+<style>
+	 .offcanvas-header {
+        height: auto !important;
+    }
+
+    .offcanvas-bottom {
+        left:50%;
+        transform:translateX(-50%) !important;
+        font-family: '넥슨 고딕';
+        border-radius: 20px 20px 0px 0px !important;
+        height: auto !important;
+        min-width:400px;
+		width: 60%;
+    }
+
+    #offcanvas-info {
+        background-color: gray;
+    }
+
+	#info_image_div {
+		text-align: center;
+	}
+    #info_body {
+        border-radius: 5px;
+    }
+
+    #info_address {
+        text-align: left;
+    }
+
+    #info_line {
+        margin: 0;
+    }
+
+    .offcanvas-body {
+        padding-top: 10px !important;
+    }
+
+	#info_image {
+		width:auto;
+		max-width:100%;
+		height:300px;
+		margin-bottom: 20px;
+		background-size: contain;
+	}
+
+	#info_div {
+		width: 100%;
+		margin:0px!important; padding:0px;  font-family:넥슨 고딕;
+	}
+</style>
 <div id="map_div">
 	<script>
 		initTmap('map_div')
@@ -40,13 +92,16 @@
 	
 	
 	<div class="offcanvas-header">
-		<form method="post" class="post-form my-3" style="margin:0px!important; padding:0px;  font-family:넥슨 고딕;">
+		<div id="info_div">
 			<div class="mb-3 row" id="info-row" style="min-width:100%;">
 				<div>
 					<text class="offcanvas-title" id="info_title" style="color:#58c9b9;font-size:20px;font-family:넥슨 고딕 bold;"></text>
 					<span class="badge rounded-pill bg-secondary" id="info_type" style="height:auto; background-color:#4C4C4C;"></span>
 				</div>
 				<br><text style="font-size:12px; color:#4C4C4C;" id="info_address"></text>
+			</div>
+			<div id="info_image_div">
+				<image id="info_image"></image>
 			</div>
 			<hr>
 			<div class="mb-3 row" id="info-row" style="min-width:100%;">
@@ -86,7 +141,7 @@
 				
 			</div>
 			
-		</form>
+		</div>
 </div>
 
 {% endblock %}

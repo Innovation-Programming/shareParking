@@ -23,7 +23,6 @@
 
     <!-- <link rel="icon" href="/static/images/favicon.ico">/ -->
 
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <!-- jQuery -->
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
     <!-- iamport.payment.js -->
@@ -139,12 +138,12 @@
     
 </body>
 <script>
-    
+    // logo 가려짐 문제 해결
     window.addEventListener('resize', function() {
         var windowHeight = window.outerHeight;
         var logoHeight = $("#logo").height() + 200;
         var formHeight = $("#input-form").height();
-        if(windowHeight < (logoHeight + formHeight)) {
+        if(windowHeight < (logoHeight + formHeight) * 0.9) {
             $('#logo').css("display", "none");
         } else {
             $('#logo').show();
