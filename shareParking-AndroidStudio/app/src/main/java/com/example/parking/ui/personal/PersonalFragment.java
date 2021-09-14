@@ -29,7 +29,7 @@ public class PersonalFragment extends Fragment {
         myWebView.setWebViewClient(new WebViewClient());
         WebSettings webSettings = myWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
-        myWebView.loadUrl("https://ad32-175-112-37-166.ngrok.io/map/form");
+        myWebView.loadUrl("https://shareparking.kr/map/form");
 //        return root;
         return myView;
     }

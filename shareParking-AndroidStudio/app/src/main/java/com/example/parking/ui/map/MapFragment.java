@@ -52,7 +52,8 @@ public class MapFragment extends Fragment {
         });
 
 
-        myWebView.loadUrl("https://ad32-175-112-37-166.ngrok.io/map/main");
+//        myWebView.loadUrl("https://32ce-203-252-240-68.ngrok.io/map/main");
+        myWebView.loadUrl("https://shareparking.kr/map/main");
         return myView;
     }
 //    @Override

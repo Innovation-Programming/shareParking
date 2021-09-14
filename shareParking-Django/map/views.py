@@ -31,7 +31,7 @@ def login_main(request):
             "username" : username,
             "password" : password,
         }
-        return redirect('map:main')
+        return JsonResponse({'username':username})
         # return r/nder(request, 'map/main.html', user_inform)
     return render(request, 'login.html')
 
