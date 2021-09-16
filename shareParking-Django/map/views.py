@@ -31,6 +31,9 @@ def login_main(request):
             "username" : username,
             "password" : password,
         }
+        print("-"*50)
+        print(username)
+        print("-"*50)
         return JsonResponse({'username':username})
         # return r/nder(request, 'map/main.html', user_inform)
     return render(request, 'login.html')

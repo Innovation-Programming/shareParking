@@ -35,7 +35,8 @@ public class ChatActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private List<ChatData> chatList;
 //    private String nick = "nick2"; //1:1채팅 or 1:다 채팅 ----> nick2 이걸 username으로 쓰고싶으면 인자를 다시 받아와야되는부분?!
-    private String nick;
+    private String rpUser, parkingAdmin;
+    private String chatRoomName;
     private EditText EditText_chat;
     private Button Button_send;
     private DatabaseReference myRef;
@@ -49,8 +50,14 @@ public class ChatActivity extends AppCompatActivity {
         EditText_chat = findViewById(R.id.EditText_chat);
 
         SharedPreferences sharedPreferences = getSharedPreferences("sFile",MODE_PRIVATE);
-        nick = sharedPreferences.getString("loginId", "user");
-
+        rpUser = sharedPreferences.getString("loginId", "user");//로그인할때 받아온 접속한 유저의 이름 셋
+        parkingAdmin = sharedPreferences.getString("parkingAdmin", "user");
+        chatRoomName = rpUser + "&" +parkingAdmin;
+        System.out.println("------------------------------------------------------------------");
+        System.out.println(rpUser);
+        System.out.println(parkingAdmin);
+        System.out.println(chatRoomName);
+        System.out.println("------------------------------------------------------------------");
         Button_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,7 +65,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 if(msg != null) {
                     ChatData chat = new ChatData();
-                    chat.setNickname(nick);
+                    chat.setNickname(rpUser);
                     chat.setMsg(msg);
                     myRef.push().setValue(chat);
                     EditText_chat.setText("");
@@ -72,13 +79,14 @@ public class ChatActivity extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this);
 
         chatList = new ArrayList<>();
-        mAdapter = new ChatAdapter(chatList, ChatActivity.this, nick);
+        mAdapter = new ChatAdapter(chatList, ChatActivity.this, rpUser);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mRecyclerView.setAdapter(mAdapter);
         // Write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance(); // 데이터베이스 생성 및 선언
-        myRef = database.getReference("message"); // message받아오기
+        myRef = database.getReference(chatRoomName); // message받아오기
+        myRef.child("roomName");
         
         myRef.addChildEventListener(new ChildEventListener() {
             @Override

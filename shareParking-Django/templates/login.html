@@ -151,7 +151,6 @@
     }, true);
 </script>
 <script>
-    let csrftoken = '{{ csrf_token }}'
     $("button[type='submit']").click(function(e){
             e.preventDefault()
             console.log($(".post-form").serialize())
@@ -162,7 +161,6 @@
                 data: $(".post-form").serialize(),
                 success : function(response){ // 서버에서 응답받으면 이함수 실행, 여기 main fragment 이동할거야
                   //  if(response.error == undefined){ //로그인 성공시
-                        // consol.log(response.username)
                         android.goMain(response.username);
                     //}
                 },

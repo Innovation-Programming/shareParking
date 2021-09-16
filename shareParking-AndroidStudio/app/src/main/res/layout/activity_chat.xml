@@ -7,6 +7,18 @@
     android:orientation="vertical"
     android:weightSum="1">
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:text="채팅하기"
+        android:textSize="30dp"
+        android:gravity="center"
+        android:textAlignment="textStart"
+        android:paddingLeft="15dp"
+        android:textColor="#ffffff"
+        android:background="#41958A"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/my_recycler_view"
         android:scrollbars="vertical"
@@ -28,8 +40,12 @@
         <Button
             android:id="@+id/Button_send"
             android:text="SEND"
+            android:textColor="#ffffff"
+            android:background="#41958A"
             android:layout_width="80dp"
             android:layout_height="match_parent"/>
     </LinearLayout>
+
+
 
 </LinearLayout>

@@ -44,7 +44,7 @@ public class Signin extends AppCompatActivity {
 
 //        webView.getSettings().setDomStorageEnabled(true);
         webView.loadUrl("https://shareparking.kr");
-//        webView.loadUrl("https://32ce-203-252-240-68.ngrok.io");
+//        webView.loadUrl("https://6a72-203-252-240-68.ngrok.io");
     }
 
     class AndroidBridge {
@@ -61,8 +61,13 @@ public class Signin extends AppCompatActivity {
             String nickname = username;
             editor.putString("loginId", nickname);
             editor.commit();
+            System.out.println("------------------------------------------------------------------");
+            System.out.println(nickname);
+            System.out.println("------------------------------------------------------------------");
 
 //            return nickname;
         }
+
+
     }
 }
