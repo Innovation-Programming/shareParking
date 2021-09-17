@@ -39,7 +39,7 @@ public class ChatActivity extends AppCompatActivity {
     private String chatRoomName;
     private EditText EditText_chat;
     private Button Button_send;
-    private DatabaseReference myRef;
+    private DatabaseReference myRef, chattingList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +51,7 @@ public class ChatActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("sFile",MODE_PRIVATE);
         rpUser = sharedPreferences.getString("loginId", "user");//로그인할때 받아온 접속한 유저의 이름 셋
-        parkingAdmin = sharedPreferences.getString("parkingAdmin", "user");
+        parkingAdmin = sharedPreferences.getString("parkingAdmin", "user");//클릭한 주차장 주인 유저의 이름
         chatRoomName = rpUser + "&" +parkingAdmin;
         System.out.println("------------------------------------------------------------------");
         System.out.println(rpUser);
@@ -68,8 +68,11 @@ public class ChatActivity extends AppCompatActivity {
                     chat.setNickname(rpUser);
                     chat.setMsg(msg);
                     myRef.push().setValue(chat);
+//                    ChatData chatRoom = new ChatData();
+//                    chatRoom.setUsername(rpUser);
+//                    chatRoom.setParkingAdmin(parkingAdmin);
+//                    myRef.push().setValue(chatRoom);
                     EditText_chat.setText("");
-
                 }
             }
         });
@@ -85,8 +88,9 @@ public class ChatActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter);
         // Write a message to the database
         FirebaseDatabase database = FirebaseDatabase.getInstance(); // 데이터베이스 생성 및 선언
+        chattingList = database.getReference("chattingList"); //채팅 리스트 database
+        chattingList.push().setValue(chatRoomName);
         myRef = database.getReference(chatRoomName); // message받아오기
-        myRef.child("roomName");
         
         myRef.addChildEventListener(new ChildEventListener() {
             @Override
