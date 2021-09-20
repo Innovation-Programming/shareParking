@@ -115,7 +115,7 @@
 					<text style="font-size:14px; color:black;" id="info_time">+ 정보 추가하기</text>
 				</div>
 			</div>
-			<div class="row">
+			<div class="row" style="margin-bottom: 30px;">
 				<div class="col-4" style="padding:0px 3px;">
 					<a href="#" id="info_a_pay">
 						<button type="button" class="btn"  id="info_btn_pay" style="background-color:#58c9b9; color:white; width:100%; font-family:넥슨 고딕 bold;">
@@ -144,3 +144,13 @@
 </div>
 
 {% endblock %}
+
+<script>
+	$(document).on('click', '#info_btn_chat', function(){
+		var value = document.getElementById("info_btn_chat").value;
+
+		// alert(value);
+		// console.log()
+		androidMain.chatRoom(value)
+	})
+</script>

@@ -34,8 +34,8 @@ def login_main(request):
         print("-"*50)
         print(username)
         print("-"*50)
-        return JsonResponse({'username':username})
-        # return r/nder(request, 'map/main.html', user_inform)
+        # return JsonResponse({'username':username})
+        return render(request, 'map/main.html', user_inform)
     return render(request, 'login.html')
 
 def logout_view(request):
@@ -82,6 +82,8 @@ def index(request):
     print(ParkingLot.objects.filter(id=1))
     context = {'parking_lot_list': parking_lot_list}
     return render(request, 'map/main.html', context)
+
+
 
 @login_required(login_url='login')
 def parking_lot_create(request):
