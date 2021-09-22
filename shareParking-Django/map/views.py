@@ -32,8 +32,8 @@ def login_main(request):
             "username" : username,
             "password" : password,
         }
-        # return JsonResponse({'username':username})
-        return render(request, 'map/main.html', user_inform)
+        return JsonResponse({'username':username})
+        # return render(request, 'map/main.html', user_inform)
     return render(request, 'login.html')
 
 def logout_view(request):
