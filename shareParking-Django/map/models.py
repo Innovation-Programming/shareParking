@@ -34,9 +34,12 @@ class Personal(models.Model):
     nickname = models.CharField(max_length=100)
     point = models.IntegerField()
     email = models.CharField(max_length=200)
-    phone = models.IntegerField()
+    phone = models.CharField(max_length=14)
     addr = models.CharField(max_length=200)
     postcode = models.IntegerField()
+    
+    def __str__(self):
+        return self.nickname
     
 
 #SMS인증 모델

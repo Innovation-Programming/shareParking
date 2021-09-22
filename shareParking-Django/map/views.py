@@ -15,6 +15,7 @@ from django.urls import reverse
 import json, time, random
 import requests
 from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from .utils import make_signature
 from .models import *
@@ -31,9 +32,6 @@ def login_main(request):
             "username" : username,
             "password" : password,
         }
-        print("-"*50)
-        print(username)
-        print("-"*50)
         # return JsonResponse({'username':username})
         return render(request, 'map/main.html', user_inform)
     return render(request, 'login.html')
@@ -83,6 +81,60 @@ def pay(request):
     personal = Personal.objects.get(user=request.user)
     context = {'personal' : personal}
     return render(request, 'map/pay.html', context)
+
+@csrf_exempt
+def pay_complete(request):
+
+    if request.method == 'POST' and request.is_ajax():
+        imp_uid = request.POST.get('imp_uid')
+        order_amount = request.POST.get('imp_amount')
+        order_amount = int(order_amount)
+
+        # // 액세스 토큰(access token) 발급받기
+        data = {
+            "imp_key": "6055957363343863",
+            "imp_secret": "8tqms0bq3Mlt5mVkUNNiSxryP4oFoORxiiTLi5blSxPXTLiNy66qExZtCn90c1xujqgCwsXoZNmSyEG7"
+        }
+
+        response = requests.post('https://api.iamport.kr/users/getToken', data=data)
+        data = response.json()
+        my_token = data['response']['access_token']
+
+        #  // imp_uid로 아임포트 서버에서 결제 정보 조회
+        headers = {"Authorization": my_token}
+        response = requests.get('https://api.iamport.kr/payments/'+imp_uid, data=data, headers = headers)
+        data = response.json()
+
+        # // DB에서 결제되어야 하는 금액 조회 const
+        amountToBePaid = data['response']['amount']  # 아임포트에서 결제후 실제 결제라고 인지 된 금액
+        amountToBePaid = int(amountToBePaid)
+        status = data['response']['status']  # 아임포트에서의 상태
+        if order_amount==amountToBePaid:
+            # DB에 결제 정보 저장
+            # await Orders.findByIdAndUpdate(merchant_uid, { $set: paymentData}); // DB에
+            if status == 'ready':
+                # DB에 가상계좌 발급정보 저장
+                return HttpResponse(json.dumps({'status': "vbankIssued", 'message': "가상계좌 발급 성공"}),
+                                    content_type="application/json")
+            elif status=='paid':
+                print("결제완료")
+                personal = Personal.objects.get(user=request.user)
+                personal.point += amountToBePaid
+                personal.save()
+                return HttpResponse(json.dumps({'status': "success", 'message': "일반 결제 성공"}),
+                                    content_type="application/json")
+            else:
+                pass
+        else:
+            return HttpResponse(json.dumps({'status': "forgery", 'message': "위조된 결제시도"}), content_type="application/json")
+    else:
+        imp_uid = request.GET['imp_uid']
+        merchant_uid = request.GET['merchant_uid']
+        print(imp_uid)
+        print(merchant_uid)
+        return HttpResponse(json.dumps({'status': "success", 'message': "일반 결제 성공"}),
+                                    content_type="application/json")
+
 
 @login_required(login_url='login')
 def parking_lot_create(request):
