@@ -75,15 +75,14 @@ def signup(request):
     return render(request, 'signup.html', {'form': form})
 
 def index(request):
-    print("hi")
     parking_lot_list = ParkingLot.objects.all()
-    print(parking_lot_list)
-    print("="*50)
-    print(ParkingLot.objects.filter(id=1))
     context = {'parking_lot_list': parking_lot_list}
     return render(request, 'map/main.html', context)
 
-
+def pay(request):
+    personal = Personal.objects.get(user=request.user)
+    context = {'personal' : personal}
+    return render(request, 'map/pay.html', context)
 
 @login_required(login_url='login')
 def parking_lot_create(request):

@@ -32,7 +32,12 @@ class Personal(models.Model):
     # username = models.CharField(max_length=100)
     # password1 = models.CharField(max_length=100)
     nickname = models.CharField(max_length=100)
+    point = models.IntegerField()
+    email = models.CharField(max_length=200)
     phone = models.IntegerField()
+    addr = models.CharField(max_length=200)
+    postcode = models.IntegerField()
+    
 
 #SMS인증 모델
 class Authentication(models.Model):
