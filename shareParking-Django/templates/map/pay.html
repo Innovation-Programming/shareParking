@@ -190,7 +190,7 @@
         let tel = "{{ personal.phone }}"
         let addr = "{{ personal.addr }}"
         let postcode = "{{ personal.postcode }}"
-
+        let mid = "pamyent_" + new Date().getTime()
         if(name.length < 1 || method.length < 1) {
             alert("먼저 결제수단/포인트를 선택하세요.")
             return -1;
@@ -207,10 +207,22 @@
 
         let amount = name.replace(/[^0-9]/g, "");
 
+        jQuery.ajax({
+            url: "/map/pay/request",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                name : name,
+                method : method,
+                amount : amount,
+                mid : mid
+            }
+        })
+
         IMP.request_pay({
             pg : 'inicis',
             pay_method : method,
-            merchant_uid : 'merchant_' + new Date().getTime(),
+            merchant_uid : mid,
             name : name,
             amount : amount,
             buyer_email : email,
@@ -228,6 +240,7 @@
                     dataType: 'json',
                     data: {
                         imp_uid : rsp.imp_uid,
+                        imp_mid : mid,
                         imp_amount : amount
                     }
                 }).done(function(data) {
@@ -239,14 +252,16 @@
                     msg += '카드 승인번호 : ' + rsp.apply_num;
                     alert(msg);
                 });
-                } else {
-                    var msg = '결제에 실패하였습니다. \n';
-                    msg += '에러내용 : ' + rsp.error_msg;
+            } else if(rsp.status == "canceled")  {
 
-                    alert(msg);
-                }
-            });
-        }
+            } else {
+                var msg = '결제에 실패하였습니다. \n';
+                msg += '에러내용 : ' + rsp.error_msg;
+
+                alert(msg);
+            }
+        });
+    }
 </script>
 
 {% endblock %}
