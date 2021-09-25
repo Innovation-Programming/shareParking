@@ -40,6 +40,17 @@ class Personal(models.Model):
     
     def __str__(self):
         return self.nickname
+
+#결제정보모델
+class Payment(models.Model):
+    uid = models.CharField(max_length=50)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50)
+    method = models.CharField(max_length=10)
+    amount = models.IntegerField()
+    # status >> paid(완료), ready(미결제), cancelled(취소). failed(실패) 
+    status = models.CharField(max_length=10)
+
     
 
 #SMS인증 모델

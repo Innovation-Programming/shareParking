@@ -82,6 +82,27 @@ def pay(request):
     context = {'personal' : personal}
     return render(request, 'map/pay.html', context)
 
+
+# 결제정보를 DB에 저장
+def pay_request(request):
+
+    if request.method == 'POST' and request.is_ajax():
+        Payment.objects.create(
+            uid=request.POST.get('uid'),
+            user=request.user,
+            name=request.POST.get('name'),
+            method=request.POST.get('method'),
+            amount=request.POST.get('amount'),
+            status="unpaid"
+        )
+
+        return HttpResponse(json.dumps({'status': "success", 'message': "성공"}),
+                                    content_type="application/json")
+    else:
+        return HttpResponse(json.dumps({'status': "failed", 'message': "전송방식이 올바르지 않습니다."}),
+                                    content_type="application/json")
+
+
 @csrf_exempt
 def pay_complete(request):
 
@@ -90,7 +111,7 @@ def pay_complete(request):
         order_amount = request.POST.get('imp_amount')
         order_amount = int(order_amount)
 
-        # // 액세스 토큰(access token) 발급받기
+        # 액세스 토큰(access token) 발급받기
         data = {
             "imp_key": "6055957363343863",
             "imp_secret": "8tqms0bq3Mlt5mVkUNNiSxryP4oFoORxiiTLi5blSxPXTLiNy66qExZtCn90c1xujqgCwsXoZNmSyEG7"

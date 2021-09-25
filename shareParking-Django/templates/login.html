@@ -160,6 +160,7 @@
                 data: $(".post-form").serialize(),
                 success : function(response){ // 서버에서 응답받으면 이함수 실행, 여기 main fragment 이동할거야
                     // if(response.error == undefined){ //로그인 성공시
+                        // alert((response.username))
                         android.goMain(response.username);
                     // }
                     

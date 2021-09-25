@@ -127,7 +127,11 @@
 				</div>
 				<div class="col-4" style="padding:0px 3px;">
 					<a href="#" id="info_a_chat">
+						<!-- <button type="button" value="" class="btn" id="info_btn_chat" style="background-color:#58c9b9; color:white; width:100%; font-family:넥슨 고딕 bold;">
+							채팅하기 
+						</button> -->
 						<button type="button" value="" class="btn" id="info_btn_chat" style="background-color:#58c9b9; color:white; width:100%; font-family:넥슨 고딕 bold;">
+							<!-- <input type="hidden" value=""> -->
 							채팅하기 
 						</button>
 					</a>
@@ -143,15 +147,13 @@
 			
 		</div>
 </div>
-
-{% endblock %}
-
 <script>
 	$(document).on('click', '#info_btn_chat', function(){
-		var value = document.getElementById("info_btn_chat").value;
-
+		var value = this.value;
 		// alert(value);
-		// console.log()
-		androidMain.chatRoom(value)
-	})
+		console.log(value);
+		androidMain.chatRoom(value);
+	});
 </script>
+{% endblock %}
+

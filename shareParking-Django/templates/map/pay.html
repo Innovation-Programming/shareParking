@@ -206,6 +206,7 @@
         }
 
         let amount = name.replace(/[^0-9]/g, "");
+
         IMP.request_pay({
             pg : 'inicis',
             pay_method : method,
