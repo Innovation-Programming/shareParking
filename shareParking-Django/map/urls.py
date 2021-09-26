@@ -16,6 +16,7 @@ urlpatterns = [
     path('main/ticket/<int:parking_lot_id>', views.ticket_create, name='ticket_create'),
     path('pay/', views.pay, name="pay"),
     path('pay/request', views.pay_request, name="pay_request"),
+    path('pay/process', views.pay_process, name="pay_process"),
     path('pay/complete', views.pay_complete, name="pay_complete"),
     path('sendSMS/',views.SmsSendView.as_view(), name="sendSMS"),
     path('confirmSMS/', views.SMSVerificationView.as_view(), name="confirmSMS"),

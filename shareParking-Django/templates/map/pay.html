@@ -2,12 +2,10 @@
 {% load static %}
 {% block content %}
 <style>
-    #pay_body {
-        width:100%;
-        height:100vh;
+    body {
         font-family:넥슨 고딕;
     }
-    #pay_body > #header {
+    #header {
         font-family:넥슨 고딕 bold;
         color: white;
         height:20%;
@@ -17,7 +15,7 @@
         position: relative;
     }
 
-    #pay_body > #header > #title {
+    #header > #title {
         font-size: 28px;
         width:100%;
         text-align: center;
@@ -25,13 +23,13 @@
         top: 20px;
     }
 
-    #pay_body > #header > #my_point {
+    #header > #my_point {
         width:100%;
         position: absolute;
         bottom: 20px;
     }
 
-    #pay_body > #header > #my_point > #description {
+    #header > #my_point > #description {
         display:inline-block;
         font-family:넥슨 고딕;
         font-size: 18px;
@@ -39,23 +37,23 @@
         width:49%;
     }
 
-    #pay_body > #header > #my_point > #value {
+    #header > #my_point > #value {
         display:inline-block;
         font-size: 28px;
         text-align: center;
         width:49%;
     }
 
-    #pay_body > #body {
+    #body {
         width:100%;
         padding:20px;
     }
     
-    #pay_body > #body > #inputPoint {
+    #body > #inputPoint {
         margin-bottom: 30px !important;
     }
 
-    #pay_body > #footer {
+    #footer {
         position:absolute;
         bottom:62px;
         width:100%;
@@ -63,7 +61,7 @@
         background-color:#e2e2e2;
     }
 
-    #pay_body > #footer > #info {
+    #footer > #info {
         text-align: left;
         margin-top: 20px;
         padding: 0px 20px;
@@ -71,7 +69,7 @@
         color:#7e7e7e;
     }
 
-    #pay_body > #footer > #pay_submit {
+    #footer > #pay_submit {
         background-color:#58C9B9;
         color:white;
         width:100%;
@@ -89,72 +87,70 @@
     }
 </style>
 
-<div id="pay_body">
-    <div id="header">
-        <div id="title">포인트 결제</div>
-        <div id="my_point">
-            <span id="description">
-                현재 내 포인트
-            </span>
-            <span id="value">
-                {{ personal.point }}
-            </span>
+<div id="header">
+    <div id="title">포인트 결제</div>
+    <div id="my_point">
+        <span id="description">
+            현재 내 포인트
+        </span>
+        <span id="value">
+            {{ personal.point }}
+        </span>
+    </div>
+</div>
+
+<div id="body" >
+    <label for="inputPoint" class="form-label">충전할 포인트를 선택하세요</label>
+    <select class="form-select form-select mb-3" id="inputPoint" aria-label=".form-select-lg example">
+        <option selected>충전할 포인트를 선택하세요.</option>
+        <option value="1000">1,000 포인트</option>
+        <option value="3000">3,000 포인트</option>
+        <option value="5000">5,000 포인트</option>
+        <option value="10000">10,000 포인트</option>
+        <option value="30000">30,000 포인트</option>
+        <option value="50000">50,000 포인트</option>
+        <option value="100000">100,000 포인트</option>
+    </select>
+
+    <label for="inputPoint" class="form-label">결제수단을 선택하세요.</label>
+    <ul class="list-group" id="inputMethods">
+
+        <label for="card">
+            <li class="list-group-item">
+                <input class="form-check-input me-1" id="card" name="inputMethod" type="radio" value="card" aria-label="...">
+                    신용카드 / 간편결제
+            </li>
+        </label>
+        <label for="vbank">
+                <li class="list-group-item">
+                    <input class="form-check-input me-1" id="vbank" name="inputMethod" type="radio" value="vbank" aria-label="...">
+                        무통장 입금
+                </li>
+        </label>
+
+        <label for="phone">
+            <li class="list-group-item">
+                <input class="form-check-input me-1" id='phone' name="inputMethod" type="radio" value="phone" aria-label="...">
+                    휴대폰 소액결제
+            </li>
+        </label>
+        </ul>
+</div>
+    
+<div id="footer" >
+    <div id="info">
+        <div class="mb-3 row">
+            <label class="col-4">결제수단</label>
+            <div class="col-8" id="method" style="text-align:right;"></div>
+        </div>
+        <div class="mb-3 row">
+            <label class="col-5">총 결제요금</label>
+            <div class="col-7" id="total_fee" style="text-align:right;"></div>
         </div>
     </div>
 
-    <div id="body" >
-        <label for="inputPoint" class="form-label">충전할 포인트를 선택하세요</label>
-        <select class="form-select form-select mb-3" id="inputPoint" aria-label=".form-select-lg example">
-            <option selected>충전할 포인트를 선택하세요.</option>
-            <option value="1000">1,000 포인트</option>
-            <option value="3000">3,000 포인트</option>
-            <option value="5000">5,000 포인트</option>
-            <option value="10000">10,000 포인트</option>
-            <option value="30000">30,000 포인트</option>
-            <option value="50000">50,000 포인트</option>
-            <option value="100000">100,000 포인트</option>
-        </select>
 
-        <label for="inputPoint" class="form-label">결제수단을 선택하세요.</label>
-        <ul class="list-group" id="inputMethods">
-
-            <label for="card">
-                <li class="list-group-item">
-                    <input class="form-check-input me-1" id="card" name="inputMethod" type="radio" value="card" aria-label="...">
-                        신용카드 / 간편결제
-                </li>
-            </label>
-            <label for="vbank">
-                    <li class="list-group-item">
-                        <input class="form-check-input me-1" id="vbank" name="inputMethod" type="radio" value="vbank" aria-label="...">
-                            무통장 입금
-                    </li>
-            </label>
-
-            <label for="phone">
-                <li class="list-group-item">
-                    <input class="form-check-input me-1" id='phone' name="inputMethod" type="radio" value="phone" aria-label="...">
-                        휴대폰 소액결제
-                </li>
-            </label>
-          </ul>
-    </div>
-      
-    <div id="footer" >
-        <div id="info">
-            <div class="mb-3 row">
-                <label class="col-4">결제수단</label>
-                <div class="col-8" id="method" style="text-align:right;"></div>
-            </div>
-            <div class="mb-3 row">
-                <label class="col-5">총 결제요금</label>
-                <div class="col-7" id="total_fee" style="text-align:right;"></div>
-            </div>
-        </div>
-    
-    
-        <button type="submit"id="pay_submit" onclick="requestPay()">결 제 하 기</button>
-    </div>
+    <button type="submit"id="pay_submit" onclick="requestPay()">결 제 하 기</button>
 </div>
 
 <script>
@@ -230,18 +226,17 @@
             buyer_tel : tel,
             buyer_addr : addr,
             buyer_postcode : postcode,
-            m_redirect_url: "https://shareparking.kr/map/pay/complete" 
+            m_redirect_url: "https://shareparking.kr/map/pay/process" 
         }, function(rsp) {
             if ( rsp.success ) {
                 //[1] 서버단에서 결제정보 조회를 위해 jQuery ajax로 imp_uid 전달하기
                 jQuery.ajax({
-                    url: "/map/pay/complete", //cross-domain error가 발생하지 않도록 동일한 도메인으로 전송
+                    url: "/map/pay/process", //cross-domain error가 발생하지 않도록 동일한 도메인으로 전송
                     type: 'POST',
                     dataType: 'json',
                     data: {
                         imp_uid : rsp.imp_uid,
-                        imp_mid : mid,
-                        imp_amount : amount
+                        mid : mid
                     }
                 }).done(function(data) {
                     //[2] 서버에서 REST API로 결제정보확인 및 서비스루틴이 정상적인 경우

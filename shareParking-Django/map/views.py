@@ -32,8 +32,8 @@ def login_main(request):
             "username" : username,
             "password" : password,
         }
-        return JsonResponse({'username':username})
-        #return render(request, 'map/main.html', user_inform)
+        # return JsonResponse({'username':username})
+        return render(request, 'map/main.html', user_inform)
     return render(request, 'login.html')
 
 def logout_view(request):
@@ -88,6 +88,7 @@ def pay(request):
 def pay_request(request):
 
     if request.method == 'POST' and request.is_ajax():
+        print
         Payment.objects.create(
             mid=request.POST.get('mid'),
             user=request.user,
@@ -106,11 +107,11 @@ def pay_request(request):
 
 # 아임포트 서버와 결제금액 대조 후 결제처리
 @csrf_exempt
-def pay_complete(request):
+def pay_process(request):
 
     if request.method == 'POST' and request.is_ajax():
         uid = request.POST.get('imp_uid')
-        mid = request.POST.get('imp_pid')
+        mid = request.POST.get('mid')
     elif request.method == "GET":
         uid = request.GET['imp_uid']
         mid = request.GET['merchant_uid']
@@ -163,7 +164,9 @@ def pay_complete(request):
     else:
         return HttpResponse(json.dumps({'status': "forgery", 'message': "위조된 결제시도"}), content_type="application/json")
 
-
+#결제완료 페이지
+def pay_complete(request):
+    return render(request, 'map/pay_complete.html')
 
 @login_required(login_url='login')
 def parking_lot_create(request):

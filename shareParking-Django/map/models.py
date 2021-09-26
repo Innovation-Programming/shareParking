@@ -44,7 +44,7 @@ class Personal(models.Model):
 #결제정보모델
 class Payment(models.Model):
     mid = models.CharField(max_length=50)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
     method = models.CharField(max_length=10)
     amount = models.IntegerField()

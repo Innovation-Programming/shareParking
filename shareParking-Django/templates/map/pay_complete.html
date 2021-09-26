@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    body {
+        font-family:넥슨 고딕;
+    }
+    #header {
+        height:20vh;
+        min-height:150px;
+        max-height:200px;
+        display: table;
+        width:100%;
+    }
+
+    #header > #message {
+        display:table-cell;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 24px;
+    }
+
+    #header > #message > #status_icon {
+        
+    }
+
+    hr {
+        margin: 10px 10px;
+    }
+</style>
+
+<div id="header">
+    <span id="message">
+        
+        <img src="{% static 'icon/marker_icon.png' %}" id="status_icon" />
+        결제가 완료되었습니다.
+    </span>
+</div>
+
+<hr>
+<div id="body">
+
+</div>
+<div id="footer">
+
+</div>
+{% endblock %}
