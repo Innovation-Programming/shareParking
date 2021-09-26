@@ -186,7 +186,7 @@
         let tel = "{{ personal.phone }}"
         let addr = "{{ personal.addr }}"
         let postcode = "{{ personal.postcode }}"
-        let mid = "pamyent_" + new Date().getTime()
+        let mid = "P" + new Date().getTime()
         if(name.length < 1 || method.length < 1) {
             alert("먼저 결제수단/포인트를 선택하세요.")
             return -1;

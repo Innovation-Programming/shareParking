@@ -3,45 +3,125 @@
 {% block content %}
 <style>
     body {
-        font-family:넥슨 고딕;
+        background-color:#ececec;
     }
-    #header {
+    #background {
+        background-color: #58C9B9;
+        position:absolute;
+        top:0px;
+        height:20vh;
+        width:100%;
+        z-index: -999;
+    }
+    
+    #content {
+        font-family:넥슨 고딕;
+        background-color: white;
+        margin: 60px 40px;
+    }
+    #content > #header {
         height:20vh;
         min-height:150px;
         max-height:200px;
         display: table;
         width:100%;
+        margin-bottom: 20px;
     }
 
-    #header > #message {
+    #content > #header > #message {
         display:table-cell;
         text-align: center;
         vertical-align: middle;
         font-size: 24px;
     }
-
-    #header > #message > #status_icon {
+    #content > #header > #message > #bold {
+        font-family: 넥슨 고딕 bold;
+        color: #58C9B9;
+    }
+    #content > #header > #message > #status_icon {
+        width: 64px;
+        height: auto;
+        margin-top: 50px;
+        margin-bottom: 20px;
         
+    } 
+
+    #content > #body {
+        padding:20px 25px;
     }
 
-    hr {
-        margin: 10px 10px;
+    #content > #body > #row > #bold {
+        font-family: 넥슨 고딕 bold;
+        color: #58C9B9;
+        font-size: 18px;
     }
+
+
+    #content > hr {
+        border: none;
+        border-top: 3px dashed rgb(173, 173, 173);
+        color: #fff;
+        background-color: #fff;
+        height: 1px;
+        width: 100%;
+    }
+
+    
+    
+    .left-col {
+        text-align: left;
+        
+        font-size: 14px;
+    }
+
+    .right-col {
+        text-align: right;
+        
+        font-size: 16px;
+    }
+
 </style>
-
-<div id="header">
-    <span id="message">
-        
-        <img src="{% static 'icon/pay_ok.png' %}" id="status_icon" />
-        결제가 완료되었습니다.
-    </span>
-</div>
-
-<hr>
-<div id="body">
+<div id="background">
 
 </div>
-<div id="footer">
+
+<div id="content">
+    <div id="header">
+        <span id="message">
+            
+            <img src="{% static 'icon/pay_ok.png' %}" id="status_icon" />
+            <br>
+            <span id="bold">결제</span>가 <span id="bold">완료</span>되었습니다.
+        </span>
+    </div>
+    
+    <hr>
+    <div class="container" id="body">
+        <div class="row mb-2" id="row">
+            <div class="col-4 left-col" >가맹점</div>
+            <div class="col-8 right-col">주차나라</div>
+        </div>
+        <div class="row mb-2" id="row">
+            <div class="col-4 left-col" >주문번호</div>
+            <div class="col-8 right-col" id="mid">P1632615041767</div>
+        </div>
+        <div class="row mb-2" id="row">
+            <div class="col-4 left-col" >주문금액</div>
+            <div class="col-8 right-col" id=bold>100,000원</div>
+        </div>
+        <hr>
+        <div class="row mb-2" id="row">
+            <div class="col-4 left-col" >결제일시</div>
+            <div class="col-8 right-col" id=bold></div>
+        </div>
+        <div class="row mb-2" id="row">
+            <div class="col-4 left-col" >주문금액</div>
+            <div class="col-8 right-col" id=bold>100,000원</div>
+        </div>
+    </div>
+    <div id="footer">
+</div>
+
 
 </div>
 {% endblock %}
