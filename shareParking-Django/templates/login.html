@@ -111,7 +111,7 @@
                 </div>
             
                 <div class="mb-3 row">
-                    <button class="btn" type="submit" style="background-color:#41958A; color:white;">로그인</button>
+                    <button class="btn" id="btn_login" type="submit" style="background-color:#41958A; color:white;">로그인</button>
                 </div>
 
                 <a class="buttons" type="submit" style="color:white; font-size: xx-small;">아이디 찾기</a>
@@ -148,7 +148,7 @@
         }
     }, true);
 </script>
-<script>
+<!-- <script>
 
     $("button[type='submit']").click(function(e){
             e.preventDefault()
@@ -158,12 +158,12 @@
                 method:"POST",
                 url: '/', //로그인   url
                 data: $(".post-form").serialize(),
-                success : function(response){ // 서버에서 응답받으면 이함수 실행, 여기 main fragment 이동할거야
-                    // if(response.error == undefined){ //로그인 성공시
-                        // alert((response.username))
-                        android.goMain(response.username);
-                    // }
-                    
+                success : function(response){ 
+                    // alert(response.username)
+                    // 
+                    // console.log("res:"+response);
+                    // console.log(response.username)
+                    android.goMain(response.username);
                 },
                 error: function(err){
                     alert(err);
@@ -171,6 +171,4 @@
             })
 
     })
-
-    
-</script>
+</script> -->
