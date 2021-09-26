@@ -125,9 +125,9 @@ public class ChatFragment extends Fragment {
                         String sendName = sharedPreferences.getString("roomName", "user");
                         System.out.println("넌무엇이냐?: "+ sendName);
 
-//                        Intent intent = new Intent(getActivity(), ChatActivity.class);
-//                        startActivity(intent);
-                        Toast.makeText(getContext(), displayList.get(i), Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getActivity(), ChatActivity.class);
+                        startActivity(intent);
+                        Toast.makeText(getContext(), displayList.get(i)+"님과의 채팅 입장", Toast.LENGTH_SHORT).show();
                     }
                 });
 
