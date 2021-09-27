@@ -69,7 +69,7 @@
 
     * > #row > .small {
         color: #afafaf;
-        font-size: 14px;
+        font-size: 13x;
     }
 
     #content > hr {
@@ -127,24 +127,24 @@
         </div>
         <div class="row mb-2" id="row">
             <div class="col-4 left-col" >주문번호</div>
-            <div class="col-8 right-col" id="mid">P1632615041767</div>
+            <div class="col-8 right-col" id="mid"></div>
         </div>
         <div class="row mb-2" id="row">
             <div class="col-4 left-col" >주문자명</div>
-            <div class="col-8 right-col" id="nickname">sihyun</div>
+            <div class="col-8 right-col" id="nickname"></div>
         </div>
         <hr>
         <div class="row mb-2" id="row">
             <div class="col-4 left-col" >결제일시</div>
-            <div class="col-8 right-col small" id="created">2021-09-27 15:13:48</div>
+            <div class="col-8 right-col small" id="created"></div>
         </div>
         <div class="row mb-2" id="row">
             <div class="col-4 left-col" >결제수단</div>
-            <div class="col-8 right-col" id="method">신용카드/간편결제</div>
+            <div class="col-8 right-col" id="method"></div>
         </div>
         <div class="row mb-2" id="row">
             <div class="col-4 left-col" >결제금액</div>
-            <div class="col-8 right-col bold">100,000원</div>
+            <div class="col-8 right-col bold" id="amount"></div>
         </div>
     </div>
 
@@ -155,16 +155,28 @@
 
 <script>
     let status = "완료";
+    let mid = "{{ payment.mid }}";
+    let nickname = "{{ payment.personal.nickname }}";
+    let created = "{{ payment.created}}";
+    let method = "신용카드/간편결제";
+    let amount = "{{ payment.amount}}";
+
     if("{{ payment.status }}" != "paid") {
         status = "실패";
-        $('#content').find('#bold').css(color, "#E04F5F");
-        $('#status_icon').attr(src, "{% static 'icon/pay_fail.png' %}")
+        $('#content').find('.bold').css("color", "#E04F5F");
+        $('#status_icon').attr("src", "{% static 'icon/pay_fail.png' %}")
+    }
+
+    if("{{ payment.method }}" == "phone") {
+        method= "휴대폰 소액결제"
     }
     
-    let mid = "{{ payment.mid }}";
-    let nickname = "{{ payment.user}}"
     $('#status').text(status)
-    $('#mid').text()
+    $('#mid').text(mid)
+    $('#nickname').text(nickname)
+    $('#created').text(created)
+    $('#method').text(method)
+    $('#amount').text(amount)
 
 </script>
 {% endblock %}

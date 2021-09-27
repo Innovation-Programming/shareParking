@@ -79,6 +79,7 @@ def index(request):
     return render(request, 'map/main.html', context)
 
 def pay(request):
+    print(request.user)
     personal = Personal.objects.get(user=request.user)
     context = {'personal' : personal}
     return render(request, 'map/pay.html', context)
@@ -160,11 +161,7 @@ def pay_process(request):
             personal.point += amountToBePaid
             personal.save()
 
-            return render(request, 'map/pay_complete.html', context)
-            # return HttpResponse(json.dumps({'status': "success", 'message': "일반 결제 성공"}),
-            #                     content_type="application/json")
-        else:
-            pass
+        return render(request, 'map/pay_complete.html', context)
     else:
         return HttpResponse(json.dumps({'status': "forgery", 'message': "위조된 결제시도"}), content_type="application/json")
 
