@@ -32,8 +32,8 @@ def login_main(request):
             "username" : username,
             "password" : password,
         }
-        # return JsonResponse({'username':username})
-        return render(request, 'map/main.html', user_inform)
+        return JsonResponse({'username':username})
+        # return render(request, 'map/main.html', user_inform)
     return render(request, 'login.html')
 
 def logout_view(request):
@@ -72,6 +72,7 @@ def signup(request):
         form = UserForm()
     return render(request, 'signup.html', {'form': form})
 
+
 def index(request):
     parking_lot_list = ParkingLot.objects.all()
     context = {'parking_lot_list': parking_lot_list}
@@ -86,8 +87,9 @@ def pay(request):
 # 결제정보를 DB에 저장
 @csrf_exempt
 def pay_request(request):
-    personal = Personal.objects.get(user=request.user)
+    
     if request.method == 'POST' and request.is_ajax():
+        personal = Personal.objects.get(user=request.user)
         Payment.objects.create(
             mid=request.POST.get('mid'),
             personal=personal,
