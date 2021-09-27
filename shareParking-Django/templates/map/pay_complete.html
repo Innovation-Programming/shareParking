@@ -4,20 +4,27 @@
 <style>
     body {
         background-color:#ececec;
+        font-family:넥슨 고딕;
     }
+
     #background {
         background-color: #58C9B9;
         position:absolute;
         top:0px;
-        height:20vh;
+        height:200px;
         width:100%;
         z-index: -999;
     }
     
     #content {
-        font-family:넥슨 고딕;
         background-color: white;
-        margin: 60px 40px;
+        min-width: 300px;
+        max-width: 400px;
+        width:80%;
+        position:absolute;
+        top:80px;
+        left: 50%;
+        transform: translate(-50%, 0);
     }
     #content > #header {
         height:20vh;
@@ -32,14 +39,17 @@
         display:table-cell;
         text-align: center;
         vertical-align: middle;
-        font-size: 24px;
+        font-size: 21px;
     }
-    #content > #header > #message > #bold {
+    
+    #content > #header > #message > .bold {
         font-family: 넥슨 고딕 bold;
         color: #58C9B9;
     }
+
+    
     #content > #header > #message > #status_icon {
-        width: 64px;
+        width: 48px;
         height: auto;
         margin-top: 50px;
         margin-bottom: 20px;
@@ -48,14 +58,19 @@
 
     #content > #body {
         padding:20px 25px;
+        margin-bottom: 20px;
     }
 
-    #content > #body > #row > #bold {
+    * > #row > .bold {
         font-family: 넥슨 고딕 bold;
         color: #58C9B9;
         font-size: 18px;
     }
 
+    * > #row > .small {
+        color: #afafaf;
+        font-size: 14px;
+    }
 
     #content > hr {
         border: none;
@@ -64,9 +79,20 @@
         background-color: #fff;
         height: 1px;
         width: 100%;
+        margin-bottom: 0px;
     }
 
-    
+    #content > #footer > #submit {
+        background-color: #58C9B9;
+        color: #ffffff;
+        font-family: 넥슨 고딕 bold;
+        font-size: 21px;
+        width:100%;
+        height:50px;
+        min-width: 300px;
+        max-width: 400px;
+        border:none;
+    }
     
     .left-col {
         text-align: left;
@@ -81,9 +107,7 @@
     }
 
 </style>
-<div id="background">
-
-</div>
+<div id="background"></div>
 
 <div id="content">
     <div id="header">
@@ -91,7 +115,7 @@
             
             <img src="{% static 'icon/pay_ok.png' %}" id="status_icon" />
             <br>
-            <span id="bold">결제</span>가 <span id="bold">완료</span>되었습니다.
+            <span class="bold">결제</span>가 <span class="bold" id="status"></span>되었습니다.
         </span>
     </div>
     
@@ -106,22 +130,41 @@
             <div class="col-8 right-col" id="mid">P1632615041767</div>
         </div>
         <div class="row mb-2" id="row">
-            <div class="col-4 left-col" >주문금액</div>
-            <div class="col-8 right-col" id=bold>100,000원</div>
+            <div class="col-4 left-col" >주문자명</div>
+            <div class="col-8 right-col" id="nickname">sihyun</div>
         </div>
         <hr>
         <div class="row mb-2" id="row">
             <div class="col-4 left-col" >결제일시</div>
-            <div class="col-8 right-col" id=bold></div>
+            <div class="col-8 right-col small" id="created">2021-09-27 15:13:48</div>
         </div>
         <div class="row mb-2" id="row">
-            <div class="col-4 left-col" >주문금액</div>
-            <div class="col-8 right-col" id=bold>100,000원</div>
+            <div class="col-4 left-col" >결제수단</div>
+            <div class="col-8 right-col" id="method">신용카드/간편결제</div>
+        </div>
+        <div class="row mb-2" id="row">
+            <div class="col-4 left-col" >결제금액</div>
+            <div class="col-8 right-col bold">100,000원</div>
         </div>
     </div>
+
     <div id="footer">
+        <button id="submit">확&nbsp;&nbsp;&nbsp;인</button>
+    </div>
 </div>
 
+<script>
+    let status = "완료";
+    if("{{ payment.status }}" != "paid") {
+        status = "실패";
+        $('#content').find('#bold').css(color, "#E04F5F");
+        $('#status_icon').attr(src, "{% static 'icon/pay_fail.png' %}")
+    }
+    
+    let mid = "{{ payment.mid }}";
+    let nickname = "{{ payment.user}}"
+    $('#status').text(status)
+    $('#mid').text()
 
-</div>
+</script>
 {% endblock %}
