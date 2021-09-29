@@ -204,7 +204,7 @@
         let amount = name.replace(/[^0-9]/g, "");
 
         jQuery.ajax({
-            url: "/map/pay/request",
+            url: "/pay/request/",
             type: 'POST',
             dataType: 'json',
             data: {
@@ -226,7 +226,7 @@
             buyer_tel : tel,
             buyer_addr : addr,
             buyer_postcode : postcode,
-            m_redirect_url: "https://shareparking.kr/map/pay/process" 
+            m_redirect_url: "https://shareparking.kr/pay/process" 
         }
         // , function(rsp) {
         //     if ( rsp.success ) {
