@@ -93,9 +93,6 @@
             <div class="col-4" style="position:relative">
                 <input type="text" class="form-control" id="inputStartTime" name="start_time" 
                         value="{{ form.start_time.value | default_if_none:'' }}">
-                <!-- <input type="text" class="form-control datetimepicker-input" id="inputStartTime"
-                        data-toggle="datetimepicker" data-target="#inputStartTime" name="start_time"
-                        value="{{ form.start_time.value | default_if_none:'' }}"/> -->
             </div>
             <div class="col-1" style="vertical-align:middle; text-align:center; font-size:24px; font-family:'넥슨 고딕';">
                 ~
@@ -103,9 +100,6 @@
             <div class="col-4" style="position:relative">
                 <input type="text" class="form-control" id="inputEndTime" name="end_time" 
                         value="{{ form.end_time.value | default_if_none:'' }}">
-                <!-- <input type="text" class="form-control datetimepicker-input" id="inputEndTime"
-                        data-toggle="datetimepicker" data-target="#inputEndTime" name="end_time"
-                        value="{{ form.end_time.value | default_if_none:'' }}"/> -->
                 
             </div>
             <!-- end input창 자바스크립트 -->
@@ -145,5 +139,10 @@
             event.preventDefault(); 
             } lastTouchEnd = now; 
         }, false);
+
+    $('#inputStartTime, #inputEndTime').clockTimePicker({
+        duration: true,
+        precision: 5
+    });
 </script>
 {% endblock %} 
