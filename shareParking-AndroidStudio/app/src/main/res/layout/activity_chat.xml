@@ -17,7 +17,7 @@
         android:textAlignment="textStart"
         android:paddingLeft="15dp"
         android:textColor="#ffffff"
-        android:background="#41958A"/>
+        android:background="#58c9b9"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/my_recycler_view"
@@ -41,7 +41,7 @@
             android:id="@+id/Button_send"
             android:text="SEND"
             android:textColor="#ffffff"
-            android:background="#41958A"
+            android:background="#58c9b9"
             android:layout_width="80dp"
             android:layout_height="match_parent"/>
     </LinearLayout>

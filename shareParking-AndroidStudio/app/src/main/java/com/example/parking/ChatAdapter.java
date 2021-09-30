@@ -1,6 +1,7 @@
 package com.example.parking;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,11 +23,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
         //each data item is just a string in this case
         public TextView TextView_nickname;
         public TextView TextView_msg;
+        public LinearLayout TextView_set;
         public View rootView;
+
         public MyViewHolder(View v) {
             super(v);
             TextView_nickname = v.findViewById(R.id.TextView_nickname);
             TextView_msg = v.findViewById(R.id.TextView_msg);
+            TextView_set = v.findViewById(R.id.TextView_set);
             rootView = v;
         }
     }
@@ -57,16 +61,26 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
         // - replace the contents of the view with that element
         ChatData chat = mDataset.get(position);
 
-        holder.TextView_nickname.setText(chat.getNickname()); //Data Transfer Object
-        holder.TextView_msg.setText(chat.getMsg()); //Data Transfer Object
+//        holder.TextView_nickname.setText(chat.getNickname()); //Data Transfer Object
+//        holder.TextView_msg.setText(chat.getMsg()); //Data Transfer Object
 
         if(chat.getNickname().equals(this.myNickname)) {
-            holder.TextView_msg.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
-            holder.TextView_nickname.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+            holder.TextView_set.setGravity(Gravity.END);
+            holder.TextView_msg.setText(chat.getMsg());
+
+//            holder.TextView_msg.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+//            holder.TextView_msg.setGravity(Gravity.END);
+//            holder.TextView_nickname.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+//            holder.TextView_msg.setGravity(View.LAYOUT_DIRECTION_RTL);
         }
         else {
-            holder.TextView_msg.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
-            holder.TextView_nickname.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+            holder.TextView_nickname.setText(chat.getNickname()); //Data Transfer Object
+            holder.TextView_msg.setText(chat.getMsg()); //Data Transfer Object
+            holder.TextView_set.setGravity(Gravity.START);
+//            holder.TextView_msg.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+//            holder.TextView_nickname.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+//            holder.TextView_nickname.setGravity(Gravity.END);
+//            holder.TextView_msg.setGravity(Gravity.END);
         }
 
     }
