@@ -7,7 +7,7 @@ from django.utils import timezone
 import json
 import requests
 from django.views.decorators.csrf import csrf_exempt
-from map.models import *
+from common.models import *
 from .models import *
 # Create your views here.
 
