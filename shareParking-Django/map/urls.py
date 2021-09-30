@@ -14,7 +14,6 @@ urlpatterns = [
     path('sms/', views.sms, name="sms"),
     path('test_chat/', views.test_chat, name="test_chat"),
     path('main/ticket/<int:parking_lot_id>', views.ticket_create, name='ticket_create'),
-
     path('sendSMS/',views.SmsSendView.as_view(), name="sendSMS"),
     path('confirmSMS/', views.SMSVerificationView.as_view(), name="confirmSMS"),
     # path("login/kakao/", views.kakao_login, name="kakao-login"),

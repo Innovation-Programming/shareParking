@@ -25,5 +25,7 @@ urlpatterns = [
     path('', views.login_main, name="login"),
     path('map/', include('map.urls')),
     path('chat/', include('chat.urls')),
+    path('mypage/', include('mypage.urls')),
+    path('pay/', include('pay.urls')),
     # path('', views.index, name='index'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

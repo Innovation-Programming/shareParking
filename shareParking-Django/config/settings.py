@@ -34,6 +34,8 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'channels',
     'map',
+    'pay',
+    'mypage',
     'chat',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -49,6 +51,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
 
 # 각 media file에 대한 URL prefix
 MEDIA_URL = '/media/'
@@ -127,13 +131,13 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_URL = '/static/'
+# STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

@@ -10,11 +10,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
-
+from django.utils import timezone
 #for sms import modules
 import json, time, random
 import requests
 from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from .utils import make_signature
 from .models import *
@@ -31,11 +32,8 @@ def login_main(request):
             "username" : username,
             "password" : password,
         }
-        print("-"*50)
-        print(username)
-        print("-"*50)
         return JsonResponse({'username':username})
-        # return r/nder(request, 'map/main.html', user_inform)
+        # return render(request, 'map/main.html', user_inform)
     return render(request, 'login.html')
 
 def logout_view(request):
@@ -74,22 +72,16 @@ def signup(request):
         form = UserForm()
     return render(request, 'signup.html', {'form': form})
 
+
 def index(request):
-    print("hi")
     parking_lot_list = ParkingLot.objects.all()
-    print(parking_lot_list)
-    print("="*50)
-    print(ParkingLot.objects.filter(id=1))
     context = {'parking_lot_list': parking_lot_list}
     return render(request, 'map/main.html', context)
+
 
 @login_required(login_url='login')
 def parking_lot_create(request):
     if request.method == 'POST':
-        # print(request.POST)
-        # print(request.user)
-
-        
         form = ParkingLotForm(request.POST or None)
         name = request.POST['name']
         address = request.POST['address']
@@ -100,17 +92,6 @@ def parking_lot_create(request):
         longitude = request.POST['longitude']
         image = request.FILES['image']
         user = request.user
-
-        # park = ParkingLot()
-        # park.name = request.POST['name']
-        # park.address = request.POST['address']
-        # park.fee = request.POST['fee']
-        # park.start_time = request.POST['start_time']
-        # park.end_time = request.POST['end_time']
-        # park.latitude = request.POST['latitude']
-        # park.longitude = request.POST['longitude']
-        # park.image = request.FILES['image']
-        # park.user = request.user
 
         ParkingLot.objects.create(
             user = user,
@@ -124,16 +105,7 @@ def parking_lot_create(request):
             fee = fee
         )
         return redirect('map:main')
-        # if form.is_valid():
-        #     parking_lot = form.save(commit=False)
-        #     parking_lot.user = request.user
-        #     parking_lot.save()
-
-        #     return redirect('map:main')
-            # return render(request, 'map/main.html', {'owner' : request.user})
-            # redirect(reverse('map:main', kwargs={'owner' : request.user}))
     else:
-        print("ㅇ")
         form = ParkingLotForm()
     context = {'form': form}
     return render(request, 'map/parking_lot_form.html', context)

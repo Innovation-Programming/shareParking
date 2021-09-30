@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from pay.models import *
 
-# Create your models here.
 # Create your models here.
 class ParkingLot(models.Model):
     name = models.CharField(max_length=50)
@@ -28,11 +28,20 @@ class Ticket(models.Model):
 
 #회원정보모델
 class Personal(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE,null=True,blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     # username = models.CharField(max_length=100)
     # password1 = models.CharField(max_length=100)
     nickname = models.CharField(max_length=100)
-    phone = models.IntegerField()
+    point = models.IntegerField()
+    email = models.CharField(max_length=200)
+    phone = models.CharField(max_length=14)
+    addr = models.CharField(max_length=200)
+    postcode = models.IntegerField()
+    
+    def __str__(self):
+        return self.nickname
+
+    
 
 #SMS인증 모델
 class Authentication(models.Model):
