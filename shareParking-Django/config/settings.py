@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'channels',
     'map',
     'pay',
+    'mypage',
     'chat',
     'django.contrib.admin',
     'django.contrib.auth',

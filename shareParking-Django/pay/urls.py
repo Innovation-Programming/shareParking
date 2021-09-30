@@ -1,6 +1,4 @@
 from django.urls.conf import path
-from django.urls.resolvers import URLPattern
-from django.contrib.auth import views as auth_views
 from . import views
 
 app_name = 'pay'
