@@ -1,7 +1,10 @@
 package com.example.parking.ui.map;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,16 +37,6 @@ public class MapFragment extends Fragment {
     private MapViewModel mapViewModel;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-//        mapViewModel =
-//                ViewModelProviders.of(this).get(MapViewModel.class);
-//        View root = inflater.inflate(R.layout.fragment_map, container, false);
-//        final TextView textView = root.findViewById(R.id.text_map);
-//        mapViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-//            @Override
-//            public void onChanged(@Nullable String s) {
-//                textView.setText(s);
-//            }
-//        });
         View myView = inflater.inflate(R.layout.activity_map, container, false);
 
         WebView myWebView = myView.findViewById(R.id.webVw_map);
@@ -63,8 +56,6 @@ public class MapFragment extends Fragment {
            }
         });
 
-
-//        myWebView.loadUrl("https://32ce-203-252-240-68.ngrok.io/map/main");
         myWebView.loadUrl("https://shareparking.kr/map/main");
         return myView;
     }
