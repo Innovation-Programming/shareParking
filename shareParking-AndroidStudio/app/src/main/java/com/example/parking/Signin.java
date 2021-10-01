@@ -44,7 +44,6 @@ public class Signin extends AppCompatActivity {
 
 //        webView.getSettings().setDomStorageEnabled(true);
         webView.loadUrl("https://shareparking.kr");
-//        webView.loadUrl("https://6a72-203-252-240-68.ngrok.io");
     }
 
     class AndroidBridge {

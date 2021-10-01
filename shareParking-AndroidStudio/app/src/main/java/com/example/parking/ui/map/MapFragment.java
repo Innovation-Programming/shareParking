@@ -76,7 +76,7 @@ public class MapFragment extends Fragment {
             //sharedpreferences 이것을 써서
             Intent intent = new Intent(getActivity(), ChatActivity.class);
             startActivity(intent);
-            System.out.println("------------------------------------------------------------------");
+            System.out.println("------------------------------parkingAdmin--------------------------------");
             System.out.println(parkingAdmin);
             System.out.println("------------------------------------------------------------------");
 //            PreferenceManager.setString(nickname, "loginId", nickuser);
@@ -85,7 +85,7 @@ public class MapFragment extends Fragment {
             String adminUser = parkingAdmin;
             editor.putString("parkingAdmin", adminUser);
             editor.commit();
-            System.out.println("------------------------------------------------------------------");
+            System.out.println("---------------------------------adminUser---------------------------------");
             System.out.println(adminUser);
             System.out.println("------------------------------------------------------------------");
 
