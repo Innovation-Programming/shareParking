@@ -26,9 +26,11 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.parking.ChatActivity;
 import com.example.parking.MainActivity;
+import com.example.parking.Navi;
 import com.example.parking.R;
 import com.example.parking.Signin;
 import com.example.parking.ui.setting.SettingViewModel;
+import com.skt.Tmap.TMapTapi;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -82,18 +84,40 @@ public class MapFragment extends Fragment {
 
 //            return adminUser;
         }
+
+        @JavascriptInterface
+        public void navi(String location) {
+            //이렇게 받아서 핸드폰에 저장해
+            //sharedpreferences 이것을 써서
+            Intent intent = new Intent(getActivity(), Navi.class);
+            startActivity(intent);
+            System.out.println("------------------------------NaviInform--------------------------------");
+            System.out.println(location);
+            System.out.println("------------------------------------------------------------------");
+//            PreferenceManager.setString(nickname, "loginId", nickuser);
+            SharedPreferences sharedPreferences = getContext().getSharedPreferences("sFile",MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            String locations = location;
+
+            String latitude;
+            String longitude;
+            String parkingName;
+
+            String[] lalo = locations.split("//");
+            latitude = lalo[0];
+            longitude = lalo[1];
+            parkingName = lalo[2];
+
+
+            editor.putString("latitude", latitude);
+            editor.putString("longitude", longitude);
+            editor.putString("parkingName", parkingName);
+            editor.commit();
+            System.out.println("---------------------------------values---------------------------------");
+            System.out.println(latitude);
+            System.out.println(longitude);
+            System.out.println(parkingName);
+            System.out.println("------------------------------------------------------------------");
+        }
     }
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.fragment_map);
-//
-//        WebView webView = (WebView) findViewById(R.id.webvw_map);
-//        webView.setWebViewClient(new WebViewClient());
-//
-//        WebSettings webSettings = webView.getSettings();
-//        webSettings.setJavaScriptEnabled(true);
-////        webView.addJavascriptInterface(new AndroidBridge(), "map_android");
-//        webView.loadUrl("http://222.232.60.152:90/main");
-//    }
 }

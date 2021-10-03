@@ -35,7 +35,7 @@ public class SettingFragment extends Fragment {
         webSettings.setJavaScriptEnabled(true);
 
         myWebView.addJavascriptInterface(new SettingFragment.AndroidBridge(), "android");
-        myWebView.loadUrl("https://shareparking.kr/map/setting");
+        myWebView.loadUrl("https://shareparking.kr/setting");
 //        return root;
         return myView;
     }
