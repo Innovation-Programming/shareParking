@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
-
+        android:name=".CustomApplication"
         >
 
         <activity
@@ -44,6 +44,9 @@
                 </intent-filter>
         </activity>
         <activity android:name=".Navi"/>
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="c2c40446e9b9eed68a6514249681727d"/>
 
 
     </application>

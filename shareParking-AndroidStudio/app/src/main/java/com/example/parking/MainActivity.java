@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.kakao.auth.Session;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,8 +28,12 @@ public class MainActivity extends AppCompatActivity {
 
     private GpsTracker gpsTracker;
 
+    private String strNick, strEmail;
+
     public static double latitude;
     public static double longitude;
+
+    private static int REQUEST_ACCESS_FINE_LOCATION = 1000;
 
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_CODE = 100;
@@ -37,6 +43,26 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+            if(permissionCheck == PackageManager.PERMISSION_DENIED){
+
+                // 권한 없음
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        REQUEST_ACCESS_FINE_LOCATION);
+
+
+            }
+            else{
+                // ACCESS_FINE_LOCATION 에 대한 권한이 이미 있음.
+            }
+        }
+        // OS가 Marshmallow 이전일 경우 권한체크를 하지 않는다.
+        else{
+
+        }
 
 //        if (!checkLocationServicesStatus()) {
 //
@@ -55,6 +81,11 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
 //        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
+
+        //카카오로그인 정보 넘기기
+        Intent intent_info = getIntent();
+        strNick = intent_info.getStringExtra("name");
+        strEmail = intent_info.getStringExtra("email");
 
         gpsTracker = new GpsTracker(MainActivity.this);
 

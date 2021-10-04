@@ -31,7 +31,7 @@ public class Navi extends AppCompatActivity {
         tMapTapi.setSKTMapAuthentication("l7xx822806fc23c04ea6b159ede271a93d10");
 
         SharedPreferences sharedPreferences = getSharedPreferences("sFile",MODE_PRIVATE);
-//
+
         final String rGoY = sharedPreferences.getString("latitude", "user");
         final String rGoX = sharedPreferences.getString("longitude", "user");
         final String rGoName = sharedPreferences.getString("parkingName", "user");
