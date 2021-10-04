@@ -1,7 +1,5 @@
 from django import forms
 from map.models import *
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
 
 class ParkingLotForm(forms.ModelForm):
     class Meta:
@@ -23,9 +21,3 @@ class TicketForm(forms.ModelForm):
     class Meta:
         model = Ticket
         fields = ['vaild_start', 'vaild_end']
-
-class UserForm(forms.ModelForm):
-    # email = forms.EmailField(label="이메일")
-    class Meta:
-        model = Personal
-        fields = ["nickname", "phone"]

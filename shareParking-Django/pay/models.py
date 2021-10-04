@@ -5,7 +5,7 @@ from django.db import models
 #결제정보모델
 class Payment(models.Model):
     mid = models.CharField(max_length=50)
-    personal = models.ForeignKey('map.Personal', on_delete=models.CASCADE)
+    personal = models.ForeignKey('common.Personal', on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=50)
     method = models.CharField(max_length=10)

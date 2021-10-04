@@ -8,14 +8,8 @@ app_name = 'map'
 urlpatterns = [
     path('main/', views.index, name="main"),
     path('form/', views.parking_lot_create, name='parking_lot_create'),
-    path('signup/', views.signup, name="signup"),
-    path('logout/', views.logout_view, name="logout"),
-    path('setting/', views.setting, name="setting"),
-    path('sms/', views.sms, name="sms"),
     path('test_chat/', views.test_chat, name="test_chat"),
     path('main/ticket/<int:parking_lot_id>', views.ticket_create, name='ticket_create'),
-    path('sendSMS/',views.SmsSendView.as_view(), name="sendSMS"),
-    path('confirmSMS/', views.SMSVerificationView.as_view(), name="confirmSMS"),
     # path("login/kakao/", views.kakao_login, name="kakao-login"),
     # path(
     #     "login/kakao/callback/",

@@ -21,8 +21,8 @@ from map import views
 
 
 urlpatterns = [
+    path('', include('common.urls')),
     path('admin/', admin.site.urls),
-    path('', views.login_main, name="login"),
     path('map/', include('map.urls')),
     path('chat/', include('chat.urls')),
     path('mypage/', include('mypage.urls')),
