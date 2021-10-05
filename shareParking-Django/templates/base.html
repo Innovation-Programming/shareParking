@@ -323,6 +323,7 @@
                 let fee = locInfo.fee;
                 let type = locInfo.type;
                 let image = locInfo.image;
+                let rGoXY = locInfo.lonlat.latitude() + "//" + locInfo.lonlat.longitude() + "//" + title;
 
                 $('#' + infoWndowId).find('#info_title').text(title);
                 $('#' + infoWndowId).find('#info_address').text(address);
@@ -332,13 +333,14 @@
                 $('#' + infoWndowId).find('#info_fee').text(fee);
                 $('#' + infoWndowId).find('#info_image').attr("src", image);
                 $('#' + infoWndowId).find('#info_btn_chat').val(user);
+                $('#' + infoWndowId).find('#info_btn_navi').val(rGoXY);
                 // $('#' + infoWndowId).find('#info_btn_chat').val(user);
                 
 
                 // T map 버튼 연동
-                $('#' + infoWndowId).find('#info_btn_navi').click(function() {
-                    window.open("https://apis.openapi.sk.com/tmap/app/routes?appKey=l7xx11758ec4b63349209fb3d9357d90b85e&lon=" + locInfo.lonlat.longitude() + "&" + "lat=" + locInfo.lonlat.latitude())
-                })
+                // $('#' + infoWndowId).find('#info_btn_navi').click(function() {
+                //     window.open("https://apis.openapi.sk.com/tmap/app/routes?appKey=l7xx11758ec4b63349209fb3d9357d90b85e&lon=" + locInfo.lonlat.longitude() + "&" + "lat=" + locInfo.lonlat.latitude())
+                // })
                 bsOffcanvas.show();
                 // set draggable false
                 map.setOptions({ draggable: false }); 

@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    /* a Tag 색상 밑 밑줄 없애기 */
+    a:link { color: red; text-decoration: none;}
+    a:visited { color: black; text-decoration: none;}
+    a:hover { color: blue; text-decoration: none;}
+
+    body {
+        font-family: '넥슨 고딕';
+    }
+
+    .title {
+        margin: 20px;
+        text-align: center;
+    }
+
+    .title > .text {
+        font-size:21px;
+    }
+
+    .title > .buttons {
+        margin: 20px;
+    }
+    
+    .title > .buttons > .link {
+        color: black;
+        margin: 0px 15px;
+    }
+
+    .header {
+        width:auto !important;
+        color:white;
+        background-color: #58C9B9;
+        height:auto;
+        margin: 40px 20px;
+        border-radius: 20px;
+        padding:20px 30px;
+        position: relative;
+    }
+    .header > .top {
+        margin:10px 0 px;
+        height: 20%;
+        
+    }
+    .header > .top > .mypoint-title {
+        color:white;
+        font-size: 18px;
+    }
+
+    
+    .header >.top  > .mypoint {
+        
+        font-size: 36px;
+        font-family: '넥슨 고딕 bold';
+    }
+
+    .header > hr {
+        height:2px;
+    }
+
+    .bottom {
+        background-color: #41958A;
+        border: none;
+        border-radius: 10px;
+        font-size:14px;
+        color: white;
+        padding:10px;
+    }
+
+    .left-text {
+        text-align: left;
+    }
+
+    .right-text {
+        text-align: right;;
+    }
+</style>
+
+<div class="header">
+    <div class="text">
+        마이 페이지
+    </div>
+    <div class="buttons">
+        <a href="" class="link">주차권</a>
+        <a href="" class="link">포인트</a>
+        <a href="" class="link">내 주차장</a>
+    </div>
+</div>
+<!-- <div class="header">
+    <div class="top">
+        <text class="mypoint">12500P</text><br>
+        <text class="mypoint-title">내 포인트</text>
+    </div>
+  
+    <hr>
+    <div class="middle right-text">
+        
+    <button class="bottom">충 전 하 기</button>
+    </div>
+</div> -->
+{% endblock %}

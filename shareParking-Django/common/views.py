@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse 
 from django.contrib.auth import authenticate, login, logout
 
@@ -10,6 +10,7 @@ from .utils import make_signature
 
 from django.contrib.auth import authenticate, login, logout
 from .models import *
+from .forms import *
 
 # Create your views here.
 def login_main(request):
@@ -23,9 +24,10 @@ def login_main(request):
             "username" : username,
             "password" : password,
         }
-        # return JsonResponse({'username':username})
-        return render(request, 'map/main.html', user_inform)
+        return JsonResponse({'username':username})
+        # return render(request, 'map/main.html', user_inform)
     return render(request, 'common/login.html')
+
 
 def logout_view(request):
     logout(request)
@@ -36,6 +38,7 @@ def logout_view(request):
 
 def setting(request):
     return render(request, 'common/setting.html')
+
 
 def signup(request):
     if request.method == "POST":
@@ -62,7 +65,7 @@ def signup(request):
         form = UserForm()
     return render(request, 'common/signup.html', {'form': form})
 
-    
+
 # 네이버 SMS 인증
 class SmsSendView(View):
     def send_sms(self, phone_number, auth_number):
@@ -88,7 +91,8 @@ class SmsSendView(View):
         # 발송 URI 부분에는 아래 URL을 넣어주면 된다.
         # https://sens.apigw.ntruss.com/sms/v2/services/ncp:sms:kr:270597174975:sms_auth/messages 
         # 다만, 너무 길고 동시에 보안이슈가 있기에 별도로 분기해놓은 settings 파일에 넣어서 불러오는 것을 추천한다.
-        
+
+
     def post(self, request):
         #data = json.loads(request.body)
         try:
@@ -109,6 +113,7 @@ class SmsSendView(View):
             self.send_sms(phone_number=input_mobile_num, auth_number=auth_num)
             return JsonResponse({'message': '인증번호 발송 및 DB 입력완료'}, status=200)
 
+
 # 네이버 SMS 인증번호 검증
 class SMSVerificationView(View):
     def post(self, request):
@@ -126,9 +131,11 @@ class SMSVerificationView(View):
         except Authentication.DoesNotExist:
             return JsonResponse({'message': '해당 휴대폰 번호가 존재하지 않습니다.'}, status=400)
 
+
 def sms(request):
     SmsSendView
     return HttpResponse('전송완료')
+
 
 def kakao_login(request):
     client_id = os.environ.get("4a59f5ef88dfe45ae62d45d932d9f7c2")

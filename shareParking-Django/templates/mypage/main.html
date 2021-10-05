@@ -2,96 +2,159 @@
 {% load static %}
 {% block content %}
 <style>
-    /* a Tag 색상 밑 밑줄 없애기 */
-    a:link { color: red; text-decoration: none;}
-    a:visited { color: black; text-decoration: none;}
-    a:hover { color: blue; text-decoration: none;}
-
     body {
         font-family: '넥슨 고딕';
     }
 
-    .title {
-        margin: 20px;
-        text-align: center;
-    }
-
-    .title > .text {
-        font-size:21px;
-    }
-
-    .title > .buttons {
-        margin: 20px;
-    }
-    
-    .title > .buttons > .link {
-        color: black;
-        margin: 0px 15px;
-    }
-
     .header {
+        width:100%;
+        height:250px;
         background-color: #58C9B9;
-        height:200px;
-        margin: 40px 20px;
-        border-radius: 20px;
-        padding:30px;
-        position: relative;
-    }
-    .header > .top {
-        margin:10px 0 px;
-        height: 20%;
-    }
-    .header > .top > .mypoint-title {
-        color:white;
-        font-family: '넥슨 고딕 bold';
-        font-size: 21px;
+        padding:20px;
+        text-align: center;
+        color: white;
     }
 
-    .header > .middle {
-        margin: 10px 0px;
-        height: 40%;
-    }
     
-    .header > .middle > .mypoint {
-        color:white;
+    .header > .mypoint {
+        margin-top: 30px;
+    }
+
+    .header > .mypoint > .value {
         font-family: '넥슨 고딕 bold';
-        font-size: 36px;
-        letter-spacing: 2px;
+        font-size:48px;
     }
 
     .bottom {
-        position: absolute;
-        height: 40px;
-        width: 80%;
-        bottom: 20px;
-        left: 50%;
-        transform: translate(-50%, 0%);
         background-color: #41958A;
         border: none;
         border-radius: 10px;
-        font-size:21px;
+        font-size:14px;
         color: white;
+        padding:10px;
+    }
+
+    .body {
+        padding: 20px;
+    }
+
+    .payment {
+        border: 2px solid rgb(238, 238, 238);
+        padding: 15px;
+        margin: 20px 0px;
+    }
+
+    .btn {
+        border-radius: 20px;
+        background-color: #33978a;
+        border:none;
+    }
+
+    .btn:focus {
+        background-color: #1d685e;
+    }
+    .btn:hover {
+        background-color: #1d685e;
+        
+    }    
+    
+    .left-text {
+        text-align: left;
+    }
+
+    .right-text {
+        text-align: right;
+        position: relative;
+    }
+
+    #pay_amount {
+        position: absolute;
+        right: 20px;
+        top:50%;
+        transform:translate(0, -50%);
+        font-size:18px;
+        font-family: '넥슨 고딕 bold';
+    }
+
+    .minus > .row > .right-text {
+        
+        color:#E06273;
+    }
+
+    .plus > .row > .right-text {
+        
+        color:#5FBE83;
+    }
+
+    #pay_name {
+        font-size:18px;
+        color:#163F76;
+    }
+    
+    #pay_date {
+        margin-top:3px;
+        font-size:12px;
     }
 </style>
 
-<div class="title">
-    <div class="text">
-        마이 페이지
-    </div>
-    <div class="buttons">
-        <a href="" class="link">주차권</a>
-        <a href="" class="link">포인트</a>
-        <a href="" class="link">내 주차장</a>
-    </div>
-</div>
 <div class="header">
-    <div class="top">
-        <text class="mypoint-title">포인트 잔액</text>
-    </div>
-    <div class="middle">
-        <text class="mypoint">12500P</text>
+    <div class="btn-group buttons" role="group" aria-label="Basic example">
+        <button type="button" class="btn btn-primary shadow-none">포인트</button>
+        <button type="button" class="btn btn-primary shadow-none">주차권</button>
+        <button type="button" class="btn btn-primary shadow-none">내주차장</button>
+      </div>
+    <div class="mypoint">
+        <text class="title">내 포인트</text><br>
+        <text class="value" id="mypoint"></text>
     </div>
     
-    <button class="bottom">충 전 하 기</button>
+    <button class="bottom" onclick="location.href='{% url 'pay:main' %}'">충 전 하 기</button>
 </div>
+
+<div class="body">
+    <div class="payment-list">
+        
+    </div>
+</div>
+
+<div id="payment_plus"  class="payment plus container" style="display:none">
+    <div class="row" id="row">
+        <div class="col-8 left-text" >
+            <b><text id="pay_name"></text></b><br>
+            <text id="pay_date"></text>
+        </div>
+        <div class="col-4 right-text" id="">
+            <b><text id="pay_amount"></text></b></div>
+    </div>
+</div>
+
+<div id="payment_minus" class="payment minus container" style="display:none">
+    <div class="row" id="row">
+        <div class="col-7 left-text" >
+            <b><text id="pay_name"></text></b><br>
+            <text id="pay_date"></text>
+        </div>
+        <div class="col-5 right-text" id="">
+            <b><text id="pay_amount"></text></b></div>
+    </div>
+</div>
+<script>
+    $('#mypoint').text("{{ user.point }}" + "P");
+    "{% for payment in payments %}"
+        var pay_name = "{{ payment.name }}";
+        var date = "{{ payment.created }}";
+        var amount = "{{ payment.amount }}";
+
+        if(pay_name.indexOf("포인트 결제") != "-1") {
+            payment_div = $("#payment_plus").clone();
+            payment_div.attr("id", pay_name);
+            payment_div.find("#pay_name").text(pay_name);
+            payment_div.find("#pay_date").text(date);
+            payment_div.find("#pay_amount").text("+" + amount);
+            payment_div.css("display", "block")
+        }
+
+        $('.payment-list').prepend(payment_div);
+    "{% endfor %}"
+</script>
 {% endblock %}
