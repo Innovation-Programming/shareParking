@@ -4,11 +4,18 @@
 <style>
     #btn-pri {
         position:absolute;
-        
+        bottom:0px;
+        left:0px;
+        width:100%;
         background-color:#58C9B9;
         color:white;
         font-family:넥슨 고딕 bold;
         font-size:21px;
+    }
+
+    #btn_camera {
+        background-color:#58C9B9;
+        color:white;
     }
 
     
@@ -84,7 +91,11 @@
         <div class="mb-3 row">
             <label class="col-3 col-form-label">사    진</label>
             <div class="col-9">
-                <input type="file" accpet="image/*" class="form-control" name='image' id="inputImage">
+                <div class="input-group mb-3">
+                    <button class="btn" id="btn_camera">파일 선택</button>
+                    <input type="text" class="form-control" placeholder="Username">
+                </div>
+                <!-- <input type="file" accpet="image/*" class="form-control" name='image' id="inputImage"> -->
             </div>
         </div>
 
@@ -145,5 +156,12 @@
         duration: true,
         precision: 5
     });
+
+    $(document).on('click', '#btn_camera', function(){
+		// var value = this.value;
+		// alert(value);
+		// console.log(value);
+		androidPersonal.camera();
+	});
 </script>
 {% endblock %} 

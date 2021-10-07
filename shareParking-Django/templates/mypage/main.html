@@ -108,7 +108,7 @@
         <text class="value" id="mypoint"></text>
     </div>
     
-    <button class="bottom" onclick="location.href='{% url 'pay:main' %}'">충 전 하 기</button>
+    <button class="bottom" onclick="goToPay()">충 전 하 기</button>
 </div>
 
 <div class="body">
@@ -156,5 +156,9 @@
 
         $('.payment-list').prepend(payment_div);
     "{% endfor %}"
+
+    function goToPay() {
+        location.href="{% url 'pay:main' %}";
+    }
 </script>
 {% endblock %}

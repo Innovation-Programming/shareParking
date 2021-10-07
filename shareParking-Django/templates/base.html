@@ -29,6 +29,8 @@
 
 <!-- TimePicker CDN -->
 <script src="{% static 'js/jquery-clock-timepicker.js' %}"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <style>
     @font-face {
         font-family: '넥슨 고딕';
@@ -347,7 +349,7 @@
 
                 if(type == "공유") {
                     let id = locInfo.id;
-                    let urlTag = "{% url 'map:ticket_create' parking_lot_id=9999 %}"
+                    let urlTag = "{% url 'map:buy_ticket' parking_lot_id=9999 %}"
                     // let urlTag2 = "{% url 'chat:room' room_name='sihyun' %}"
                     
                     console.log(id)

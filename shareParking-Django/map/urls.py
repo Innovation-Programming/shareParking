@@ -9,7 +9,8 @@ urlpatterns = [
     path('main/', views.index, name="main"),
     path('form/', views.parking_lot_create, name='parking_lot_create'),
     path('test_chat/', views.test_chat, name="test_chat"),
-    path('main/ticket/<int:parking_lot_id>', views.ticket_create, name='ticket_create'),
+    path('ticket/buy/<int:parking_lot_id>', views.buy_ticket, name='buy_ticket'),
+    path('ticket/create/', views.create_ticket, name='create_ticket')
     # path("login/kakao/", views.kakao_login, name="kakao-login"),
     # path(
     #     "login/kakao/callback/",
