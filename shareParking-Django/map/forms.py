@@ -16,8 +16,3 @@ class ParkingLotForm(forms.ModelForm):
             'image' : '사    진',
             'fee': '요    금'
         }
-
-class TicketForm(forms.ModelForm):
-    class Meta:
-        model = Ticket
-        fields = ['vaild_start', 'vaild_end']

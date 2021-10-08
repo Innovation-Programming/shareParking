@@ -1,136 +1,252 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<div style="font-family:넥슨 고딕;">
-    <h3 class="my-3 border-bottom pb-2" style="padding: 10px; color:#58C9B9; font-family:넥슨 고딕 bold; ">주차권 결제</h3>
-    <form method="post" class="post-form my-3" >
-        <div style="text-align:center;margin-top:25px !important;">
-            {% csrf_token %}
-            <!-- 오류표시 Start -->
-            {% if form.errors %}
-                <div class="alert alert-danger" role="alert">
-                {% for field in form %}
-                    {% if field.errors %}
-                    <strong>{{ field.label }}</strong>
-                    {{ field.errors }}
-                    {% endif %}
-                {% endfor %}
-                </div>
-            {% endif %}
-            <div style="display:inline-block; border-radius:20px; background-color:#58C9B9; color:white; width:85%; height:auto; padding:10px;">
-                <div class="mb-3 row" id="info-row" style="min-width:100%;">
-                    <span style="font-family:넥슨 고딕 bold; font-size:24px;"> {{ parking_lot.name }}</span>
-                </div>
-                
-                <div class="mb-3 row" id="info-row" style="min-width:100%;">
-                    <label class="col-4" style="font-size:13px;">입차시각</label>
-                    <div class="col-8" style="position:relative">
-                        <select class="timepicker" id="start-time-picker" dir="rtl">
-                            <option selected>시간 선택</option>
-                            <option value="9">09:00</option>
-                            <option value="10">10:00</option>
-                            <option value="11">11:00</option>
-                            <option value="12">12:00</option>
-                            <option value="13">13:00</option>
-                            <option value="14">14:00</option>
-                            <option value="15">15:00</option>
-                            <option value="16">16:00</option>
-                            <option value="17">17:00</option>
-                            <option value="18">18:00</option>
-                            <option value="19">19:00</option>
-                            <option value="20">20:00</option>
-                            <option value="21">21:00</option>
-                            <option value="22">22:00</option>
-                        </select>
 
-                        <script>
-                        </script>
-                    </div>
-                </div>
-                <div class="mb-3 row" id="info-row" style="min-width:100%;">
-                    <label class="col-4" style="font-size:13px;">주차시간</label>
-                    <div class="col-8" style="text-align:right;">
-                        <select class="timepicker" id="ParkingTime" dir="rtl">
-                            <option selected>시간 선택</option>
-                            <option value="1">1시간</option>
-                            <option value="2">2시간</option>
-                            <option value="3">3시간</option>
-                            <option value="4">4시간</option>
-                            <option value="5">5시간</option>
-                            <option value="6">6시간</option>
-                            <option value="7">7시간</option>
-                            <option value="8">8시간</option>
-                            <option value="9">9시간</option>
-                            <option value="10">10시간</option>
-                            <option value="11">11시간</option>
-                            <option value="12">12시간</option>
-                        </select>
+<style>
 
-                    </div>
-                </div>
-            </div>
-            
+    body {
+        background-color:#ececec;
+        font-family:'넥슨 고딕';
+    }
+
+    #background {
+        background-color: #58C9B9;
+        position:absolute;
+        top:0px;
+        left: 0px;
+        height:200px;
+        width:100%;
+        z-index: -999;
+    }
+
+    #content {
+        background-color: white;
+        min-width: 300px;
+        max-width: 400px;
+        width:80%;
+        margin: auto;
         
-            <div style="padding:20px; color:#7e7e7e; font-family:넥슨 고딕; font-size:18px;">
-                <div class="mb-3 row"style=" color:#7e7e7e">
-                    <label class="col-4" >포인트</label>
-                    <div class="col-8">
-                        <input type="number" class="form-control" placeholder="사용할 포인트" style="text-align: right;">
-                    </div>
-                </div>
-            </div>
+        margin-top:50px;
+    }
 
+    #content > #header {
+        height:20vh;
+        min-height:150px;
+        max-height:200px;
+        display: table;
+        width:100%;
+    }
+
+    #content > #header > #message {
+        display:table-cell;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 21px;
+    }
+
+    #content > #header > #message > #status_icon {
+        width: 48px;
+        height: auto;
+        margin-bottom: 20px;
+        
+    } 
+    #content > hr {
+        border: none;
+        border-top: 3px dashed rgb(173, 173, 173);
+        color: #fff;
+        background-color: #fff;
+        height: 1px;
+        width: 100%;
+        margin: 0px !important;
+    }
+
+    #content > #body {
+        padding:20px 25px;
+        margin-bottom: 20px;
+    }
+
+    #info {
+        
+        min-width: 300px;
+        max-width: 400px;
+        width:80%;
+        margin: auto;
+        text-align: center;
+        font-size:12px;
+        
+        padding: 10px 0px;
+    }
+
+    #buttons {
+        min-width: 300px;
+        max-width: 400px;
+        width:80%;
+        margin:auto;
+        margin-top:20px;
+        margin-bottom:20px;
+    }
+
+    .bold {
+        font-family: '넥슨 고딕 bold';
+        color: #58C9B9;
+    }
+
+    .left-col {
+        text-align: left;
+        color: #58C9B9;
+        font-size: 14px;
+    }
+
+    .right-col {
+        text-align: right;
+        
+        font-size: 14px;
+    }
+
+    .small {
+        color: #929292;
+        font-size: 14px;
+    }
+
+    .xsmall {
+        color: #929292;
+        font-size: 12px;
+    }
+
+    .btn-main {
+        background-color: #58C9B9;
+        color: white;
+        border: none;
+        width:100%;
+        padding:10px;
+    }
+    .btn-main:focus {
+        background-color: #1d685e !important;
+        color:white;
+    }
+    .btn-main:hover {
+        background-color: #1d685e !important;
+        color:white;
+    }
+    .btn-sub {
+        background-color: #58C9B9;
+        color: white;
+        border: none;
+        width:100%;
+        font-size:14px;
+        padding:3px;
+        margin-bottom: 10px;
+    }
+    .btn-sub:focus {
+        background-color: #1d685e;
+        color:white;
+    }
+    .btn-sub:hover {
+        background-color: #1d685e;
+        color:white;
+    }
+
+    #btn_cancel {
+        background-color: #81cec4;
+    }
+    
+    
+    
+</style>
+
+<div id="background"></div>
+
+<div id="content">
+    <div id="header">
+        <text id="message">
+            <img src="{% static 'icon/question.png' %}" id="status_icon" /><br>
+            <text class="bold">입차</text> 하시겠습니까?
+        </text>
+    </div>
+    <hr>
+    <div class="container" id="body">
+        <div class="row mb-2" id="row">
+            <div class="col-4 left-col" >주차장명</div>
+            <div class="col-8 right-col" id="name">{{ parking_lot.name }}</div>
         </div>
-        <div id="footer" style="margin-left:0px !important" >
-            <div style="text-align: left; margin-top: 20px; padding: 0px 20px;font-family:넥슨 고딕;">
-                <div class="mb-3 row"style="font-size:18px; color:#7e7e7e">
-                    <label class="col-4" style="font-size:18px; color:#7e7e7e">주차요금</label>
-                    <div class="col-8" style="text-align:right;">
-                        {{parking_lot.fee}} 원 / 시간당
-                    </div>
-                    
-                </div>
-                <div class="mb-3 row"style="font-size:18px; color:#7e7e7e;">
-                    <label class="col-5" style="font-size:18px; color:#7e7e7e">총 결제요금</label>
-                    <div class="col-7" id="total_fee" style="text-align:right;">
-                        원
-                    </div>
-                </div>
-            </div>
-        
-        
-            <button type="submit"id="btn-pri"
-                style="background-color:#58C9B9; color:white; width:100%; height:50px;border:none; font-family:넥슨 고딕 bold; font-size:21px;">
-                    결   제   하   기
+        <div class="row mb-2" id="row">
+            <div class="col-4 left-col" >입차시각</div>
+            <div class="col-8 right-col" id="datetime"></div>
+        </div>
+        <div class="row mb-2" id="row">
+            <div class="col-4 left-col" >내포인트</div>
+            <div class="col-8 right-col" id="point">{{ personal.point }}P</div>
+        </div>
+        <div class="row mb-2" id="row">
+            <div class="col-4 left-col" ></div>
+            <div class="col-8 right-col">
+                <button type="button" class="btn btn-sub shadow-none" onclick="goToPay()">
+                    충 전 하 기
                 </button>
+            </div>
         </div>
-        <input type="hidden" id="inputValidStart" name="vaild_start" value="{{ form.vaild_start.value | default_if_none:'' }}"/>
-        <input type="hidden" id="inputValidEnd" name="vaild_end" value="{{ form.vaild_end.value | default_if_none:'' }}"/>
-        
-    </form>
+        <div class="row mb-2" id="row">
+            <div class="col-4 left-col" >가&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;격</div>
+            <div class="col-8 right-col" id="fee">{{ parking_lot.fee }}P/10분당</div>
+        </div>
+    </div>
+</div> 
+
+<div id="info">
+    ※ 확인 버튼을 누르시면, 해당 주차장에 입차 처리가 되어 10분당 한번 씩, 위 가격에 고지된 포인트만큼 차감됩니다.<br><br>
+    ※ 마이페이지 > 내 주차권에서 출차하실 수 있으며 출차처리 이후에는 포인트가 차감되지 않습니다.<br><br>
+    ※ 고객님의 포인트가 전부 소진되면 조기에 출차처리가 이루어질 수 있습니다.
 </div>
-        
 
+<div class="container" id="buttons">
+    <div class="row" id="row">
+        <div class="col-6" style="padding-left:0px; padding-right:5px;">
+            <button class="btn btn-main shadow-none" id="btn_cancel" type="button"  onclick="goToMain()">
+                취&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;소
+            </button>
+        </div>
+        <div class="col-6" style=" padding-left:5px; padding-right:0px;">
+            <button class="btn btn-main shadow-none" id="btn_ok" type="button" onclick="submit()">
+                확&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;인
+            </button>
+        </div>
+    </div>
+    
+    
+</div>
 <script>
-    $('#start-time-picker').change(function() {
-        let time = parseInt($('#start-time-picker').val())
-        
-        $("#inputValidStart").attr('value', time + ":00");
-    })
+    // 실시간 표시
+    function printTime() {
+        var clock = document.getElementById("datetime");
+        var now = new Date();
+        clock.innerHTML = now.getFullYear() + "-"
+        + ('00' + (now.getMonth()+1)).slice(-2) + "-"
+        + ('00' + now.getDate()).slice(-2) + " "
+        + ('00' + now.getHours()).slice(-2) + ":"
+        + ('00' + now.getMinutes()).slice(-2) + ":"
+        + ('00' + now.getSeconds()).slice(-2);
+        setTimeout("printTime()", 1000);
+    }
 
-    $('#ParkingTime').change(function() {
-        let strTime = parseInt($('#start-time-picker').val())
-        let time =  parseInt($('#ParkingTime').val())
-        let fee = parseInt("{{parking_lot.fee}}");
-        let endTime = (strTime + time)
+    window.onload = function() { printTime(); };
 
-        if(endTime > 24) {
-            endTime -= 24;
-        }
-        console.log(fee)
-        $("#total_fee").text(time * fee);
-        $("#inputValidEnd").attr('value', endTime + ":00");
+    function goToPay() {
+        location.href="{% url 'pay:main' %}";
+    }
 
-    })
+    function goToMain() {
+        location.href="{% url 'map:main' %}";
+    }
+
+    function submit() {
+        jQuery.ajax({
+            url: "/map/ticket/create/",
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                id: "{{ parking_lot.id }}"
+            }
+        })
+    }
 </script>
 {% endblock %}

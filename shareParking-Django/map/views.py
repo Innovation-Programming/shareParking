@@ -7,9 +7,10 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 #for sms import modules
 from .models import *
+from django.views.decorators.csrf import csrf_exempt
 
-
-
+import json
+from django.http import HttpResponse
 
 
 def index(request):
@@ -21,7 +22,6 @@ def index(request):
 @login_required(login_url='login')
 def parking_lot_create(request):
     if request.method == 'POST':
-        form = ParkingLotForm(request.POST or None)
         name = request.POST['name']
         address = request.POST['address']
         fee = request.POST['fee']
@@ -44,10 +44,8 @@ def parking_lot_create(request):
             fee = fee
         )
         return redirect('map:main')
-    else:
-        form = ParkingLotForm()
-    context = {'form': form}
-    return render(request, 'map/parking_lot_form.html', context)
+
+    return render(request, 'map/parking_lot_form.html')
 
 def test_chat(request):
     if request.method == "GET":
@@ -55,24 +53,31 @@ def test_chat(request):
         print(user)
     return render(request, 'test_chat.html')
 
-#ticket_create
-def ticket_create(request, parking_lot_id):
-    # pybo 질문 등록
+
+def buy_ticket(request, parking_lot_id):
     parking_lot = ParkingLot.objects.get(id=parking_lot_id)
-    if request.method == 'POST':
-        # parking_lot = get_object_or_404(ParkingLot, pk=parking_lot_id)
-        form = TicketForm(request.POST or None)
-        if form.is_valid():
-            ticket = form.save(commit=False)
-            ticket.parking_lot = parking_lot
-            ticket.save()
-            return redirect('map:main')
-    else:
-        form = ParkingLotForm()
-    context = {'form': form, 'parking_lot':parking_lot}
+    # if request.method == 'POST':
+    personal = Personal.objects.get(user=request.user)
+    context = {'parking_lot':parking_lot, 'personal': personal}
     return render(request, 'map/ticket_form.html', context)
 
+@csrf_exempt
+def create_ticket(request):
+    if request.method == 'POST' and request.is_ajax():
+        parking_lot_id = request.POST['id']
+        user = request.user
 
+        parking_lot = ParkingLot.objects.get(id=parking_lot_id)
+        personal = Personal.objects.get(user=user)
+
+        Ticket.objects.create(
+            parking_lot = parking_lot,
+            personal = personal
+        )
+
+        return HttpResponse(json.dumps({'status': "success"}), content_type="application/json")
+    else:
+        return HttpResponse(json.dumps({'status': "failed"}), content_type="application/json")
     
 # def kakao_login_callback(request):
 #         code = request.GET.get("code", None)

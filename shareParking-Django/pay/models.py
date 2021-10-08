@@ -12,6 +12,5 @@ class Payment(models.Model):
     amount = models.IntegerField()
     # status >> paid(완료), ready(미결제), cancellmed(취소). failed(실패) 
     status = models.CharField(max_length=10)
-
     def __str__(self):
         return self.mid
