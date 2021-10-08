@@ -23,4 +23,5 @@ class ParkingLot(models.Model):
 class Ticket(models.Model):
     parking_lot = models.ForeignKey(ParkingLot, on_delete=models.CASCADE)
     # user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    personal = models.ForeignKey(Personal, on_delete=models.CASCADE)
+    personal = models.OneToOneField(Personal, on_delete=models.CASCADE)
+    is_available = models.BooleanField()

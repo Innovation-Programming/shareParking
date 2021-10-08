@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 import json
 from django.http import HttpResponse
-
+from django.db.utils import IntegrityError
 
 def index(request):
     parking_lot_list = ParkingLot.objects.all()
@@ -66,18 +66,36 @@ def create_ticket(request):
     if request.method == 'POST' and request.is_ajax():
         parking_lot_id = request.POST['id']
         user = request.user
-
+        
         parking_lot = ParkingLot.objects.get(id=parking_lot_id)
         personal = Personal.objects.get(user=user)
 
-        Ticket.objects.create(
-            parking_lot = parking_lot,
-            personal = personal
-        )
+        max_space = parking_lot.space
+        ticket_set = Ticket.objects.filter(parking_lot=parking_lot, is_available=True)
+        tickets = len(ticket_set)
+        available_space = max_space - tickets
 
-        return HttpResponse(json.dumps({'status': "success"}), content_type="application/json")
+        if available_space < 1:
+            return HttpResponse(json.dumps({'status': "failed", 'message': "해당 주차장에 자리가 없습니다."}),
+                            content_type="application/json")
+
+        try:
+            Ticket.objects.create(
+                parking_lot = parking_lot,
+                personal = personal,
+                is_available = True
+            )
+        except IntegrityError as e:
+            print(e)
+            return HttpResponse(json.dumps({'status': "failed", 'message': "이미 주차권을 보유중입니다."}),
+                            content_type="application/json")
+        
+        
+        return HttpResponse(json.dumps({'status': "success"}),
+                            content_type="application/json")
     else:
-        return HttpResponse(json.dumps({'status': "failed"}), content_type="application/json")
+        return HttpResponse(json.dumps({'status': "failed", 'message': "전송방식이 올바르지 않습니다."}),
+                            content_type="application/json")
     
 # def kakao_login_callback(request):
 #         code = request.GET.get("code", None)

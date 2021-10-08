@@ -123,7 +123,7 @@
             </script>
         </div>
         <a href="{% url 'pay:main' %}">결제</a>
-        <a href="{% url 'mypage:main' %}">마이페이지</a>
+        <a href="{% url 'mypage:ticket' %}">마이페이지</a>
         <input type="hidden" id="inputLat" value="{{ form.latitude.value | default_if_none:'' }}" name="latitude"> 
         <input type="hidden" id="inputLng" value="{{ form.longitude.value | default_if_none:'' }}" name="longitude">
         <div class="d-grid gap-2">
