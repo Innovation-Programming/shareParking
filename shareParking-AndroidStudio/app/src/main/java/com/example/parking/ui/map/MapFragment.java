@@ -1,11 +1,14 @@
 package com.example.parking.ui.map;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +34,8 @@ import com.example.parking.R;
 import com.example.parking.Signin;
 import com.example.parking.ui.setting.SettingViewModel;
 import com.skt.Tmap.TMapTapi;
+
+import java.net.URISyntaxException;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -59,6 +64,9 @@ public class MapFragment extends Fragment {
         });
 
         myWebView.loadUrl("https://shareparking.kr/map/main");
+
+
+
         return myView;
     }
 

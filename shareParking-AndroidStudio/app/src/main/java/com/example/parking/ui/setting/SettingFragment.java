@@ -43,19 +43,9 @@ public class SettingFragment extends Fragment {
     class AndroidBridge {
         @JavascriptInterface
         public void returnMain(String username) {
-            //이렇게 받아서 핸드폰에 저장해
-            //sharedpreferences 이것을 써서
             Intent intent = new Intent(getActivity().getApplicationContext(), Signin.class);
             startActivity(intent);
 
-//            PreferenceManager.setString(nickname, "loginId", nickuser);
-//            SharedPreferences sharedPreferences = getSharedPreferences("sFile",MODE_PRIVATE);
-//            SharedPreferences.Editor editor = sharedPreferences.edit();
-//            String nickname = username;
-//            editor.putString("loginId", nickname);
-//            editor.commit();
-
-//            return nickname;
         }
     }
 }
