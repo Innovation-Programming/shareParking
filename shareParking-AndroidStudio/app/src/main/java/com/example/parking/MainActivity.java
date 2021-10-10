@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
 
         System.out.println("위도: "+latitude);
         System.out.println("경도: "+longitude);
-        Toast.makeText(MainActivity.this, "현재위치 \n위도 " + latitude + "\n경도 " + longitude, Toast.LENGTH_LONG).show();
+//        Toast.makeText(MainActivity.this, "현재위치 \n위도 " + latitude + "\n경도 " + longitude, Toast.LENGTH_LONG).show();
     }
 
 

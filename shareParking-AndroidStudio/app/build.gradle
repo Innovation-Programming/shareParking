@@ -39,6 +39,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation files('libs/com.skt.Tmap_1.69.jar')
+    implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
@@ -47,6 +48,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:17.2.3'
     implementation 'com.google.firebase:firebase-core:17.2.3'
     implementation 'com.google.firebase:firebase-database:19.2.1'
+    implementation 'gun0912.ted:tedpermission:2.0.0' // 추가해야 하는 부분
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
 
 //    implementation group: project.KAKAO_SDK_GROUP, name: 'usermgmt', version: project.KAKAO_SDK_VERSION
     implementation 'com.kakao.sdk:usermgmt:1.27.0'

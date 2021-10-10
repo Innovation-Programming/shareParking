@@ -4,9 +4,10 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+<!--    <uses-permission android:name="android.permission.CAMERA"/>-->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="18" />
     <uses-feature android:name="android.hardware.camera"
         android:required="true" />
 
@@ -22,8 +23,34 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         android:name=".CustomApplication"
+        android:networkSecurityConfig="@xml/network_security_config"
         >
+        <activity android:name=".Test">
+<!--                <intent-filter>-->
+<!--                    <action android:name="android.intent.action.MAIN" />-->
 
+<!--                    <category android:name="android.intent.category.LAUNCHER" />-->
+<!--                </intent-filter>-->
+
+        </activity>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+<!--        <provider-->
+<!--            android:name="androidx.core.content.FileProvider"-->
+<!--            android:authorities="com.example.parking"-->
+<!--            android:exported="false"-->
+<!--            android:grantUriPermissions="true">-->
+<!--            <meta-data-->
+<!--                android:name="android.support.FILE_PROVIDER_PATHS"-->
+<!--                android:resource="@xml/file_paths" />-->
+<!--        </provider>-->
         <activity
             android:name=".ChatActivity">
 <!--            <intent-filter>-->
@@ -41,6 +68,7 @@
 <!--                <category android:name="android.intent.category.LAUNCHER" />-->
 <!--            </intent-filter>-->
         </activity>
+        
         <activity
             android:name=".Signin">
                 <intent-filter>
@@ -49,6 +77,8 @@
                     <category android:name="android.intent.category.LAUNCHER" />
                 </intent-filter>
         </activity>
+        <activity android:name=".Camera"/>
+
         <activity android:name=".Navi"/>
         <meta-data
             android:name="com.kakao.sdk.AppKey"
