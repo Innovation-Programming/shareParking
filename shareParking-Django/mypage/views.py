@@ -7,3 +7,6 @@ def mypage(request):
     payments = Payment.objects.filter(personal=user, status="paid")
     context = {'payments': payments, 'user': user}
     return render(request, 'mypage/main.html', context)
+
+def ticket(request):
+    return render(request, 'mypage/ticket.html')

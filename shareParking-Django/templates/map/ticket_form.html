@@ -245,8 +245,39 @@
             dataType: 'json',
             data: {
                 id: "{{ parking_lot.id }}"
+            },
+
+            success: function (data) {
+                status = data['status'];
+
+                if(status == 'success') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '입차 성공',
+                        text: '입차가 완료되었습니다.',
+                        confirmButtonColor: '#58C9B9',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            goToMain();
+                        }
+                    })
+                } else {
+                    message = data['message'];
+                    Swal.fire({
+                        icon: 'error',
+                        title: '입차 실패',
+                        text: message,
+                        confirmButtonColor: '#58C9B9',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            goToMain();
+                        }
+                    })
+                }
             }
+
         })
+        
     }
 </script>
 {% endblock %}
