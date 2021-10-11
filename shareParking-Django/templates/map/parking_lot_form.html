@@ -92,8 +92,10 @@
             <label class="col-3 col-form-label">사    진</label>
             <div class="col-9">
                 <div class="input-group mb-3">
-                    <button class="btn" id="btn_camera">파일 선택</button>
-                    <input type="text" class="form-control" placeholder="Username">
+                        <input type="file" accept="image/*" name="image"/>
+                    <!-- <button type="button" class="btn" id="btn_camera">파일 선택</button> -->
+                    
+                    <!-- <input type="text" class="form-control" placeholder="Username"> -->
                 </div>
                 <!-- <input type="file" accpet="image/*" class="form-control" name='image' id="inputImage"> -->
             </div>
@@ -157,11 +159,11 @@
         precision: 5
     });
 
-    $(document).on('click', '#btn_camera', function(){
-		// var value = this.value;
-		// alert(value);
-		// console.log(value);
-		androidPersonal.camera();
-	});
+    // $(document).on('click', '#btn_camera', function(){
+	// 	// var value = this.value;
+	// 	// alert(value);
+	// 	// console.log(value);
+	// 	androidPersonal.camera();
+	// });
 </script>
 {% endblock %} 

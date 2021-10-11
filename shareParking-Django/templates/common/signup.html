@@ -5,7 +5,7 @@
     <h4>회원가입</h4>
 </div>
 <div class="container my-3">
-    <form method="post" class="post-form" action="{% url 'map:signup' %}">
+    <form method="post" class="post-form" action="{% url 'common:signup' %}">
         {% csrf_token %}
         {% include "form_errors.html" %}
         <div class="form-group" style="display: flex; margin-bottom: 20px;">
@@ -55,7 +55,7 @@
         e.preventDefault();
         $.ajax({
                 type : "POST",
-                url : "{% url 'map:sendSMS' %}",
+                url : "{% url 'common:sendSMS' %}",
                 data : $("form.post-form").serialize(),
                 success : function(response)
                 {
@@ -71,7 +71,7 @@
         e.preventDefault();
         $.ajax({
                 type : "POST",
-                url : "{% url 'map:confirmSMS' %}",
+                url : "{% url 'common:confirmSMS' %}",
                 data : $("form.post-form").serialize(),
                 success : function(response)
                 {
