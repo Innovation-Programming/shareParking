@@ -12,16 +12,18 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from django.http import HttpResponse
 from django.db.utils import IntegrityError
-
+from PIL import Image
+from django.utils import timezone
 def index(request):
     parking_lot_list = ParkingLot.objects.all()
     context = {'parking_lot_list': parking_lot_list}
     return render(request, 'map/main.html', context)
 
-
+# @csrf_exempt
 @login_required(login_url='login')
 def parking_lot_create(request):
     if request.method == 'POST':
+
         name = request.POST['name']
         address = request.POST['address']
         fee = request.POST['fee']
@@ -45,7 +47,16 @@ def parking_lot_create(request):
         )
         return redirect('map:main')
 
+    
+
     return render(request, 'map/parking_lot_form.html')
+
+# def form_test(request):
+#     if request.method == "POST":
+#         image_dir = Image.open(request.FILES.get("image"))
+#         print("*" * 60)
+#         print(image_dir)
+#         print("*" * 60)
 
 def test_chat(request):
     if request.method == "GET":
@@ -83,7 +94,8 @@ def create_ticket(request):
             Ticket.objects.create(
                 parking_lot = parking_lot,
                 personal = personal,
-                is_available = True
+                is_available = True,
+                created = timezone.now()
             )
         except IntegrityError as e:
             print(e)
