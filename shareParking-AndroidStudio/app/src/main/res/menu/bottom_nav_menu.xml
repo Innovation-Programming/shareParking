@@ -8,8 +8,8 @@
 
     <item
         android:id="@+id/navigation_chat"
-        android:icon="@drawable/ic_baseline_chat_24"
-        android:title="@string/title_chat" />
+        android:icon="@drawable/ic_baseline_format_list_bulleted_24"
+        android:title="@string/title_board" />
 
     <item
         android:id="@+id/navigation_personal"

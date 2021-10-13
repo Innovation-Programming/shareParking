@@ -12,7 +12,9 @@ import android.preference.Preference;
 import android.util.Base64;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
+import android.webkit.JsResult;
 import android.webkit.SslErrorHandler;
+import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -55,6 +57,13 @@ public class Signin extends AppCompatActivity {
                 handler.proceed();
             }
 
+        });
+
+        webView.setWebChromeClient(new WebChromeClient(){
+            @Override
+            public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
+                return super.onJsAlert(view, url, message, result);
+            }
         });
 
         WebSettings webSettings = webView.getSettings();
