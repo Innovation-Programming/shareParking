@@ -1,3 +1,4 @@
+from django.contrib.auth.views import PasswordResetConfirmView, PasswordResetView
 from django.shortcuts import render, redirect
 from django.http import HttpResponse 
 from django.contrib.auth import authenticate, login, logout
@@ -12,6 +13,40 @@ from django.contrib.auth import authenticate, login, logout
 from .models import *
 from .forms import *
 
+# from decorators import unauthenticated_user
+from django.conf import settings
+from django.contrib import messages
+from django.core.mail import EmailMessage, message
+from django.template.loader import render_to_string
+from django.contrib.auth.hashers import check_password
+
+#emailTest
+def send_email(request):
+    context = {}
+    if request.method == "POST":
+        email = request.POST.get('email')
+        print(email)
+        # current_password = request.POST.get("origin_password")
+        try:
+            user = Personal.objects.get(email=email)
+            print(user)
+            newUser = Personal.objects.get(user = user)
+            newUser.set_password("1111")
+            newUser.save()
+            print("1")
+            messages.info(request, "비밀번호 초기화 이메일을 확인해주세요. 기입한 이메일로 전송하였습니다.")
+            print("2")
+            subject = "주차나라 비밀번호 초기화 안내"
+            to = [email]
+            from_email = "tjtlgus5@gmail.com"
+            message = "초기화된 비밀번호 안내입니다. 비밀번호는 1111 입니다. 초기화된 비밀번호로 로그인하여 비밀번호를 재설정 해주세요."
+            EmailMessage(subject=subject, body=message, to=to, from_email=from_email).send()
+        except Exception as e:
+            print(e)
+            messages.info(request, "이메일을 확인해 주세요.")
+    return render(request, 'common/findPw.html', context)
+    
+
 # Create your views here.
 def login_main(request):
     if request.method == "POST":
@@ -24,9 +59,23 @@ def login_main(request):
             "username" : username,
             "password" : password,
         }
-        return JsonResponse({'username':username})
-        # return render(request, 'map/main.html', user_inform)
+        # return JsonResponse({'username':username})
+        return render(request, 'map/main.html', user_inform)
     return render(request, 'common/login.html')
+
+# @unauthenticated_user
+def ForgotIDView(request):
+    context = {}
+    if request.method == "POST":
+        email = request.POST.get('email')
+        print(email)
+        try:
+            user = Personal.objects.get(email=email)
+            if user is not None:
+                messages.info(request, "가입된 아이디는 " + str(user) + " 입니다.")
+        except:
+            messages.info(request, "가입된 정보가 없습니다.")
+    return render(request, 'common/findID.html', context)
 
 
 def logout_view(request):
@@ -47,6 +96,7 @@ def signup(request):
         username = request.POST['username']
         password1 = request.POST['password1']
         password2 = request.POST['password2']
+        email = request.POST['email']
         nickname = request.POST['nickname']
         phone = request.POST['phone']
         user=User.objects.create_user(username=username,password=password1)
@@ -55,8 +105,17 @@ def signup(request):
         Personal.objects.create(
             user = user,
             nickname = nickname,
+            email = email,
             phone = phone,
+            point = 0,
+            deposit = 0,
+            addr = "충북 청주시 청원구 대성로 298",
+            postcode = 28503
         )
+
+        print("-"*60)
+        print(email)
+        print("-"*60)
 
         user = authenticate(request, username=username, password=password1)
         login(request, user)

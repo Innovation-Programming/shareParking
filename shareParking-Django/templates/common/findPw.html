@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    #background {
+        background-color: #58C9B9;
+        color:white;
+        position: fixed;
+        top:0px;
+        height:180px;
+        width:100%;
+        z-index: -999;
+        text-align: center;
+        padding: 20px;
+    }
+    #page-info {
+        margin-top:40px;
+    }
+    #page-name {
+        font-family: '넥슨 고딕 bold';
+        font-size:18px;
+    }
+    .payment-list {
+        position: fixed;
+        top: 180px;
+        width:100%;
+        min-width:300px;
+        max-width:500px;
+        margin: 0 auto;
+        left: 0;
+        right: 0;
+        padding:50px;
+        border: 10px solid #58C9B9;
+        justify-content: center;
+        text-align: center;
+    }
+    .personal-info {
+
+    }
+    #pay_name {
+        font-size:16px;
+        color:#163F76;
+    }
+    #page-desc {
+        font-size:12px;
+    }
+    #btn-sbm {
+        background-color: #58C9B9;
+        color: white;
+        border: 0;
+        padding: 4px;
+    }
+    #send-sms-btn,  #confirm-sms-btn, #btn-submit{
+        background-color: #58C9B9;
+        color:white;
+        border: 0;
+        outline: 0;
+        font-family: '넥슨 고딕 bold';
+    }
+    #id-info {
+        font-family: '넥슨 고딕 bold';
+    }
+
+</style>
+
+<div id="background">
+    <div id="page-info">
+        <text id="page-name">
+            비밀번호 찾기
+        </text>
+        <br><br>
+        <text id="page-desc">
+            가입할때 사용한 이메일을 입력해 주세요!
+        </text>
+    </div>
+</div>
+
+<div class="payment-list">
+    <form method="POST">
+        {% csrf_token %}
+        Email: <input type="email" name="email">
+        <input type="submit" name="email_submit" value="전송" id="btn-sbm">
+        
+    </form>
+    <br>
+    <div class="personal-info">
+        {% for message in messages %}
+        <text id="id-info">
+            {{ message }}
+        </text>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}

@@ -5,4 +5,4 @@ class UserForm(forms.ModelForm):
     # email = forms.EmailField(label="이메일")
     class Meta:
         model = Personal
-        fields = ["nickname", "phone"]
+        fields = ["nickname", "phone", "email"]

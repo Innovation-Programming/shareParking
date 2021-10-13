@@ -87,6 +87,14 @@
                 </select>
             </div>
         </div>
+
+        <div class="mb-3 row">
+            <label class="col-3 col-form-label">주차가능</label>
+            <div class="col-9">
+                <input type="number" class="form-control" id="inputSpace" name="space" 
+                        value="{{ form.name.value | default_if_none:'' }}">
+            </div>
+        </div>
         
         <div class="mb-3 row">
             <label class="col-3 col-form-label">사    진</label>
@@ -124,6 +132,8 @@
                 });
             </script>
         </div>
+
+        
         <a href="{% url 'pay:main' %}">결제</a>
         <a href="{% url 'mypage:ticket' %}">마이페이지</a>
         <input type="hidden" id="inputLat" value="{{ form.latitude.value | default_if_none:'' }}" name="latitude"> 

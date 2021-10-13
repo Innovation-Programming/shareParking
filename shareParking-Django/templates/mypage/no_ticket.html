@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    body {
+        
+        background-color:#f3f3f3;
+        font-family: '넥슨 고딕';
+    }
+
+    #header {
+        background-color: #58C9B9;
+        color:white;
+        text-align: center;
+        height:180px;
+        padding: 20px;
+    }
+
+    #page-info {
+        margin-top:20px;
+    }
+
+    #page-name {
+        font-family: '넥슨 고딕 bold';
+        font-size:18px;
+    }
+
+    #page-desc {
+        font-size:12px;
+    }
+    #body {
+        width: 80%;
+        margin:auto;
+        margin-top:30px;
+        background-color: white;
+        padding:15px;
+        font-size:14px;
+        
+    }
+
+    #body-header {
+        text-align: center;
+    }
+
+    #body-footer {
+        margin-top: 25px;
+        text-align: center;
+    }
+
+    #status {
+        text-align: center;
+    }
+
+    #status-text {
+        font-family: '넥슨 고딕 bold';
+        font-size: 16px;
+        color: #33978a;
+    }
+
+    #park-info {
+        margin-top: 20px;
+    }
+
+    #submit-out {
+        display: block;
+        width: 80%;
+        height: 50px;
+        border:none;
+        margin:auto;
+        background-color: #58C9B9;
+        color:white;
+        font-family: '넥슨 고딕 bold';
+        font-size: 18px;
+    }
+    .title {
+        font-family: '넥슨 고딕 bold';
+        font-size: 21px;
+        color: #33978a;
+    }
+
+    .min-max {
+        min-width:300px;
+        max-width:350px;
+    }
+
+    /* override exist bootstrap style */
+    .btn {
+        font-size:14px;
+        border-radius: 20px;
+        background-color: #33978a;
+        border:none;
+        color:white;
+    }
+
+    .btn:focus {
+        background-color: #1d685e;
+    }
+    .btn:hover {
+        background-color: #1d685e;
+    }
+
+</style>
+
+<div id="header">
+    <div id="buttons" class="btn-group" role="group" aria-label="Basic example">
+        <button type="button" id="" onclick="goToPoint()" class="btn btn-primary shadow-none">포인트</button>
+        <button type="button" id="" onclick="goToTicket()" class="btn btn-primary shadow-none">주차권</button>
+        <button type="button" id="btn-myParkingLot" onclick="goToPark()" class="btn btn-primary shadow-none">내주차장</button>
+    </div>
+
+    <div id="page-info">
+        <text id="page-name">
+            내 주차권 확인
+        </text>
+        <br>
+        <text id="page-desc">
+            내가 가지고 있는 주차권을<br>확인하고 관리하세요.
+        </text>
+    </div>
+</div>
+
+<div id="body" class="min-max shadow">
+    <div id="body-body">
+        티켓 없음
+    </div>
+</div>
+
+
+<script>
+</script>
+{% endblock %}

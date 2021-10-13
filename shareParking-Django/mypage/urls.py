@@ -4,6 +4,6 @@ from . import views
 app_name = 'mypage'
 
 urlpatterns = [
-    path('', views.mypage, name="main"),
+    path('', views.mypage, name="point"),
     path('ticket/', views.ticket, name="ticket")
 ]

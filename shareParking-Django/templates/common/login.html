@@ -102,27 +102,27 @@
                 <div class="mb-3 row" style="margin-bottom: 10px !important;">
                     <!-- <input type="text" class="form-control" name="username" id="username"
                         placeholder="ID" value="{{ form.username.value|default_if_none:'' }}"> -->
-                    <input type="text" class="form-control" name="username" id="username" placeholder="ID" autocomplete='off'>
+                    <input type="text" class="form-control" name="username" id="username" placeholder="ID" autocomplete='off' value="{{ form.username.value|default_if_none:'' }}">
                 </div>
                 <div class="mb-3 row">
                     <!-- <input type="password" class="form-control" name="password" id="password"
                         placeholder="Password" value="{{ form.password.value|default_if_none:'' }}"> -->
-                    <input type="password" class="form-control" name="password" id="password" placeholder="Password" autocomplete='off'>
+                    <input type="password" class="form-control" name="password" id="password" placeholder="Password" autocomplete='off' value="{{ form.password.value|default_if_none:'' }}">
                 </div>
             
                 <div class="mb-3 row">
-                    <button class="btn" id="btn_login" type="submit" style="background-color:#41958A; color:white;">로그인</button>
+                    <button class="btn" id="btn_login" type="submit" style="background-color:#41958A; color:rgb(255, 255, 255);">로그인</button>
                 </div>
 
-                <a class="buttons" type="submit" style="color:white; font-size: xx-small;">아이디 찾기</a>
+                <a href="forgot_id/" class="buttons" type="submit" style="color:white; font-size: xx-small;">아이디 찾기</a>
                 &nbsp;&nbsp;
-                <a class="buttons" type="submit" style="color:white; font-size: xx-small;">비밀번호 찾기</a>
+                <a href="forgot_pw/"class="buttons" type="submit" style="color:white; font-size: xx-small;">비밀번호 찾기</a>
                 <br><br><br>
                 
             
-                <div class="mb-3 row">
+                <!-- <div class="mb-3 row">
                     <button type="btn" class="btn" id="kakaoLogin" style="color:rgb(104, 55, 26) ;background-color:yellow; font-weight: bold;">카카오톡으로 로그인</button>
-                </div>
+                </div> -->
                 <div style="width:100%;">
                     <h9 style="font-family: 넥슨 고딕 bold; color:white ">아직 회원이 아니신가요?</h9>&nbsp;
                     <a href="signup/" style="color:#FFDC05">회원가입</a>
@@ -158,14 +158,15 @@
                 url: '/', //로그인   url
                 data: $(".post-form").serialize(),
                 success : function(response){ 
-                    // alert(response.username)
+                    alert("로그인 성공")
                     // 
                     // console.log("res:"+response);
                     // console.log(response.username)
-                    android.goMain(response.username);
+                    // android.goMain(response.username);
                 },
                 error: function(err){
-                    alert(err);
+                    alert("아이디와 비밀번호를 확인해주세요.");
+                    // console.log("res: " + err);
                 }         
             })
 
