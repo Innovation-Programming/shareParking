@@ -33,6 +33,10 @@ import com.example.parking.Navi;
 import com.example.parking.R;
 import com.example.parking.Signin;
 import com.example.parking.ui.setting.SettingViewModel;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.skt.Tmap.TMapTapi;
 
 import java.net.URISyntaxException;
@@ -42,8 +46,30 @@ import static android.content.Context.MODE_PRIVATE;
 //public class MapFragment extends AppCompatActivity {
 public class MapFragment extends Fragment {
     private MapViewModel mapViewModel;
+    String token;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
+//        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+//            @Override
+//            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+//                if (!task.isSuccessful()) {
+//                    return;
+//                }
+//                //SharedPreference 사용하여 토큰 값 저장
+//                SharedPreferences sharedPreferences = getContext().getSharedPreferences("sFile", MODE_PRIVATE);
+//                SharedPreferences.Editor editor = sharedPreferences.edit();
+//                token = task.getResult().getToken();
+//                editor.putString("Token1", token);
+//                editor.commit();
+//
+//                System.out.println("!!!!tokenChecktokenChecktokenChecktokenChecktokenChecktokenCheck!!!!");
+//                System.out.println(token);
+//                System.out.println("!!!!tokenChecktokenChecktokenChecktokenChecktokenChecktokenCheck!!!!");
+//            }
+//        });
+
         View myView = inflater.inflate(R.layout.activity_map, container, false);
 
         WebView myWebView = myView.findViewById(R.id.webVw_map);
@@ -54,6 +80,8 @@ public class MapFragment extends Fragment {
 
         myWebView.addJavascriptInterface(new AndroidBridge(), "androidMain");
         SharedPreferences sf = getContext().getSharedPreferences("sFile",MODE_PRIVATE);
+        token = sf.getString("Token1", token);
+
 
         myWebView.setWebChromeClient(new WebChromeClient() {
            @Override
@@ -63,7 +91,11 @@ public class MapFragment extends Fragment {
            }
         });
 
-        myWebView.loadUrl("https://shareparking.kr/map/main");
+        myWebView.loadUrl("https://shareparking.kr/map/main?userToken="+token);
+
+        System.out.println("tokenChecktokenChecktokenChecktokenChecktokenChecktokenCheck");
+        System.out.println(token);
+        System.out.println("tokenChecktokenChecktokenChecktokenChecktokenChecktokenCheck");
 
 
 

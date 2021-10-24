@@ -10,9 +10,13 @@ import android.os.Bundle;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.kakao.auth.Session;
 
 import androidx.annotation.NonNull;
@@ -43,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
@@ -99,6 +104,28 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("위도: "+latitude);
         System.out.println("경도: "+longitude);
 //        Toast.makeText(MainActivity.this, "현재위치 \n위도 " + latitude + "\n경도 " + longitude, Toast.LENGTH_LONG).show();
+    }
+
+    public void getToken() {
+        //토큰값 받아오기(개개인 유저의 핸드폰 고유의 토큰값임)
+        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+            @Override
+            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                if (!task.isSuccessful()) {
+                    return;
+                }
+                //SharedPreference 사용하여 토큰 값 저장
+                SharedPreferences sharedPreferences = getSharedPreferences("sFile", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                String token = task.getResult().getToken();
+                editor.putString("Token1", token);
+                editor.commit();
+
+                System.out.println("!!!!tokenChecktokenChecktokenChecktokenChecktokenChecktokenCheck!!!!");
+                System.out.println(token);
+                System.out.println("!!!!tokenChecktokenChecktokenChecktokenChecktokenChecktokenCheck!!!!");
+            }
+        });
     }
 
 
