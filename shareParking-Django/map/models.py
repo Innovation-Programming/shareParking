@@ -27,4 +27,12 @@ class Ticket(models.Model):
     # user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     personal = models.OneToOneField(Personal, on_delete=models.CASCADE)
     created = models.DateTimeField()
-    is_available = models.BooleanField()
+
+
+class TicketPayment(models.Model):
+    name = models.CharField(max_length=50)
+    parking_lot = models.ForeignKey(ParkingLot, on_delete=models.CASCADE)
+    personal = models.ForeignKey(Personal, on_delete=models.CASCADE)
+    created = models.DateTimeField()
+    spend_sec = models.IntegerField()
+    amount = models.IntegerField()

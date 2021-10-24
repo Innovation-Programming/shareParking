@@ -5,7 +5,7 @@
 <style>
     body {
         
-        background-color:#ececec;
+        background-color:#f3f3f3;
         font-family: '넥슨 고딕';
     }
 
@@ -23,15 +23,20 @@
 
     #page-name {
         font-family: '넥슨 고딕 bold';
-        font-size:24px;
+        font-size:18px;
     }
 
+    #page-desc {
+        font-size:12px;
+    }
     #body {
         width: 80%;
         margin:auto;
         margin-top:30px;
         background-color: white;
         padding:15px;
+        font-size:14px;
+        
     }
 
     #body-header {
@@ -49,7 +54,7 @@
 
     #status-text {
         font-family: '넥슨 고딕 bold';
-        font-size: 18px;
+        font-size: 16px;
         color: #33978a;
     }
 
@@ -66,12 +71,11 @@
         background-color: #58C9B9;
         color:white;
         font-family: '넥슨 고딕 bold';
-        font-size: 21px;
+        font-size: 18px;
     }
-
     .title {
         font-family: '넥슨 고딕 bold';
-        font-size: 24px;
+        font-size: 21px;
         color: #33978a;
     }
 
@@ -101,6 +105,7 @@
     }
     /* override exist bootstrap style */
     .btn {
+        font-size:14px;
         border-radius: 20px;
         background-color: #33978a;
         border:none;
@@ -121,9 +126,9 @@
 
 <div id="header">
     <div id="buttons" class="btn-group" role="group" aria-label="Basic example">
-        <button type="button" class="btn btn-primary shadow-none">포인트</button>
-        <button type="button" class="btn btn-primary shadow-none">주차권</button>
-        <button type="button" class="btn btn-primary shadow-none">내주차장</button>
+        <button type="button" id="" onclick="goToPoint()" class="btn btn-primary shadow-none">포인트</button>
+        <button type="button" id="" onclick="goToTicket()" class="btn btn-primary shadow-none">주차권</button>
+        <button type="button" id="btn-myParkingLot" onclick="goToPark()" class="btn btn-primary shadow-none">내주차장</button>
     </div>
 
     <div id="page-info">
@@ -131,13 +136,13 @@
             내 주차권 확인
         </text>
         <br>
-        <text id="page-info">
+        <text id="page-desc">
             내가 가지고 있는 주차권을<br>확인하고 관리하세요.
         </text>
     </div>
 </div>
 
-<div id="body" class="min-max">
+<div id="body" class="min-max shadow">
     <div id="body-header">
         <text class="title" id="park-name">
             {{ park.name }}
@@ -181,58 +186,103 @@
         <div id="fee-info" class="container">
             <div class="row mb-2">
                 <text class="col-6 info-label">
-                    청구금액
+                    청구금액(예상)
                 </text>
-                <text class="col-6 info-value">
-                    4,500원
+                <text class="col-6 info-value" id="billing_fee">
                 </text>
             </div>
             <div class="row mb-2">
-                <text class="col-6 info-label">
-                    이용가능(잔여)
+                <text class="col-6 info-label" >
+                    내포인트(잔여)
                 </text>
-                <text class="col-6 info-value" id="avail_time">
-                    1시간 51분 23초
+                <text class="col-6 info-value"id="mypoint">
+                    
                 </text>
             </div>
         </div>
     </div>
 
     <div id="body-footer">
-        <button type="button" class="btn">
+        <button type="button" class="btn shadow-none">
             충전하기
         </button>
-        <button type="button" class="btn">
+        <button type="button" class="btn shadow-none">
             채팅하기
         </button>
-        <button type="button" class="btn">
+        <button type="button" class="btn shadow-none">
             불편신고
         </button>
     </div>
 
 </div>
 
-<button type="button" id="submit-out" class="min-max">
+<button type="button" id="submit-out" class="min-max shadow" onclick="requestOut()">
 출&nbsp;&nbsp;차&nbsp;&nbsp;하&nbsp;&nbsp;기
 </button>
 
 <script>
     var created = new Date("{{ ticket.created|date:'Y-m-d H:i:s' }}")
-    function printGap() {
+    var myPoint = parseInt("{{ user.deposit }}");
+    var spendSec = parseInt("{{ sec_diff }}");
+    myPoint = myPoint.toLocaleString('ko-kr') + "P";
+    $('#mypoint').text(myPoint);
 
-        function secToStr(seconds) {
+    function printInterval() {
+        function formatTime(seconds) {
             var hour = parseInt(seconds/3600);
             var min = parseInt((seconds%3600)/60);
             var sec = seconds % 60;
-            var str = hour + "시간 " + min + "분 " + sec + "초"
-            $('#spend-time').text(str);
+            var str = hour + "시간 " + min + "분 " + sec + "초";
+
+            return str;
         }
-        var now = new Date()
-        var gapSec = parseInt((now - created) / 1000)
-        secToStr(gapSec)
-        setTimeout("printGap()", 1000);
+        function setSpendTime(seconds) {
+            var spendTime = formatTime(seconds);
+            $('#spend-time').text(spendTime);
+        }
+        function setBillingFee(seconds) {
+            var spendMin = spendSec / 60;
+            var spendPeriod = Math.ceil(spendMin / 10);
+            var fee = parseInt("{{ park.fee }}");
+            var billingFee = fee * spendPeriod;
+            var billingFee= billingFee.toLocaleString('ko-kr') + "P";
+            $('#billing_fee').text(billingFee);
+        }
+        
+
+
+        setSpendTime(spendSec)
+        setBillingFee(spendSec)
+        spendSec += 1;
+        setTimeout("printInterval()", 1000);
     }
-    
-    printGap()
+    printInterval()
+
+    function requestOut() {
+        Swal.fire({
+            title: '출차 확인',
+            icon: 'question',
+            text: '정말 출차 하시겠습니까?',
+            showCancelButton: true,
+            confirmButtonColor: '#58C9B9',
+            confirmButtonText: '네',
+            cancelButtonText: `아니요`,
+        }).then((firstResult) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (firstResult.isConfirmed) {
+                Swal.fire({
+                    icon: 'success',
+                    title: '출차 성공',
+                    text: '출차가 완료되었습니다.',
+                    confirmButtonColor: '#58C9B9',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.href="{% url 'map:confirm_ticket' %}"
+                    }
+                })
+            }
+        })
+        
+    }
 </script>
 {% endblock %}

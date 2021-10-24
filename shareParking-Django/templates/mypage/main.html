@@ -23,9 +23,15 @@
 
     #page-name {
         font-family: '넥슨 고딕 bold';
-        font-size:24px;
+        font-size:18px;
     }
 
+    #page-desc {
+        font-size:12px;
+    }
+    #mypoint-text {
+        font-size:14px;
+    }
     #header {
         position: fixed;
         padding:15px;
@@ -45,7 +51,7 @@
     #header > #mypoint > .row > #value {
         
         font-family: '넥슨 고딕 bold';
-        font-size:32px;
+        font-size:28px;
     }
     #header >  #mypoint > .row >  #charge {
         background-color: #41958A;
@@ -74,6 +80,7 @@
         border-bottom: 1px solid rgb(177, 177, 177);
         padding: 15px;
         margin: 10px 0px;
+
     }
     
     .row {
@@ -82,6 +89,8 @@
     }
     .btn {
         border-radius: 20px;
+
+        font-size:14px;
         background-color: #33978a;
         border:none;
     }
@@ -107,8 +116,7 @@
         right: 20px;
         top:50%;
         transform:translate(0, -50%);
-        font-size:18px;
-        font-family: '넥슨 고딕 bold';
+        font-size:16px;
     }
 
     .minus > .row > .right-text {
@@ -117,12 +125,12 @@
     }
 
     .plus > .row > .right-text {
-        font-size:21px;
-        color:#5FBE83;
+        font-size:16px;
+        color:#163F76;
     }
 
     #pay_name {
-        font-size:18px;
+        font-size:16px;
         color:#163F76;
     }
     
@@ -139,16 +147,16 @@
 
 <div id="background">
     <div class="btn-group buttons" role="group" aria-label="Basic example">
-        <button type="button" id="" class="btn btn-primary shadow-none">포인트</button>
-        <button type="button" id="" class="btn btn-primary shadow-none">주차권</button>
-        <button type="button" id="btn-myParkingLot" class="btn btn-primary shadow-none">내주차장</button>
+        <button type="button" id="" onclick="goToPoint()" class="btn btn-primary shadow-none">포인트</button>
+        <button type="button" id="" onclick="goToTicket()" class="btn btn-primary shadow-none">주차권</button>
+        <button type="button" id="btn-myParkingLot" onclick="goToPark()" class="btn btn-primary shadow-none">내주차장</button>
     </div>
     <div id="page-info">
         <text id="page-name">
             내 포인트 확인
         </text>
         <br>
-        <text id="page-info">
+        <text id="page-desc">
             내 포인트 충전 및 결제내역을 확인하세요!
         </text>
     </div>
@@ -157,7 +165,7 @@
 <div class="moblie" id="header">
     <div id="mypoint" class="container">
         <div class="row">
-                <text class="title col-12">사용가능</text>
+                <text class="title col-12" id="mypoint-text">사용가능</text>
         </div>
         <div class="row">
                 <text class="value col-8" id="value">
@@ -179,7 +187,7 @@
             <text id="pay_date"></text>
         </div>
         <div class="col-4 right-text" id="">
-            <b><text id="pay_amount"></text></b></div>
+            <text id="pay_amount"></text></div>
     </div>
 </div>
 
@@ -190,7 +198,7 @@
             <text id="pay_date"></text>
         </div>
         <div class="col-5 right-text" id="">
-            <b><text id="pay_amount"></text></b></div>
+            <text id="pay_amount"></text></div>
     </div>
 </div>
 <script>
@@ -201,19 +209,19 @@
 
         if(pay_name.indexOf("포인트 결제") != "-1") {
             payment_div = $("#payment_plus").clone();
-            payment_div.attr("id", pay_name);
+            payment_div.find("#pay_amount").text("+" + amount);
+        } else {
+            payment_div = $("#payment_minus").clone();
+            payment_div.find("#pay_amount").text("-" + amount);
+        }
+        payment_div.attr("id", pay_name);
             payment_div.find("#pay_name").text(pay_name);
             payment_div.find("#pay_date").text(date);
-            payment_div.find("#pay_amount").text("+" + amount);
+           
             payment_div.css("display", "block")
-        }
-
         $('.payment-list').prepend(payment_div);
     "{% endfor %}"
 
-    function goToPay() {
-        location.href="{% url 'pay:main' %}";
-    }
 
     header_height = (document.getElementById('header').clientHeight + 100); // 100px for margin-top
     body_height = (window.innerHeight - header_height)  * 0.95;
@@ -225,5 +233,6 @@
 		// console.log(value);
 		androidPersonal.myParkingLot();
 	});
+    
 </script>
 {% endblock %}

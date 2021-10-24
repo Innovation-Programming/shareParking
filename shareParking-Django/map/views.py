@@ -1,7 +1,7 @@
 from django.shortcuts import render
 import os
 # Create your views here.
-from .models import ParkingLot
+from .models import ParkingLot, TicketPayment
 from .forms import *
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
@@ -14,6 +14,9 @@ from django.http import HttpResponse
 from django.db.utils import IntegrityError
 from PIL import Image
 from django.utils import timezone
+import datetime as dt
+import mypage.views as myview
+import math
 def index(request):
     parking_lot_list = ParkingLot.objects.all()
     context = {'parking_lot_list': parking_lot_list}
@@ -33,6 +36,7 @@ def parking_lot_create(request):
         longitude = request.POST['longitude']
         image = request.FILES['image']
         user = request.user
+        space = request.POST['space']
 
         ParkingLot.objects.create(
             user = user,
@@ -43,7 +47,8 @@ def parking_lot_create(request):
             end_time = end_time,
             latitude = latitude,
             longitude = longitude,
-            fee = fee
+            fee = fee,
+            space=space
         )
         return redirect('map:main')
 
@@ -57,6 +62,7 @@ def parking_lot_create(request):
 #         print("*" * 60)
 #         print(image_dir)
 #         print("*" * 60)
+
 
 def test_chat(request):
     if request.method == "GET":
@@ -72,6 +78,7 @@ def buy_ticket(request, parking_lot_id):
     context = {'parking_lot':parking_lot, 'personal': personal}
     return render(request, 'map/ticket_form.html', context)
 
+
 @csrf_exempt
 def create_ticket(request):
     if request.method == 'POST' and request.is_ajax():
@@ -82,32 +89,77 @@ def create_ticket(request):
         personal = Personal.objects.get(user=user)
 
         max_space = parking_lot.space
-        ticket_set = Ticket.objects.filter(parking_lot=parking_lot, is_available=True)
+        ticket_set = Ticket.objects.filter(parking_lot=parking_lot)
+
         tickets = len(ticket_set)
+        if tickets > 1:
+            return HttpResponse(json.dumps({'status': "failed", 'message': "이미 주차권을 보유중입니다."}),
+                        content_type="application/json")
+
         available_space = max_space - tickets
 
         if available_space < 1:
             return HttpResponse(json.dumps({'status': "failed", 'message': "해당 주차장에 자리가 없습니다."}),
                             content_type="application/json")
-
-        try:
-            Ticket.objects.create(
-                parking_lot = parking_lot,
-                personal = personal,
-                is_available = True,
-                created = timezone.now()
-            )
-        except IntegrityError as e:
-            print(e)
-            return HttpResponse(json.dumps({'status': "failed", 'message': "이미 주차권을 보유중입니다."}),
-                            content_type="application/json")
         
+        Ticket.objects.create(
+            parking_lot = parking_lot,
+            personal = personal,
+            created = timezone.now()
+        )
+
+        # 보증금 처리
+        personal.deposit = personal.point
+        personal.point = 0
+        personal.save()
+
+        # 주차장 자리 처리
+        parking_lot.space -= 1
+        parking_lot.save()
         
         return HttpResponse(json.dumps({'status': "success"}),
                             content_type="application/json")
     else:
         return HttpResponse(json.dumps({'status': "failed", 'message': "전송방식이 올바르지 않습니다."}),
                             content_type="application/json")
+
+
+def confirm_ticket(request):
+    personal = Personal.objects.get(user=request.user)
+    ticket = Ticket.objects.get(personal=personal)
+    park = ticket.parking_lot
+
+    now =  timezone.now()
+    created = ticket.created
+    # 청구금액 계산
+    spend_time = now - created
+    seconds = spend_time.total_seconds()
+    minutes = seconds / 60
+    period = math.ceil(minutes / 10)
+    biliing_fee = park.fee * period
+
+    personal.deposit -= biliing_fee
+
+    if personal.deposit < 0:
+        personal.deposit = 0
+    
+    personal.point += personal.deposit
+    personal.save()
+    
+    park.space += 1
+    park.save()
+    TicketPayment.objects.create(
+        name = "주차권: " + park.name,
+        personal=personal,
+        parking_lot=park,
+        created = timezone.now(),
+        spend_sec = seconds,
+        amount = biliing_fee
+    )
+    ticket.delete()
+
+    return myview.mypage(request)
+    
     
 # def kakao_login_callback(request):
 #         code = request.GET.get("code", None)

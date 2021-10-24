@@ -1,63 +1,155 @@
+{% extends 'base.html' %}
 {% load static %}
-<html lang="ko">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+{% block content %}
+<style>
+    body {
+        font-family:넥슨 고딕;
+    }
 
-    <!-- Mobile Metas -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    #background {
+        background-color: #58C9B9;
+        color:white;
+        position: fixed;
+        top:0px;
+        height:100px;
+        width:100%;
+        z-index: -999;
+        text-align: center;
+        padding: 20px;
+    }
+    #page-info {
+        margin-top:20px;
+    }
 
-    <!-- <link rel="icon" href="/static/images/favicon.ico">/ -->
+    #page-name {
+        font-family: '넥슨 고딕 bold';
+        font-size:18px;
+    }
 
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <!-- jQuery -->
-    <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
-    <!-- iamport.payment.js -->
-    <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
-    <link rel="stylesheet" href="//unpkg.com/bootstrap@4/dist/css/bootstrap.min.css">
-    <script src='//unpkg.com/jquery@3/dist/jquery.min.js'></script>
-    <script src='//unpkg.com/popper.js@1/dist/umd/popper.min.js'></script>
-    <script src='//unpkg.com/bootstrap@4/dist/js/bootstrap.min.js'></script>
-
-    <link href="//cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/css/bootstrap4-toggle.min.css" rel="stylesheet">  
-    <script src="//cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.4.0/js/bootstrap4-toggle.min.js"></script>
-</head>
-<body>
-    <div style="margin-left: 25px; margin-right: 25px;">
-        <div style="text-align: center; margin-top: 20px; margin-bottom: 50px;">
-            <h5><strong>환경 설정</strong></h5>
-        </div>
-        <br><br>
-        <div>
-            <div style="float: left;">
-                <a>푸시 알림</a>
-            </div>
-            <div style="text-align: end; float: right;">
-                <input type="checkbox" checked data-toggle="toggle" data-size="xs">
-            </div>
-        </div>
-        <br><hr style="color: gray;">
-        <div>
-            <div style="float: left;">
-                <a>다크 모드</a>
-            </div>
-            <div style="text-align: end; float: right;">
-                <input type="checkbox" checked data-toggle="toggle" data-size="xs">
-            </div>
-        </div>
-        <br><hr style="color: gray;">
-        <div >
-            <a>판매자 인증</a>
-        </div>
-        <hr style="color: gray;">
-        <div class="logout">
-            <a href="#">로그 아웃</a>
-        </div>
-        <hr style="color: gray;">
-        <div>
-            <a>회원 탈퇴</a>
-        </div>
-        <hr style="color: gray;">
-    </div>
+    #page-desc {
+        font-size:12px;
+    }
+    #mypoint-text {
+        font-size:14px;
+    }
+    #header {
+        position: fixed;
+        padding:15px;
+        width:80px;
+        background-color: white;
+        left:50%;
+        top:150px;
+        transform: translate(-50%, 0);
+        border-radius: 15px;;
+        box-shadow: 0px 10px 20px -10px #8b8b8b;
+    }
     
-</body>
+    #header > #mypoint {
+        color: #41958A;
+    }
+
+    #header > #mypoint > .row > #value {
+        
+        font-family: '넥슨 고딕 bold';
+        font-size:28px;
+    }
+    #header >  #mypoint > .row >  #charge {
+        background-color: #41958A;
+        border: none;
+        border-radius: 10px;
+        font-size:14px;
+        color: white;
+        padding:5px;
+    }
+
+    .payment-list {
+        overflow: scroll;
+        position: fixed;
+        top:255px;
+        width:100%;
+        min-width:300px;
+        max-width:500px;
+        margin: 0 auto;
+        left: 0;
+        right: 0;
+        padding:20px;
+    }
+
+    .payment {
+
+        border-bottom: 1px solid rgb(177, 177, 177);
+        padding: 15px;
+        margin: 10px 0px;
+
+    }
+    
+    .row {
+        display: flex;
+        vertical-align: middle;
+    }
+    .btn {
+        border-radius: 20px;
+
+        font-size:14px;
+        background-color: #33978a;
+        border:none;
+    }
+
+    .btn:focus {
+        background-color: #1d685e;
+    }
+    .btn:hover {
+        background-color: #1d685e;
+    }    
+    
+    .left-text {
+        text-align: left;
+    }
+
+    .right-text {
+        text-align: right;
+        position: relative;
+    }
+
+    #pay_amount {
+        position: absolute;
+        right: 20px;
+        top:50%;
+        transform:translate(0, -50%);
+        font-size:16px;
+    }
+
+    .minus > .row > .right-text {
+        
+        color:#E06273;
+    }
+
+    .plus > .row > .right-text {
+        font-size:16px;
+        color:#163F76;
+    }
+
+    #pay_name {
+        font-size:16px;
+        color:#163F76;
+    }
+    
+    #pay_date {
+        margin-top:3px;
+        font-size:12px;
+    }
+
+    .moblie {
+        min-width:300px;
+        max-width:400px;
+    }
+</style>
+<div id="background">
+    <div id="page-info">
+        <text id="page-name">
+            환경설정
+        </text>
+        <br>
+    </div>
+</div>
+{% endblock %}
