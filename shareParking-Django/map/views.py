@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 #for sms import modules
 from .models import *
 from django.views.decorators.csrf import csrf_exempt
-
+from common.views import *
 import json
 from django.http import HttpResponse
 from django.db.utils import IntegrityError
@@ -17,10 +17,13 @@ from django.utils import timezone
 import datetime as dt
 import mypage.views as myview
 import math
+
 def index(request):
-    parking_lot_list = ParkingLot.objects.all()
-    context = {'parking_lot_list': parking_lot_list}
-    return render(request, 'map/main.html', context)
+    # send_to_firebase_cloud_messaging()
+    # parking_lot_list = ParkingLot.objects.all()
+    # context = {'parking_lot_list': parking_lot_list}
+    # return render(request, 'map/main.html', context)
+    return render(request, 'map/main.html')
 
 # @csrf_exempt
 @login_required(login_url='login')
