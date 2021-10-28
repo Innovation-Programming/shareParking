@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 #for sms import modules
 from .models import *
 from django.views.decorators.csrf import csrf_exempt
-
+from common.views import *
 import json
 from django.http import HttpResponse
 from django.db.utils import IntegrityError
@@ -17,18 +17,25 @@ from django.utils import timezone
 import datetime as dt
 import mypage.views as myview
 import math
+
+
 def index(request):
-    parking_lot_list = ParkingLot.objects.all()
+    parking_lot_list = ParkingLot.objects.order_by('fee')
     context = {'parking_lot_list': parking_lot_list}
     return render(request, 'map/main.html', context)
+    # return render(request, 'map/main.html')
 
-# @csrf_exempt
+
+@csrf_exempt
 @login_required(login_url='login')
 def parking_lot_create(request):
+    parking_lot_list = ParkingLot.objects.filter(user=request.user)
+    parking_lot_list = parking_lot_list.order_by("id")
     if request.method == 'POST':
 
         name = request.POST['name']
         address = request.POST['address']
+        addr_detail = request.POST['addr_detail']
         fee = request.POST['fee']
         start_time = request.POST['start_time']
         end_time = request.POST['end_time']
@@ -37,24 +44,62 @@ def parking_lot_create(request):
         image = request.FILES['image']
         user = request.user
         space = request.POST['space']
+        desc = request.POST['description']
 
         ParkingLot.objects.create(
             user = user,
             name = name,
             address = address,
+            addr_detail = addr_detail,
             image = image,
             start_time = start_time,
             end_time = end_time,
             latitude = latitude,
             longitude = longitude,
             fee = fee,
-            space=space
+            space=space,
+            description=desc
         )
         return redirect('map:main')
+    context = {'parking_lot_list': parking_lot_list}
+    return render(request, 'map/parking_lot_form.html', context)
 
-    
+@csrf_exempt
+@login_required(login_url='login')
+def parking_lot_modify(request):
+    if request.method == 'POST':
+        parking_lot_list = ParkingLot.objects.filter(user=request.user)
+        parking_lot_list = parking_lot_list.order_by("id")
+        name = request.POST['name']
+        address = request.POST['address']
+        addr_detail = request.POST['addr_detail']
+        fee = request.POST['fee']
+        start_time = request.POST['start_time']
+        end_time = request.POST['end_time']
+        latitude = request.POST['latitude']
+        longitude = request.POST['longitude']
+        image = request.FILES['image']
+        user = request.user
+        space = request.POST['space']
+        desc = request.POST['description']
 
-    return render(request, 'map/parking_lot_form.html')
+        ParkingLot.objects.create(
+            user = user,
+            name = name,
+            address = address,
+            addr_detail = addr_detail,
+            image = image,
+            start_time = start_time,
+            end_time = end_time,
+            latitude = latitude,
+            longitude = longitude,
+            fee = fee,
+            space=space,
+            description=desc
+        )
+        return redirect('map:main')
+    context = {'parking_lot_list': parking_lot_list}
+    return render(request, 'map/parking_lot_form.html', context)
 
 # def form_test(request):
 #     if request.method == "POST":
@@ -116,7 +161,7 @@ def create_ticket(request):
         # 주차장 자리 처리
         parking_lot.space -= 1
         parking_lot.save()
-        
+        send_to_firebase_cloud_messaging()
         return HttpResponse(json.dumps({'status': "success"}),
                             content_type="application/json")
     else:

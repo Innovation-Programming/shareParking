@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+    #background {
+        background-color: #58C9B9;
+        color:white;
+        position: fixed;
+        top:0px;
+        height:180px;
+        width:100%;
+        z-index: -999;
+        text-align: center;
+        padding: 20px;
+    }
+    #page-info {
+        margin-top:40px;
+    }
+    #page-name {
+        font-family: '넥슨 고딕 bold';
+        font-size:18px;
+    }
+    .payment-list {
+        position: fixed;
+        top: 180px;
+        width:100%;
+        min-width:300px;
+        max-width:500px;
+        margin: 0 auto;
+        left: 0;
+        right: 0;
+        padding:50px;
+        border: 10px solid #58C9B9;
+        justify-content: center;
+        text-align: center;
+    }
+    .personal-info {
+
+    }
+    #pay_name {
+        font-size:16px;
+        color:#163F76;
+    }
+    #page-desc {
+        font-size:12px;
+    }
+    #btn-sbm {
+        background-color: #58C9B9;
+        color: white;
+        border: 0;
+        padding: 4px;
+    }
+    #send-sms-btn,  #confirm-sms-btn, #btn-submit{
+        background-color: #58C9B9;
+        color:white;
+        border: 0;
+        outline: 0;
+        font-family: '넥슨 고딕 bold';
+    }
+    #id-info {
+        font-family: '넥슨 고딕 bold';
+    }
+
+</style>
+
+<div id="background">
+    <div id="page-info">
+        <text id="page-name">
+            회원탈퇴
+        </text>
+        <br><br>
+        <text id="page-desc">
+            계정을 삭제하면 모든 사용자의 정보가 삭제됩니다.
+        </text>
+    </div>
+</div>
+
+<div class="payment-list">
+    <form method="POST">
+        {% csrf_token %}
+        Password: <input type="text" name="pw_del">
+        <input type="submit" name="pw_submit" value="확인" id="btn-sbm">
+    </form>
+    <br>
+</div>
+
+
+{% endblock %}

@@ -1,6 +1,27 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+<script src="https://www.gstatic.com/firebasejs/5.5.9/firebase.js"></script>
+<!-- <script type="module">
+	// Import the functions you need from the SDKs you need
+	import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js";
+	// TODO: Add SDKs for Firebase products that you want to use
+	// https://firebase.google.com/docs/web/setup#available-libraries
+  
+	// Your web app's Firebase configuration
+	const firebaseConfig = {
+	  apiKey: "AIzaSyC5OcdZmLOnckPEbF-hqnjE8UyZ9zZnXr4",
+	  authDomain: "shareparking-e9e14.firebaseapp.com",
+	  projectId: "shareparking-e9e14",
+	  storageBucket: "shareparkssing-e9e14.appspot.com",
+	  messagingSenderId: "397100250344",
+	  appId: "1:397100250344:web:2b03d51f063f4cdc4c855d"
+	};
+  
+	// Initialize Firebase
+	const app = initializeApp(firebaseConfig);
+	
+  </script> -->
 
 <style>
 	 .offcanvas-header {
@@ -13,8 +34,9 @@
         font-family: '넥슨 고딕';
         border-radius: 20px 20px 0px 0px !important;
         height: auto !important;
-        min-width:400px;
+        min-width:420px;
 		width: 60%;
+		
         bottom:0px;
     }
 
@@ -24,6 +46,7 @@
 
 	#info_image_div {
 		text-align: center;
+		
 	}
     #info_body {
         border-radius: 5px;
@@ -44,14 +67,75 @@
 	#info_image {
 		width:auto;
 		max-width:100%;
-		height:300px;
+		max-height:300px;
 		margin-bottom: 20px;
 		background-size: contain;
 	}
 
 	#info_div {
 		width: 100%;
-		margin:0px!important; padding:0px;  font-family:넥슨 고딕;
+		margin:0px!important; padding:0px 10px;  font-family:넥슨 고딕;
+	}
+	#view_list {
+        position: absolute;
+        bottom: 0px;
+        left: 50%;
+        transform:translate(-50%, 0%);
+        z-index: 1;
+    }
+
+	#expand_btn {
+		border-radius: 100px 100px 0px 0px;
+	}
+
+	#parkList {
+		border: none;
+		min-height: 100px;
+		max-height: 75vh;
+		z-index: 9999;
+		padding:10px;
+	}
+
+	#parkList > hr {
+		margin: 10px 10px;
+	}
+
+	#parkList-header {
+		text-align: center;
+		font-family:넥슨 고딕 bold;
+		font-size:18px;
+		color:#58c9b9;
+	}
+
+	#parkList-body {
+		padding:10px 20px;
+		overflow: scroll;
+	}
+
+	#parkList-name {
+		color:#58c9b9;
+		font-size:20px;
+		font-family:넥슨 고딕 bold;
+	}
+
+	#parkList-addr {
+		font-size:12px; color:#4C4C4C;
+		margin-bottom: 10px;
+	}
+
+	#parkList-type {
+		background-color:#bc58c9;
+	}
+
+	#parkList-fee {
+		background-color: #58c9b9;
+	}
+	#parkList-time {
+		background-color: #58c9b9;
+	}
+	.badge-icon {
+		font-size:15px;
+		vertical-align: middle;
 	}
 </style>
 <div id="map_div">
@@ -83,13 +167,16 @@
 		</button>
 	</div>
 	
-
+	<div id="view_list">
+		<button id="expand_btn" class="btn btn-light" type="button" onclick="showList()">
+			<span class="material-icons" id="ctr_icon_font">expand_less</span>
+		</button>
+	</div>
 </div>
 
 
 <!-- parking info windows(offCanvas) -->
 <div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
-	
 	
 	<div class="offcanvas-header">
 		<div id="info_div">
@@ -116,6 +203,16 @@
 					<text style="font-size:14px; color:black;" id="info_time">+ 정보 추가하기</text>
 				</div>
 			</div>
+			<div class="mb-3 row" id="info-row" style="min-width:100%; border:1px solid #a7a7a7; padding:5px;">
+				<label class="col-4" style="font-size:12px; color:#58c9b9; ">
+					주차장 설명
+				</label>
+				<div class="col-12" style="text-align:left;">
+					<text id="info_desc" style="font-size:14px; color:black;" id="info_time">
+						주차장 설명이 없습니다.
+					</text>
+				</div>
+			</div>
 			<div class="row">
 				<div class="col-4" style="padding:0px 3px;">
 					<a href="#" id="info_a_pay">
@@ -123,7 +220,6 @@
 							주차권 결제
 						</button>
 					</a>
-					
 				</div>
 				<div class="col-4" style="padding:0px 3px;">
 					<a href="#" id="info_a_chat">
@@ -131,20 +227,89 @@
 							채팅하기 
 						</button>
 					</a>
-					
 				</div>
 				<div class="col-4" style="padding:0px 3px;">
 					<button type="button" class="btn" value="" id="info_btn_navi" style="background-color:#58c9b9; color:white; width:100%; font-family:넥슨 고딕 bold;">
 						길찾기
 					</button>
 				</div>
-				
 			</div>
 			
 		</div>
 	</div>
 </div>
+
+
+<div class="offcanvas offcanvas-bottom" tabindex="-1" id="parkList">
+	<div id="parkList-header">
+		공유 주차장 리스트
+	</div>
+	<div id="parkList-body">
+	</div>
+	<br>
+</div>
+
+
+<div id="parkList-info">
+	<hr>
+	<text id="parkList-name">
+	</text>
+	<div id="parkList-addr">
+	</div>
+	<span class="badge rounded-pill " style="background-color:#bc58c9;">
+		<span class="material-icons badge-icon">
+			place
+		</span>
+		<span id="parkList-type">
+			공유
+		</span>
+	</span>
+	<span class="badge rounded-pill " style="background-color: #58c9b9;">
+		<span class="material-icons badge-icon">
+			local_parking
+		</span>
+		<span id="parkList-fee">
+		</span>
+	</span>
+	<span class="badge rounded-pill" style="background-color: #58c9b9;">
+		<span class="material-icons badge-icon">
+			timer
+		</span>
+		<span id="parkList-time" >
+		</span>
+	</span>
+</div>
 <script>
+	// navigator.serviceWorker.register('{% static "js/firebase-messaging-sw.js" %}')
+    //         .then((registration) => {
+	// 			const config = {
+	// 				apiKey: "AIzaSyC5OcdZmLOnckPEbF-hqnjE8UyZ9zZnXr4",
+	// 				authDomain: "shareparking-e9e14.firebaseapp.com",
+	// 				projectId: "shareparking-e9e14",
+	// 				storageBucket: "shareparking-e9e14.appspot.com",
+	// 				messagingSenderId: "397100250344",
+	// 				appId: "1:397100250344:web:2b03d51f063f4cdc4c855d"
+	// 			};
+	// 			firebase.initializeApp(config);
+    //             var messaging = firebase.messaging();
+    //             messaging.useServiceWorker(registration);  
+			
+				
+	// 			//token값 알아내기
+	// 			messaging.requestPermission()
+	// 			.then(function(){
+	// 				console.log("Have permission");
+	// 				return messaging.getToken();
+	// 			})
+	// 			.then(function(token){
+	// 				document.write(token)
+	// 			})
+	// 			.catch(function(arr){
+	// 				console.log("Error Occured");
+	// 			});
+    //         }
+	// 	);
+
 	$(document).on('click', '#info_btn_chat', function(){
 		var value = this.value;
 		// alert(value);
@@ -158,6 +323,12 @@
 		// console.log(value);
 		androidMain.navi(value);
 	});
+	
+	function showList() {
+		let myOffcanvas = document.getElementById("parkList")
+		let bsOffcanvas = new bootstrap.Offcanvas(myOffcanvas)
+		bsOffcanvas.show()
+	}
 </script>
 {% endblock %}
 

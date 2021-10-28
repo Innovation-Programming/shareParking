@@ -20,31 +20,111 @@ from django.core.mail import EmailMessage, message
 from django.template.loader import render_to_string
 from django.contrib.auth.hashers import check_password
 
+from firebase_admin import messaging
+from pyfcm import FCMNotification
+
+def change_password(request):
+    if request.method == "POST":
+        current_password = request.POST.get("origin_password")
+        user = request.user
+        
+        if check_password(current_password, user.password):
+            new_password = request.POST.get("password1")
+            password_confirm = request.POST.get("password2")
+            if new_password == password_confirm:
+                user.set_password(new_password)
+                user.save()
+                login(request, user)
+                return render(request, 'common/setting.html')
+
+    return render(request, 'common/change_password.html')
+
+def edit_personal_info(request):
+    user = request.user
+    req_user = Personal.objects.filter(user=user)
+    phone = req_user.first().phone
+    context = {
+        "user_phone" : phone
+    }
+
+    print("Personal로 조회한 기존 이메일")
+    bfEmail = req_user.first().email
+    print(bfEmail)
+
+    print("User로 조회한 기존 이메일")
+    req_user2 = User.objects.filter(username=user)
+    bfEmail2 = req_user2.first().email
+    print(bfEmail2)
+
+    if request.method == "POST":
+        newEmail = request.POST.get("email")
+        newPhone = request.POST.get("user_phone")
+        print(newEmail)
+        print(newPhone)
+
+        request.user.personal.email = newEmail
+        request.user.personal.phone = newPhone
+        request.user.personal.save()
+
+        request.user.email = newEmail
+        request.user.save()
+
+        return render(request, 'common/setting.html')
+    return render(request, 'common/edit_personal_info.html', context)
+
+def personal_info(request):
+    user = request.user
+    req_user = Personal.objects.filter(user=user)
+    phone = req_user.first().phone
+    context = {
+        "user_phone" : phone
+    }
+
+    return render(request, 'common/personal_info.html', context)
+
+def delete_user(request):
+    if request.method == "POST":
+        current_password = request.POST.get('pw_del')
+        user = request.user
+        if check_password(current_password, user.password):
+            user.delete()
+            return redirect("common:login")
+    
+    return render(request, 'common/delete_user.html')
+
 #emailTest
 def send_email(request):
-    context = {}
+    subject = "주차나라 비밀번호 초기화 안내"
+    to = ["tjtlgus4@naver.com"]
+    from_email = "tjtlgus5@gmail.com"
+    message = "초기화된 비밀번호 안내입니다. 비밀번호는 1111 입니다. 초기화된 비밀번호로 로그인하여 비밀번호를 재설정 해주세요."
+    EmailMessage(subject=subject, body=message, to=to, from_email=from_email).send()
+
+def ForgotPwView(request):
     if request.method == "POST":
         email = request.POST.get('email')
         print(email)
         # current_password = request.POST.get("origin_password")
         try:
-            user = Personal.objects.get(email=email)
+            user = User.objects.get(email=email)
             print(user)
-            newUser = Personal.objects.get(user = user)
+            newUser = User.objects.get(username = user)
             newUser.set_password("1111")
             newUser.save()
-            print("1")
-            messages.info(request, "비밀번호 초기화 이메일을 확인해주세요. 기입한 이메일로 전송하였습니다.")
-            print("2")
+            print("이메일 전송")
+            # send_email(request)
             subject = "주차나라 비밀번호 초기화 안내"
             to = [email]
             from_email = "tjtlgus5@gmail.com"
             message = "초기화된 비밀번호 안내입니다. 비밀번호는 1111 입니다. 초기화된 비밀번호로 로그인하여 비밀번호를 재설정 해주세요."
             EmailMessage(subject=subject, body=message, to=to, from_email=from_email).send()
+            print("1")
+            messages.info(request, "비밀번호 초기화 이메일을 확인해주세요. 기입한 이메일로 전송하였습니다.")
+            print("2")
         except Exception as e:
             print(e)
             messages.info(request, "이메일을 확인해 주세요.")
-    return render(request, 'common/findPw.html', context)
+    return render(request, 'common/findPw.html')
     
 
 # Create your views here.
@@ -59,8 +139,8 @@ def login_main(request):
             "username" : username,
             "password" : password,
         }
-        # return JsonResponse({'username':username})
-        return render(request, 'map/main.html', user_inform)
+        return JsonResponse({'username':username})
+        # return render(request, 'map/main.html', user_inform)
     return render(request, 'common/login.html')
 
 # @unauthenticated_user
@@ -70,7 +150,8 @@ def ForgotIDView(request):
         email = request.POST.get('email')
         print(email)
         try:
-            user = Personal.objects.get(email=email)
+            user = User.objects.get(email=email)
+            userId = user
             if user is not None:
                 messages.info(request, "가입된 아이디는 " + str(user) + " 입니다.")
         except:
@@ -99,7 +180,11 @@ def signup(request):
         email = request.POST['email']
         nickname = request.POST['nickname']
         phone = request.POST['phone']
-        user=User.objects.create_user(username=username,password=password1)
+        user=User.objects.create_user(
+            username=username,
+            password=password1,
+            email = email
+            )
 
 
         Personal.objects.create(
@@ -203,3 +288,38 @@ def kakao_login(request):
     return redirect(
         f"https://kauth.kakao.com/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}&response_type=code"
     )
+
+def send_to_firebase_cloud_messaging():
+    # This registration token comes from the client FCM SDKs.
+    # registration_token = 'erCpWP1eT3So0zYMWBcj6p:APA91bGAZ5T2Wau0HqOqU_zvaJsZMvhghD15ExMbUZsGcqHlEcfbf-PfRR6W-19UGg2CRpzeKDLMlHy9zTmE69b9t7S5FxPsKbBtPzZn0iRBDJ0gShPBS35PtK7EfSPqPguzGzPx-Ca-'
+    registration_token = 'dBsL0YSLQ9u9WQdOjoOO3D:APA91bFKxrMATraM2r2MdN3zqERDrd1PegH65C3xPoAKC_SnBFQCgeQbDUENDBE7-KdEyrmv2Yu0IErjHC-g2dkXlkdq89ncOWUS25D0pfgJhTjMr4VrOdf4RZHoE3ch0oNuuqjr3G6E'
+    # See documentation on defining a message payload.
+    message = messaging.Message(
+    notification=messaging.Notification(
+        title='안녕하세요 타이틀 입니다',
+        body='입차했습니다',
+    ),
+    token=registration_token,
+    )
+
+    response = messaging.send(message)
+    # Response is a message ID string.
+    print('Successfully sent message:', response)
+
+# def send_message():
+#     APIKEY = "Your Server Key"
+#     TOKEN = "Your Token"
+#     # 파이어베이스 콘솔에서 얻어 온 서버 키를 넣어 줌
+#     push_service = FCMNotification(APIKEY)
+
+#     # 메시지 (data 타입)
+#     data_message = {
+#         "body": "body",
+#         "title": "title
+#     }
+ 
+#     # 토큰값을 이용해 1명에게 푸시알림을 전송함
+#     result = push_service.single_device_data_message(registration_id=TOKEN, data_message=data_message)
+ 
+#     # 전송 결과 출력
+#     print(result)

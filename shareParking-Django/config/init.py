@@ -1,0 +1,3 @@
+from common.views import send_to_firebase_cloud_messaging
+
+send_to_firebase_cloud_messaging()

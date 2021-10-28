@@ -158,21 +158,17 @@
                 url: '/', //로그인   url
                 data: $(".post-form").serialize(),
                 success : function(response){ 
-                    alert("로그인 성공")
+                    // alert("로그인 성공")
                     // 
                     // console.log("res:"+response);
                     // console.log(response.username)
-                    // android.goMain(response.username);
+                    android.goMain(response.username);
                 },
                 error: function(err){
-                    alert("아이디와 비밀번호를 확인해주세요.");
+                    // alert("아이디와 비밀번호를 확인해주세요.");
                     // console.log("res: " + err);
                 }         
             })
 
     })
-
-    $(document).on('click', '#kakaoLogin', function(){
-		android.kakaoLogin();
-	});
 </script>

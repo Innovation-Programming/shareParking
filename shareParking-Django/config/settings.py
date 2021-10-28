@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
+import firebase_admin
+from firebase_admin import credentials
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -156,8 +158,8 @@ CHANNEL_LAYERS = {
     },
 }
 
-# LOGIN_REDIRECT_URL = '127.0.0.1:8000/map/main'
-# LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = 'map/main'
+LOGOUT_REDIRECT_URL = '/'
 
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'	
 EMAIL_HOST = 'smtp.gmail.com'
@@ -166,3 +168,9 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'tjtlgus5@gmail.com'
 EMAIL_HOST_PASSWORD = 'erbrzkxefkyxaedi'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# Firebase SDK 초기설정
+cred_path = os.path.join(BASE_DIR, "shareparking-4c6d4-firebase-adminsdk-pef4w-6eec41ea51.json")
+
+cred = credentials.Certificate(cred_path)
+firebase_admin.initialize_app(cred)

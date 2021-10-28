@@ -4,6 +4,7 @@
 <style>
     body {
         font-family:넥슨 고딕;
+        padding-top: 20px;
     }
 
     #background {
@@ -61,18 +62,20 @@
         color: white;
         padding:5px;
     }
-
-    .payment-list {
-        overflow: scroll;
-        position: fixed;
-        top:255px;
-        width:100%;
-        min-width:300px;
-        max-width:500px;
-        margin: 0 auto;
-        left: 0;
-        right: 0;
-        padding:20px;
+    .setting-box{
+        margin-top: 100px;
+    }
+    .setting-item{
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-top: 30px;
+        margin-bottom: 20px;
+        padding-top: 10px;
+        height: fit-content;
+    }
+    .setting-item > div{
+        margin-top: 30px;
+        margin-left: 50px;
     }
 
     .payment {
@@ -152,4 +155,96 @@
         <br>
     </div>
 </div>
+<div class='setting-box'>
+    <div class="setting-item payment-list">
+        <strong>사용자 설정</strong>
+        <div class="personal-setting">
+            <text>
+                계정관리
+            </text>
+        </div>
+        <hr>
+    </div>
+    <div class="setting-item payment-list">
+        <strong>판매자 등록</strong>
+        <div class="add-parkingLot">
+            <text>
+                주차장 등록
+            </text>
+        </div>
+        <hr>
+    </div>
+    <div class="setting-item app-info">
+        <strong>기타</strong>
+        <div class="logout">
+            <text>
+                로그아웃
+            </text>
+        </div>
+        <div class="setting-item leave" id="delete_user">
+            <text>
+                회원탈퇴
+            </text>
+        </div>
+        <hr>
+    </div>
+    <div class="setting-item app-info">
+        <strong>앱정보</strong>
+        <div class="info-application">
+            <text>
+                버전 정보
+            </text>
+            <text>
+                1.0.0
+            </text>
+        </div>
+        <div class="setting-item leave">
+            <text>
+                운영진
+            </text>
+            <text>
+                sihyun, 
+            </text>
+            <text>
+                takeny
+            </text>
+        </div>
+        <div class="setting-item leave">
+            <text>
+                문의연락처
+            </text>
+            <br>
+            <text>
+                tjtlgus5@gmail.com
+            </text>
+            <br>
+            <text>
+                희범이 이메일
+            </text>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('.personal-setting').on('click', function() {
+            location.href = "{% url 'common:personal_info' %}"
+        })
+        $('.logout').on('click', function() {
+            location.href = "{% url 'common:logout' %}";
+            android.returnMain();
+        })
+        $('#delete_user').on('click', function() {
+            location.href = "{% url 'common:delete_user' %}"
+        })
+        $('.add-parkingLot').on('click', function() {
+            android.goToMain()
+        })
+        
+    })
+    
+
+</script>
+
+
 {% endblock %}
