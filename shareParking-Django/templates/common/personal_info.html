@@ -156,17 +156,17 @@
                     <input class="form-control" name="user_phone" id="user_phone"
                            type="text" value="{{ user_phone }}" disabled>
                 </div>
-                <button id="edit" class="btn btn-primary" style="background-color:#58C9B9;" onclick="goToPersonalInfo()">수정하기</button>
-                <button type="submit" class="btn btn-primary" style="background-color:#58C9B9;">비밀번호 변경</button>
+                <button type="button" id = "edit" class="btn btn-primary" style="background-color:#58C9B9;" onclick="location.href='/edit_personal_info'">수정하기</button>
+                <button type="button" class="btn btn-primary" style="background-color:#58C9B9;" onclick="location.href='/change_password'">비밀번호 변경</button>
             </form>
         </div>
         <hr>
     </div>
 </div>
 
-<script>
+<!-- <script>
     function goToPersonalInfo() {
         location.href="{% url 'common:edit_personal_info' %}";
     }
-</script>
+</script> -->
 {% endblock %}

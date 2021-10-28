@@ -170,6 +170,7 @@ EMAIL_HOST_PASSWORD = 'erbrzkxefkyxaedi'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # Firebase SDK 초기설정
-cred_path = os.path.join(BASE_DIR, "firebaseKey.json")
+cred_path = os.path.join(BASE_DIR, "shareparking-4c6d4-firebase-adminsdk-pef4w-6eec41ea51.json")
+
 cred = credentials.Certificate(cred_path)
 firebase_admin.initialize_app(cred)

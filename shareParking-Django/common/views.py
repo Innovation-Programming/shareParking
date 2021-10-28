@@ -21,9 +21,56 @@ from django.template.loader import render_to_string
 from django.contrib.auth.hashers import check_password
 
 from firebase_admin import messaging
+from pyfcm import FCMNotification
+
+def change_password(request):
+    if request.method == "POST":
+        current_password = request.POST.get("origin_password")
+        user = request.user
+        
+        if check_password(current_password, user.password):
+            new_password = request.POST.get("password1")
+            password_confirm = request.POST.get("password2")
+            if new_password == password_confirm:
+                user.set_password(new_password)
+                user.save()
+                login(request, user)
+                return render(request, 'common/setting.html')
+
+    return render(request, 'common/change_password.html')
 
 def edit_personal_info(request):
-    return render(request, 'common/edit_personal_info.html')
+    user = request.user
+    req_user = Personal.objects.filter(user=user)
+    phone = req_user.first().phone
+    context = {
+        "user_phone" : phone
+    }
+
+    print("Personal로 조회한 기존 이메일")
+    bfEmail = req_user.first().email
+    print(bfEmail)
+
+    print("User로 조회한 기존 이메일")
+    req_user2 = User.objects.filter(username=user)
+    bfEmail2 = req_user2.first().email
+    print(bfEmail2)
+
+    if request.method == "POST":
+        newEmail = request.POST.get("email")
+        newPhone = request.POST.get("user_phone")
+        print(newEmail)
+        print(newPhone)
+
+        request.user.personal.email = newEmail
+        request.user.personal.phone = newPhone
+        request.user.personal.save()
+
+        request.user.email = newEmail
+        request.user.save()
+
+        return render(request, 'common/setting.html')
+    return render(request, 'common/edit_personal_info.html', context)
 
 def personal_info(request):
     user = request.user
@@ -92,8 +139,8 @@ def login_main(request):
             "username" : username,
             "password" : password,
         }
-        # return JsonResponse({'username':username})
-        return render(request, 'map/main.html', user_inform)
+        return JsonResponse({'username':username})
+        # return render(request, 'map/main.html', user_inform)
     return render(request, 'common/login.html')
 
 # @unauthenticated_user
@@ -244,13 +291,13 @@ def kakao_login(request):
 
 def send_to_firebase_cloud_messaging():
     # This registration token comes from the client FCM SDKs.
-    registration_token = 'fPICSaomBxM:APA91bHbha26djvrsMUmUG1lGBemg8hiUJs9rS-dzX3uVv92qFnZWx-7V1L_nCVkQyQeALeEUoPCzj6q9wIuPVpSN_FV44jtTVC3e0dydKCotvyZJGhtvs13tK0AojXslZSm9sodlE7L'
-
+    # registration_token = 'erCpWP1eT3So0zYMWBcj6p:APA91bGAZ5T2Wau0HqOqU_zvaJsZMvhghD15ExMbUZsGcqHlEcfbf-PfRR6W-19UGg2CRpzeKDLMlHy9zTmE69b9t7S5FxPsKbBtPzZn0iRBDJ0gShPBS35PtK7EfSPqPguzGzPx-Ca-'
+    registration_token = 'dBsL0YSLQ9u9WQdOjoOO3D:APA91bFKxrMATraM2r2MdN3zqERDrd1PegH65C3xPoAKC_SnBFQCgeQbDUENDBE7-KdEyrmv2Yu0IErjHC-g2dkXlkdq89ncOWUS25D0pfgJhTjMr4VrOdf4RZHoE3ch0oNuuqjr3G6E'
     # See documentation on defining a message payload.
     message = messaging.Message(
     notification=messaging.Notification(
         title='안녕하세요 타이틀 입니다',
-        body='안녕하세요 메세지 입니다',
+        body='입차했습니다',
     ),
     token=registration_token,
     )
@@ -258,3 +305,21 @@ def send_to_firebase_cloud_messaging():
     response = messaging.send(message)
     # Response is a message ID string.
     print('Successfully sent message:', response)
+
+# def send_message():
+#     APIKEY = "Your Server Key"
+#     TOKEN = "Your Token"
+#     # 파이어베이스 콘솔에서 얻어 온 서버 키를 넣어 줌
+#     push_service = FCMNotification(APIKEY)
+
+#     # 메시지 (data 타입)
+#     data_message = {
+#         "body": "body",
+#         "title": "title
+#     }
+ 
+#     # 토큰값을 이용해 1명에게 푸시알림을 전송함
+#     result = push_service.single_device_data_message(registration_id=TOKEN, data_message=data_message)
+ 
+#     # 전송 결과 출력
+#     print(result)

@@ -68,8 +68,9 @@
     .setting-item{
         margin-left: 10px;
         margin-right: 10px;
-        margin-top: 20px;
+        margin-top: 30px;
         margin-bottom: 20px;
+        padding-top: 10px;
         height: fit-content;
     }
     .setting-item > div{
@@ -164,6 +165,15 @@
         </div>
         <hr>
     </div>
+    <div class="setting-item payment-list">
+        <strong>판매자 등록</strong>
+        <div class="add-parkingLot">
+            <text>
+                주차장 등록
+            </text>
+        </div>
+        <hr>
+    </div>
     <div class="setting-item app-info">
         <strong>기타</strong>
         <div class="logout">
@@ -180,7 +190,7 @@
     </div>
     <div class="setting-item app-info">
         <strong>앱정보</strong>
-        <div class="logout">
+        <div class="info-application">
             <text>
                 버전 정보
             </text>
@@ -221,14 +231,19 @@
             location.href = "{% url 'common:personal_info' %}"
         })
         $('.logout').on('click', function() {
-            location.href = "{% url 'common:logout' %}"
+            location.href = "{% url 'common:logout' %}";
+            android.returnMain();
         })
         $('#delete_user').on('click', function() {
             location.href = "{% url 'common:delete_user' %}"
         })
+        $('.add-parkingLot').on('click', function() {
+            android.goToMain()
+        })
         
     })
     
+
 </script>
 
 

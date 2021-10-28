@@ -1,179 +1,396 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
 <style>
-    #btn-pri {
-        position:absolute;
-        bottom:0px;
-        left:0px;
-        width:100%;
-        background-color:#58C9B9;
+    #header {
+        background-color: #58C9B9;
         color:white;
-        font-family:넥슨 고딕 bold;
+        text-align: center;
+        height:180px;
+        padding: 20px;
+    }
+
+    #page-info {
+        margin:20px 0px ;
+    }
+
+    #page-name {
+        font-family: '넥슨 고딕 bold';
+        font-size:18px;
+    }
+
+    #page-desc {
+        font-size:12px;
+    }
+
+    #my-parks {
+        text-align: left;
+    }
+
+    body {
+        font-family: '넥슨 고딕';
+    }
+
+    /* form에 들어가는 tmap */
+    #tmap-div {
+        position: relative;
+        width: 100%;
+        height: 150px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+    }
+
+    #center-marker {
+        max-width:56;
+        height:auto;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform:translate(-50%, -50%);
+        z-index: 1;
+    }
+
+    #daum-postcode {
+        display:none;
+        position: absolute;
+        z-index: 9999;
+        top:0px;
+        width:100vw;
+        height:100%;
+    }
+
+    #post-header {
+        padding: 5px;
+        background-color: #58C9B9;
+        color: white;
+        font-family: '넥슨 고딕 bold';
+        text-align: center;
+    }
+
+    #post-header-close {
+        color: white;
+        position: absolute;
+        right:5px;
+        top:5px;
         font-size:21px;
     }
 
-    #btn_camera {
-        background-color:#58C9B9;
+    #content {
+        margin-top: 20px;
+        /* width:80%; */
+    }
+    .component {
+        margin:auto;
+        width:85%;
+        min-width:300px;
+    }
+
+    .form-label {
+        font-size:14px;
+    }
+
+    select {
+        visibility: visible;
+        -webkit-appearance: menulist-text;
+    }
+
+    /* override exist bootstrap style */
+    .btn-primary {
+        font-size:14px;
+        border-radius: 20px;
+        background-color: #33978a;
+        border:none;
         color:white;
     }
 
-    
-    #footer {
-        position:absolute;
-        bottom:62px;
-        width:100%;
-        height:auto;
-        background:#EDEDF2;
-    }   
-</style>
-<div style="display:table; width:100%; background-color:#58C9B9; height:50px; color:white">
-    <span style="display: table-cell; vertical-align:middle; width:100%; font-family:넥슨 고딕 bold; font-size:24px;">
-        &nbsp&nbsp주차장 등록
-    </span>
-</div>
-<div class="container" style="font-family: '넥슨 고딕';" style="width:100%">
-    <form method="post" class="post-form my-3"  enctype="multipart/form-data">
-        {% csrf_token %}
-        <!-- 오류표시 Start -->
-        {% if form.errors %}
-            <div class="alert alert-danger" role="alert">
-            {% for field in form %}
-                {% if field.errors %}
-                <strong>{{ field.label }}</strong>
-                {{ field.errors }}
-                {% endif %}
-            {% endfor %}
-            </div>
-        {% endif %}
-        <!-- 오류표시 End -->
+    .round {
         
-        <!-- 주초 검색창 -->
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="주차장 주소 입력" id="searchAddr">
-            <button class="btn btn-outline-secondary" onclick="setCenterByAddr(document.getElementById('searchAddr').value)" type="button" id="btn-find-addr">길찾기</button>
+        border-radius: 20px;
+    }
+    .btn-submit {
+        border-radius: 20px;
+        font-size:18px;
+        background-color: #58C9B9;
+        color: white;
+        width:100%;
+    }
+
+    #btn-modify {
+        border-radius: 20px;
+        font-size:18px;
+        background-color: #bc58c9;
+        color: white;
+        width:100%;
+    }
+    .btn-delete {
+        border-radius: 20px;
+        font-size:18px;
+        background-color: #b83f3f;
+        color: white;
+        width:100%;
+    }
+    .btn-primary:focus {
+        background-color: #1d685e;
+    }
+    .btn-primary:hover {
+        background-color: #1d685e;
+    }
+    .row> div {
+        padding-left: 0px;
+    }
+
+    .form-control-round {
+        border-radius: 400px;
+        background-color: #f9f9f9;
+    }
+</style>
+
+<div id="daum-postcode">
+    <div id="post-header">
+        주소 검색
+        <span id="post-header-close" class="material-icons">
+            close
+        </span>
+    </div>
+</div>
+
+<form method="post" class="post-form"  enctype="multipart/form-data">
+    <div id="header">
+        <div id="buttons" class="btn-group" role="group" aria-label="Basic example">
+            <button type="button" id="" onclick="goToPoint()" class="btn btn-primary round shadow-none">포인트</button>
+            <button type="button" id="" onclick="goToTicket()" class="btn btn-primary round shadow-none">주차권</button>
+            <button type="button" id="btn-myParkingLot" onclick="goToPark()" class="btn btn-primary round shadow-none">내주차장</button>
         </div>
-        <!-- t map 영역 -->
-        <div id="tmap-form">
-            <image src="{% static 'icon/marker_current.png' %}" id="center-marker"></image>
+        <div id="page-info">
+            <text id="page-name">
+                내 주차장 관리
+            </text>
+            <br>
+        </div>
+        <div class="input-group" >
+            <select class="form-select" id="myParks" aria-label="Example select with button addon">
+                <option selected value="-1">내 주차장 목록</option>
+            </select>
+            <button class="btn btn-primary btn-outline-secondary" onclick="window.location.reload()" type="button">초기화</button>
+          </div>
+    </div>
+    
+    <div id="content" class="component"  class="container">
+        
+        <div class="row mb-3" >
+            <div class=" col-8" style="margin:auto">
+                <input class="form-control form-control-round" id="input-name" name="name" placeholder="주차장 이름">
+            </div>
+        </div>
+        <div class="row" >
+            <div class="col-12">
+                <div id="tmap-div">
+                    <image src="{% static 'icon/marker_current.png' %}" id="center-marker"></image>
+                </div>
+            </div>
         </div>
         <script>
-            initTmapForm('tmap-form')
+            initTmapForm('tmap-div')
         </script>
-
-        <div class="mb-3 row">
-            <label class="col-3 col-form-label">주    소</label>
-            <div class="col-9">
-                <input type="text" class="form-control" id="inputAddr" name="address" 
-                    value="{{ form.address.value | default_if_none:'' }}" readonly>
+        <div class="row mb-3" >
+            <div class="col-12">
+                <label for="input-addr" class="form-label">주차장 주소</label>
+                <input class="form-control form-control-round" id="input-addr" name="address" placeholder="클릭하여 주차장 주소를 입력하세요.">
             </div>
         </div>
-        <div class="mb-3 row">
-            <label class="col-3 col-form-label">이    름</label>
-            <div class="col-9">
-                <input type="text" class="form-control" id="inputName" name="name" 
-                        value="{{ form.name.value | default_if_none:'' }}">
+        <div class="row mb-3" >
+            <div class="col-12">
+                <input class="form-control form-control-round" id="input-addr-detail" name="addr_detail" placeholder="상세 주소를 입력하세요." autocomplete="off">
             </div>
         </div>
-        <div class="mb-3 row">
-            <label class="col-3 col-form-label">이용요금</label>
-            <div class="col-5" style="padding-right:0px !important;">
-                <input type="number" class="form-control" id="inputFee" name="fee"
-                        value="{{ form.fee.value | default_if_none:'' }}">
+        <div class="row mb-3">
+            <div class="col-6">
+                <label for="input-addr" class="form-label">이용요금(10분당)</label>
+                <input type="number" class="form-control form-control-round" id="input-fee"  name="fee" placeholder="">
+            </div>
+            <div class="col-6">
+                <label for="input-addr" class="form-label">주차가능대수</label>
+                <input type="number" class="form-control form-control-round"  name="space" id="input-space"/>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-6">
+                <label for="input-start" class="form-label">운영시간</label>
+                <input type="text" id="input-start" class="form-control form-control-round" placeholder="시작시간" name="start_time">
+            </div>
+            <div class="col-6">
+                <label for="input-start" class="form-label">　</label>
+                <input type="text" id="input-end"  class="form-control form-control-round" placeholder="종료시간" name="end_time">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-12">
+                <label for="input-start" class="form-label">주차장 사진</label>
+                <div class="input-group mb-3">
+                    <div class="input-group">
+                        <input type="file" id="input-image"  class="form-control form-control-round" name="image"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-12">
+                <div class="form-floating">
+                    <textarea class="form-control" id="input-desc" placeholder="주차장 설명" style="white-space:nowrap; height: 100px; border-radius: 15px;
+                    background-color: #f9f9f9;" name="desc" onKeyPress="javascript: if (event.keyCode==13) return false;"></textarea>
+                    <label for="input-desc">주차장 설명</label>
+                  </div>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-4">
+                <button type="submit" onclick="submit()" id="btn-sumbit" class="btn  btn-submit">등&nbsp;&nbsp;&nbsp;&nbsp;록</button>
             </div>
             <div class="col-4">
-                <select class="form-select" aria-label="Default select example">
-                    <option selected>시간당</option>
-                </select>
+                <button type="button" onclick="submit()" id="btn-modify" class="btn">수&nbsp;&nbsp;&nbsp;&nbsp;정</button>
+            </div>
+            <div class="col-4">
+                <button type="button" class="btn btn-delete">삭&nbsp;&nbsp;&nbsp;&nbsp;제</button>
             </div>
         </div>
-
-        <div class="mb-3 row">
-            <label class="col-3 col-form-label">주차가능</label>
-            <div class="col-9">
-                <input type="number" class="form-control" id="inputSpace" name="space" 
-                        value="{{ form.name.value | default_if_none:'' }}">
-            </div>
-        </div>
-        
-        <div class="mb-3 row">
-            <label class="col-3 col-form-label">사    진</label>
-            <div class="col-9">
-                <div class="input-group mb-3">
-                        <input type="file" accept="image/*" name="image"/>
-                    <!-- <button type="button" class="btn" id="btn_camera">파일 선택</button> -->
-                    
-                    <!-- <input type="text" class="form-control" placeholder="Username"> -->
-                </div>
-                <!-- <input type="file" accpet="image/*" class="form-control" name='image' id="inputImage"> -->
-            </div>
-        </div>
-
-        <div class="mb-3 row">
-            <label class="col-3 col-form-label">운영시간</label>
-            <div class="col-4" style="position:relative">
-                <input type="text" class="form-control" id="inputStartTime" name="start_time" 
-                        value="{{ form.start_time.value | default_if_none:'' }}">
-            </div>
-            <div class="col-1" style="vertical-align:middle; text-align:center; font-size:24px; font-family:'넥슨 고딕';">
-                ~
-            </div>
-            <div class="col-4" style="position:relative">
-                <input type="text" class="form-control" id="inputEndTime" name="end_time" 
-                        value="{{ form.end_time.value | default_if_none:'' }}">
-                
-            </div>
-            <!-- end input창 자바스크립트 -->
-            <script type="text/javascript">
-                $(function () {
-                    $('#inputEndTime').datetimepicker({
-                        format: 'LT'
-                    });
-                });
-            </script>
-        </div>
-
-        
-        <a href="{% url 'pay:main' %}">결제</a>
-        <a href="{% url 'mypage:ticket' %}">마이페이지</a>
         <input type="hidden" id="inputLat" value="{{ form.latitude.value | default_if_none:'' }}" name="latitude"> 
         <input type="hidden" id="inputLng" value="{{ form.longitude.value | default_if_none:'' }}" name="longitude">
-        <div class="d-grid gap-2">
-            <button type="submit" class="btn btn" id="btn-pri">
-                저  장  하  기
-            </button>
-            
-        </div>
-        
-    </form>
-</div>
+    </div>
+</form>
 
 <script>
-    document.documentElement.addEventListener('touchstart', function (event) {
-     if (event.touches.length > 1) {
-          event.preventDefault(); 
-        } 
-    }, false);
+    var myParks = document.querySelector('#myParks');
+    parks = {};
+    "{% for park in parking_lot_list %}"
+        var option = document.createElement('option');
+        var name = "{{ park.name }}";
+        var id = "{{ park.id }}";
+        var addr = "{{ park.address }}";
+        var addr_detail = "{{ park.addr_detail }}";
+        var fee = "{{ park.fee }}";
+        var space = "{{ park.space }}";
+        var start_time = "{{ park.start_time }}";
+        var end_time = "{{ park.end_time }}";
+        var desc = "{{ park.desc }}"
+        var image = "{{ park.image }}"
+        option.innerText = name;
+        option.value = id
+        //option.value = subOption[i]; 이것도 가능합니다.
+        myParks.append(option);
+        parks[id] = {'name': name, 'addr': addr, 'addr_detail': addr_detail, 'fee': fee, 'space':space, 'start_time': start_time, 'end_time': end_time, 'image': image};
+    "{% endfor %}"
+    var themeObj = {
+        bgColor: "#FFFFFF", //바탕 배경색
+        searchBgColor: "#58C9B9", //검색창 배경색
+        //contentBgColor: "", //본문 배경색(검색결과,결과없음,첫화면,검색서제스트)
+        //pageBgColor: "", //페이지 배경색
+        //textColor: "", //기본 글자색
+        queryTextColor: "#FFFFFF", //검색창 글자색
+        postcodeTextColor: "#A169C5", //우편번호 글자색
+        emphTextColor: "#33978A" //강조 글자색
+        //outlineColor: "", //테두리
+    };
 
-    var lastTouchEnd = 0; 
+    $('#myParks').on('change', function() {
+        idx = this.value;
+        if(idx != "-1") {
+            $('#input-name').val(parks[idx].name);
+            $('#input-name').attr("disabled",true);
 
-    document.documentElement.addEventListener('touchend', function (event) {
-        var now = (new Date()).getTime();
-        if (now - lastTouchEnd <= 300) {
-            event.preventDefault(); 
-            } lastTouchEnd = now; 
-        }, false);
+            $('#input-addr').val(parks[idx].addr);
+            $('#input-addr-detail').val(parks[idx].addr_detail);
+            $('#input-fee').val(parks[idx].fee);
+            $('#input-space').val(parks[idx].space);
+            $('#input-start').val(parks[idx].start_time);
+            $('#input-end').val(parks[idx].end_time);
+            $('#input-desc').val(parks[idx].desc);
+            
+        } else {
+            window.location.reload()
+        }
+    })
 
-    $('#inputStartTime, #inputEndTime').clockTimePicker({
+    $('#input-addr').on('click', execDaumPostcode);
+    function execDaumPostcode() {
+        // 현재 scroll 위치를 저장해놓는다.
+        var currentScroll = Math.max(document.body.scrollTop, document.documentElement.scrollTop);
+        var element_wrap = document.getElementById('daum-postcode');
+
+        new daum.Postcode({
+            theme: themeObj,
+            oncomplete: function(data) {
+                // 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                var addr = ''; // 주소 변수
+                var extraAddr = ''; // 참고항목 변수
+
+                //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                    addr = data.roadAddress;
+                } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                    addr = data.jibunAddress;
+                }
+
+                // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+                if(data.userSelectedType === 'R'){
+                    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                    // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                        extraAddr += data.bname;
+                    }
+                    // 건물명이 있고, 공동주택일 경우 추가한다.
+                    if(data.buildingName !== '' && data.apartment === 'Y'){
+                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+                    if(extraAddr !== ''){
+                        extraAddr = ' (' + extraAddr + ')';
+                    }
+                    // 조합된 참고항목을 해당 필드에 넣는다.
+                } 
+                
+                // 참고항목을 주소에 더한다.
+                addr += extraAddr;
+
+                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                document.getElementById("input-addr").value = addr;
+
+                // iframe을 넣은 element를 안보이게 한다.
+                // (autoClose:false 기능을 이용한다면, 아래 코드를 제거해야 화면에서 사라지지 않는다.)
+                element_wrap.style.display = 'none';
+
+                // 우편번호 찾기 화면이 보이기 이전으로 scroll 위치를 되돌린다.
+                document.body.scrollTop = currentScroll;
+                
+                setCenterByAddr( addr);
+            },
+            onresize : function(size) {
+                element_wrap.style.height = size.height+'px';
+            },
+            width : '100%',
+            height : '100%'
+        }).embed(element_wrap);
+
+        // iframe을 넣은 element를 보이게 한다.
+        element_wrap.style.display = 'block';
+        
+        $("#post-header-close").on("click", function() {
+            element_wrap.style.display = 'none';
+        })
+    }
+    $('#input-start, #input-end').clockTimePicker({
         duration: true,
         precision: 5
     });
 
-    // $(document).on('click', '#btn_camera', function(){
-	// 	// var value = this.value;
-	// 	// alert(value);
-	// 	// console.log(value);
-	// 	androidPersonal.camera();
-	// });
+    function submit() {
+        android.goToMain();
+    }
 </script>
+
 {% endblock %} 
