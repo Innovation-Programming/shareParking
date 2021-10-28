@@ -67,10 +67,10 @@ def parking_lot_create(request):
 @csrf_exempt
 @login_required(login_url='login')
 def parking_lot_modify(request):
+    parking_lot_list = ParkingLot.objects.filter(user=request.user)
+    
     if request.method == 'POST':
-        parking_lot_list = ParkingLot.objects.filter(user=request.user)
-        parking_lot_list = parking_lot_list.order_by("id")
-        name = request.POST['name']
+        id = request.POST['id']
         address = request.POST['address']
         addr_detail = request.POST['addr_detail']
         fee = request.POST['fee']
@@ -78,27 +78,24 @@ def parking_lot_modify(request):
         end_time = request.POST['end_time']
         latitude = request.POST['latitude']
         longitude = request.POST['longitude']
-        image = request.FILES['image']
-        user = request.user
         space = request.POST['space']
-        desc = request.POST['description']
+        desc = request.POST['desc']
 
-        ParkingLot.objects.create(
-            user = user,
-            name = name,
-            address = address,
-            addr_detail = addr_detail,
-            image = image,
-            start_time = start_time,
-            end_time = end_time,
-            latitude = latitude,
-            longitude = longitude,
-            fee = fee,
-            space=space,
-            description=desc
-        )
-        return redirect('map:main')
+        park = parking_lot_list.get(id=id)
+        
+        park.address = address
+        park.addr_detail = addr_detail
+        park.fee = fee
+        park.start_time = start_time
+        park.end_time = end_time
+        park.latitude = latitude
+        park.longitude = longitude
+        park.space = space
+        park.desc = desc
+        park.save()
+        return HttpResponse(json.dumps({'status': "success"}), content_type="application/json")
     context = {'parking_lot_list': parking_lot_list}
+    
     return render(request, 'map/parking_lot_form.html', context)
 
 # def form_test(request):

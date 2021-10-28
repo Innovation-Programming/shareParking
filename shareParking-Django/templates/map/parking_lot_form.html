@@ -157,12 +157,11 @@
     </div>
 </div>
 
-<form method="post" class="post-form"  enctype="multipart/form-data">
+<form method="post" class="post-form" id="park-form" enctype="multipart/form-data">
     <div id="header">
         <div id="buttons" class="btn-group" role="group" aria-label="Basic example">
             <button type="button" id="" onclick="goToPoint()" class="btn btn-primary round shadow-none">포인트</button>
             <button type="button" id="" onclick="goToTicket()" class="btn btn-primary round shadow-none">주차권</button>
-            <button type="button" id="btn-myParkingLot" onclick="goToPark()" class="btn btn-primary round shadow-none">내주차장</button>
         </div>
         <div id="page-info">
             <text id="page-name">
@@ -250,7 +249,7 @@
                 <button type="submit" onclick="submit()" id="btn-sumbit" class="btn  btn-submit">등&nbsp;&nbsp;&nbsp;&nbsp;록</button>
             </div>
             <div class="col-4">
-                <button type="button" onclick="submit()" id="btn-modify" class="btn">수&nbsp;&nbsp;&nbsp;&nbsp;정</button>
+                <button type="button" onclick="modify()" id="btn-modify" class="btn">수&nbsp;&nbsp;&nbsp;&nbsp;정</button>
             </div>
             <div class="col-4">
                 <button type="button" class="btn btn-delete">삭&nbsp;&nbsp;&nbsp;&nbsp;제</button>
@@ -264,6 +263,7 @@
 <script>
     var myParks = document.querySelector('#myParks');
     parks = {};
+    idx = -1;
     "{% for park in parking_lot_list %}"
         var option = document.createElement('option');
         var name = "{{ park.name }}";
@@ -276,11 +276,14 @@
         var end_time = "{{ park.end_time }}";
         var desc = "{{ park.desc }}"
         var image = "{{ park.image }}"
+        var latitude = "{{ park.latitude }}";
+        var longitude = "{{ park.longitude }}"
         option.innerText = name;
         option.value = id
         //option.value = subOption[i]; 이것도 가능합니다.
         myParks.append(option);
-        parks[id] = {'name': name, 'addr': addr, 'addr_detail': addr_detail, 'fee': fee, 'space':space, 'start_time': start_time, 'end_time': end_time, 'image': image};
+        parks[id] = {'name': name, 'addr': addr, 'addr_detail': addr_detail, 'fee': fee, 'space':space, 'start_time': start_time, 'end_time': end_time, 'image': image, 'latitude': latitude, 'longitude': longitude, 'desc': desc};
+
     "{% endfor %}"
     var themeObj = {
         bgColor: "#FFFFFF", //바탕 배경색
@@ -299,7 +302,7 @@
         if(idx != "-1") {
             $('#input-name').val(parks[idx].name);
             $('#input-name').attr("disabled",true);
-
+            $('#input-image').attr("disabled",true);
             $('#input-addr').val(parks[idx].addr);
             $('#input-addr-detail').val(parks[idx].addr_detail);
             $('#input-fee').val(parks[idx].fee);
@@ -307,7 +310,7 @@
             $('#input-start').val(parks[idx].start_time);
             $('#input-end').val(parks[idx].end_time);
             $('#input-desc').val(parks[idx].desc);
-            
+            setCenterByAddr(parks[idx].addr);
         } else {
             window.location.reload()
         }
@@ -390,6 +393,54 @@
 
     function submit() {
         android.goToMain();
+    }
+
+    function modify() {
+        if(idx != -1) {
+            jQuery.ajax({
+                url: "/map/form/modify",
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    id : idx,
+                    address : $('#input-addr').val(),
+                    addr_detail : $('#input-addr-detail').val(),
+                    fee : $('#input-fee').val(),
+                    start_time : $('#input-start').val(),
+                    end_time : $('#input-end').val(),
+                    latitude : $('#inputLat').val(),
+                    longitude : $('#inputLng').val(),
+                    space : $('#input-space').val(),
+                    desc : $('#input-space').val(),
+                },
+                success: function (data) {
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: '수정 성공',
+                        text: '수정이 완료되었습니다.',
+                        confirmButtonColor: '#58C9B9',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            submit();
+                        }
+                    })
+                },
+                error: function() {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '수정 실패',
+                        text: '수정이 실패했습니다.',
+                        confirmButtonColor: '#58C9B9',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            goToMain();
+                        }
+                    })
+                }
+            })
+        }
+        
     }
 </script>
 
