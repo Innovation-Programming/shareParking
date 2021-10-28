@@ -195,11 +195,11 @@ public class MainActivity extends AppCompatActivity {
             }
 
             // Registration succeeded, display an alert with the device token
-            new android.app.AlertDialog.Builder(this.mActivity)
-                    .setTitle("Pushy")
-                    .setMessage(message)
-                    .setPositiveButton(android.R.string.ok, null)
-                    .show();
+//            new android.app.AlertDialog.Builder(this.mActivity)
+//                    .setTitle("Pushy")
+//                    .setMessage(message)
+//                    .setPositiveButton(android.R.string.ok, null)
+//                    .show();
         }
     }
 

@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
@@ -29,6 +31,8 @@ import com.example.parking.Test;
 public class SettingFragment extends Fragment {
     private SettingViewModel settingViewModel;
 
+    private long backBtnTime = 0;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View myView = inflater.inflate(R.layout.activity_setting, container, false);
@@ -37,6 +41,20 @@ public class SettingFragment extends Fragment {
         myWebView.setWebViewClient(new WebViewClient());
         WebSettings webSettings = myWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
+
+        myWebView.canGoBack();
+        myWebView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if (i == KeyEvent.KEYCODE_BACK
+                        && keyEvent.getAction() == MotionEvent.ACTION_UP
+                        && myWebView.canGoBack()) {
+                    myWebView.goBack();
+                    return true;
+                }
+                return false;
+            }
+        });
 
         myWebView.addJavascriptInterface(new SettingFragment.AndroidBridge(), "android");
         myWebView.loadUrl("https://shareparking.kr/setting");
