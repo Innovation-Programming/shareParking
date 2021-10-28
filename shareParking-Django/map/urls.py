@@ -8,10 +8,11 @@ app_name = 'map'
 urlpatterns = [
     path('main/', views.index, name="main"),
     path('form/', views.parking_lot_create, name='parking_lot_create'),
+    path('form/modify', views.parking_lot_modify, name='parking_lot_modify'),
     path('test_chat/', views.test_chat, name="test_chat"),
     path('ticket/buy/<int:parking_lot_id>', views.buy_ticket, name='buy_ticket'),
     path('ticket/create/', views.create_ticket, name='create_ticket'),
-    path('ticket/confirm/', views.confirm_ticket, name='confirm_ticket')
+    path('ticket/confirm/', views.confirm_ticket, name='confirm_ticket'),
     # path("login/kakao/", views.kakao_login, name="kakao-login"),
     # path(
     #     "login/kakao/callback/",
