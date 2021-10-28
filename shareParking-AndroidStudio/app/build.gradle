@@ -12,6 +12,8 @@ android {
         versionCode 1
         versionName "1.0"
 
+        multiDexEnabled true //추가한 아이
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -49,6 +51,10 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:17.2.3'
     implementation 'com.google.firebase:firebase-database:19.2.1'
     implementation 'com.google.firebase:firebase-messaging:20.1.2'
+
+    implementation 'me.pushy:sdk:1.0.73'
+
+    implementation 'androidx.multidex:multidex:2.0.1' //추가한 아이
 
     implementation 'gun0912.ted:tedpermission:2.0.0' // 추가해야 하는 부분
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'

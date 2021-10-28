@@ -1,7 +1,9 @@
 package com.example.parking.ui.setting;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -21,6 +24,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.parking.MainActivity;
 import com.example.parking.R;
 import com.example.parking.Signin;
+import com.example.parking.Test;
 
 public class SettingFragment extends Fragment {
     private SettingViewModel settingViewModel;
@@ -42,10 +46,17 @@ public class SettingFragment extends Fragment {
 
     class AndroidBridge {
         @JavascriptInterface
-        public void returnMain(String username) {
-            Intent intent = new Intent(getActivity().getApplicationContext(), Signin.class);
+        public void returnMain() {
+//            ActivityCompat.finishAffinity(getActivity());
+            Intent intent = new Intent(getContext(), Signin.class);
             startActivity(intent);
 
+            getActivity().finish();
+        }
+        @JavascriptInterface
+        public void goToMain() {
+            Intent intent = new Intent(getContext(), Test.class);
+            startActivity(intent);
         }
     }
 }

@@ -14,6 +14,8 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Window;
+import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
@@ -28,6 +30,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import com.example.parking.R;
+import com.example.parking.ui.personal.PersonalFragment;
 
 import java.io.File;
 
@@ -128,6 +131,8 @@ public class Test extends AppCompatActivity {
             }
         });
 
+        mWebView.addJavascriptInterface(new AndroidBridge(), "android");
+
         // 사용자의 웹뷰에 띄울 웹페이지 주소
         mWebView.loadUrl("https://shareparking.kr/map/form");
     }
@@ -141,7 +146,6 @@ public class Test extends AppCompatActivity {
                 return false;
             }
         }
-
         return super.onKeyDown(keyCode, event);
     }
 
@@ -276,6 +280,15 @@ public class Test extends AppCompatActivity {
         } else {// 바로 카메라 실행..
             startActivityForResult(intentCamera, FILECHOOSER_LOLLIPOP_REQ_CODE);
         }
+    }
+
+    class AndroidBridge {
+        @JavascriptInterface
+        public void goToMain() {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+        }
+
     }
 }
 

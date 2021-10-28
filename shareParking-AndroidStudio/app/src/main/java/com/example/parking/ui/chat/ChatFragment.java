@@ -2,15 +2,20 @@ package com.example.parking.ui.chat;
 
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
+import android.webkit.JsResult;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -23,6 +28,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
@@ -50,6 +56,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChatFragment extends Fragment {
+
+    public ValueCallback<Uri> filePathCallbackNormal;
+    public ValueCallback<Uri[]> filePathCallbackLollipop;
+    public final static int FILECHOOSER_NORMAL_REQ_CODE = 2001;
+    public final static int FILECHOOSER_LOLLIPOP_REQ_CODE = 2002;
 //    private SettingViewModel settingViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -58,6 +69,9 @@ public class ChatFragment extends Fragment {
 
         WebView myWebView = myView.findViewById(R.id.webVw_setting);
 //        myWebView.setWebViewClient(new WebViewClient());
+//----------------------------------------------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------------------------------------------
         myWebView.setWebViewClient(new WebViewClient(){
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -155,6 +169,9 @@ public class ChatFragment extends Fragment {
 //        return root;
         return myView;
     }
+//----------------------------------------------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------------------------------------------
 
     class AndroidBridge {
         @JavascriptInterface
@@ -163,7 +180,14 @@ public class ChatFragment extends Fragment {
             startActivity(intent);
             System.out.println("TestActivity: 넘어갔음");
         }
+
+//        @JavascriptInterface
+//        public void goToMain() {
+//            Intent intent = new Intent(getActivity(), MainActivity.class);
+//            startActivity(intent);
+//        }
     }
+
     }
 //    private DatabaseReference chattingList;
 //    private ChatViewModel chatViewModel;

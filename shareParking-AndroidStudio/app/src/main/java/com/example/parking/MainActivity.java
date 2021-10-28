@@ -1,12 +1,15 @@
 package com.example.parking;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
@@ -28,6 +31,11 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import java.net.URL;
+
+import me.pushy.sdk.Pushy;
+import me.pushy.sdk.util.exceptions.PushyException;
+
 public class MainActivity extends AppCompatActivity {
 
     private GpsTracker gpsTracker;
@@ -47,6 +55,35 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (!Pushy.isRegistered(this)) {
+            new RegisterForPushNotificationsAsync(this).execute();
+        }
+
+//        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+//            @Override
+//            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+//                if(!task.isSuccessful()) {
+//                    Log.w("token", "getInstanceId failed", task.getException());
+//                    return;
+//                }
+//
+//                //Get new Instance ID token
+//                String token = task.getResult().getToken();
+//
+////                SharedPreferences sharedPreferences = getSharedPreferences("sFile", MODE_PRIVATE);
+////                SharedPreferences.Editor editor = sharedPreferences.edit();
+//////                String token = task.getResult().getToken();
+////                editor.putString("Token1", token);
+////                editor.commit();
+//
+//                System.out.println("---what is token---");
+//                Log.d("token", "what is token: " + token);
+//                System.out.println("---what is token---");
+//
+//                Toast.makeText(MainActivity.this, token, Toast.LENGTH_LONG).show();
+//            }
+//        });
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -87,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
 //        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
+
         //카카오로그인 정보 넘기기
         Intent intent_info = getIntent();
         strNick = intent_info.getStringExtra("name");
@@ -106,27 +144,86 @@ public class MainActivity extends AppCompatActivity {
 //        Toast.makeText(MainActivity.this, "현재위치 \n위도 " + latitude + "\n경도 " + longitude, Toast.LENGTH_LONG).show();
     }
 
-    public void getToken() {
-        //토큰값 받아오기(개개인 유저의 핸드폰 고유의 토큰값임)
-        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-            @Override
-            public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                if (!task.isSuccessful()) {
-                    return;
-                }
-                //SharedPreference 사용하여 토큰 값 저장
+    private class RegisterForPushNotificationsAsync extends AsyncTask<Void, Void, Object> {
+        Activity mActivity;
+
+        public RegisterForPushNotificationsAsync(Activity activity) {
+            this.mActivity = activity;
+        }
+
+        protected Object doInBackground(Void... params) {
+            try {
+                // Register the device for notifications
+                String deviceToken = Pushy.register(getApplicationContext());
+
+                System.out.println("deviceToken : " + deviceToken);
+
+                // Registration succeeded, log token to logcat
+                Log.d("Pushy", "Pushy device token: " + deviceToken);
+
+                // Send the token to your backend server via an HTTP GET request
+//                new URL("https://{YOUR_API_HOSTNAME}/register/device?token=" + deviceToken).openConnection();
+
+                // Provide token to onPostExecute()
+                return deviceToken;
+            }
+            catch (Exception exc) {
+                // Registration failed, provide exception to onPostExecute()
+                return exc;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Object result) {
+            String message;
+
+            // Registration failed?
+            if (result instanceof Exception) {
+                // Log to console
+                Log.e("Pushy", result.toString());
+
                 SharedPreferences sharedPreferences = getSharedPreferences("sFile", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                String token = task.getResult().getToken();
-                editor.putString("Token1", token);
+                editor.putString("tokenFromPushy", result.toString());
                 editor.commit();
 
-                System.out.println("!!!!tokenChecktokenChecktokenChecktokenChecktokenChecktokenCheck!!!!");
-                System.out.println(token);
-                System.out.println("!!!!tokenChecktokenChecktokenChecktokenChecktokenChecktokenCheck!!!!");
+                // Display error in alert
+                message = ((Exception) result).getMessage();
             }
-        });
+            else {
+                message = "Pushy device token: " + result.toString() + "\n\n(copy from logcat)";
+            }
+
+            // Registration succeeded, display an alert with the device token
+            new android.app.AlertDialog.Builder(this.mActivity)
+                    .setTitle("Pushy")
+                    .setMessage(message)
+                    .setPositiveButton(android.R.string.ok, null)
+                    .show();
+        }
     }
+
+//    public void getToken() {
+//        //토큰값 받아오기(개개인 유저의 핸드폰 고유의 토큰값임)
+//        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+//            @Override
+//            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+//                if (!task.isSuccessful()) {
+//                    return;
+//                }
+//                //SharedPreference 사용하여 토큰 값 저장
+//                SharedPreferences sharedPreferences = getSharedPreferences("sFile", MODE_PRIVATE);
+//                SharedPreferences.Editor editor = sharedPreferences.edit();
+//                String token = task.getResult().getToken();
+//                editor.putString("Token1", token);
+//                editor.commit();
+//
+//                System.out.println("!!!!tokenChecktokenChecktokenChecktokenChecktokenChecktokenCheck!!!!");
+//                System.out.println(token);
+//                System.out.println("!!!!tokenChecktokenChecktokenChecktokenChecktokenChecktokenCheck!!!!");
+//            }
+//        });
+//    }
 
 
 

@@ -46,7 +46,7 @@ import static android.content.Context.MODE_PRIVATE;
 //public class MapFragment extends AppCompatActivity {
 public class MapFragment extends Fragment {
     private MapViewModel mapViewModel;
-    String token;
+    String token = null;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -80,7 +80,9 @@ public class MapFragment extends Fragment {
 
         myWebView.addJavascriptInterface(new AndroidBridge(), "androidMain");
         SharedPreferences sf = getContext().getSharedPreferences("sFile",MODE_PRIVATE);
-        token = sf.getString("Token1", token);
+        token = sf.getString("tokenFromPushy", null);
+
+        System.out.println("이 기기의 토큰값은 : " + token);
 
 
         myWebView.setWebChromeClient(new WebChromeClient() {
@@ -92,12 +94,6 @@ public class MapFragment extends Fragment {
         });
 
         myWebView.loadUrl("https://shareparking.kr/map/main?userToken="+token);
-
-        System.out.println("tokenChecktokenChecktokenChecktokenChecktokenChecktokenCheck");
-        System.out.println(token);
-        System.out.println("tokenChecktokenChecktokenChecktokenChecktokenChecktokenCheck");
-
-
 
         return myView;
     }
