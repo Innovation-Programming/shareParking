@@ -74,9 +74,11 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.example.parking.Camera;
 import com.example.parking.ChatActivity;
+import com.example.parking.MainActivity;
 import com.example.parking.Navi;
 import com.example.parking.R;
 import com.example.parking.Signin;
+import com.example.parking.Test;
 import com.example.parking.ui.map.MapFragment;
 import com.example.parking.ui.setting.SettingViewModel;
 
@@ -118,6 +120,69 @@ public class PersonalFragment extends Fragment {
         webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         webSettings.setDomStorageEnabled(true);
 
+
+        myWebView.setWebChromeClient(new WebChromeClient(){
+            // 자바스크립트의 alert창
+            @Override
+            public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
+                new android.app.AlertDialog.Builder(view.getContext())
+                        .setTitle("Alert")
+                        .setMessage(message)
+                        .setPositiveButton(android.R.string.ok,
+                                new android.app.AlertDialog.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        result.confirm();
+                                    }
+                                })
+                        .setCancelable(false)
+                        .create()
+                        .show();
+                return true;
+            }
+
+            @Override
+            public boolean onJsConfirm(WebView view, String url, String message,
+                                       final JsResult result) {
+                new android.app.AlertDialog.Builder(view.getContext())
+                        .setTitle("Confirm")
+                        .setMessage(message)
+                        .setPositiveButton("Yes",
+                                new android.app.AlertDialog.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        result.confirm();
+                                    }
+                                })
+                        .setNegativeButton("No",
+                                new android.app.AlertDialog.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        result.cancel();
+                                    }
+                                })
+                        .setCancelable(false)
+                        .create()
+                        .show();
+                return true;
+            }
+
+            // For Android 5.0+ 카메라 - input type="file" 태그를 선택했을 때 반응
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            public boolean onShowFileChooser(
+                    WebView webView, ValueCallback<Uri[]> filePathCallback,
+                    FileChooserParams fileChooserParams) {
+                Log.d("MainActivity", "5.0+");
+
+                // Callback 초기화 (중요!)
+                if (filePathCallbackLollipop != null) {
+                    filePathCallbackLollipop.onReceiveValue(null);
+                    filePathCallbackLollipop = null;
+                }
+                filePathCallbackLollipop = filePathCallback;
+
+                boolean isCapture = fileChooserParams.isCaptureEnabled();
+                runCamera(isCapture);
+                return true;
+            }
+        });
 
         myWebView.loadUrl("https://shareparking.kr/map/form");
 //        myWebView.setWebChromeClient(new WebChromeClient() {
@@ -231,7 +296,7 @@ public class PersonalFragment extends Fragment {
 //        webSettings.setJavaScriptEnabled(true);
 //        webSettings.setMediaPlaybackRequiresUserGesture(false);
 //        webSettings.setPluginState(WebSettings.PluginState.ON);
-        myWebView.addJavascriptInterface(new AndroidBridge(), "androidPersonal");
+        myWebView.addJavascriptInterface(new PersonalFragment.AndroidBridge(), "personal");
 //        webSettings.setDomStorageEnabled(true);
 
 //        return root;
@@ -298,7 +363,6 @@ public class PersonalFragment extends Fragment {
                         return;
                     }
                 }
-//                Toast.makeText(this, "Succeed Read/Write external storage !", Toast.LENGTH_SHORT).show();
 
             }
         }
@@ -491,6 +555,7 @@ public class PersonalFragment extends Fragment {
             //return super.shouldOverrideUrlLoading(view, request);
         }
     }
+
     class AndroidBridge {
         @JavascriptInterface
         public void camera() {
@@ -498,6 +563,13 @@ public class PersonalFragment extends Fragment {
             startActivity(intent);
             System.out.println("cameraAction: 넘어갔음");
         }
+
+        @JavascriptInterface
+        public void goToMain() {
+            Intent intent = new Intent(getContext(), MainActivity.class);
+            startActivity(intent);
+        }
+
     }
 }
 

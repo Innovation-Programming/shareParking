@@ -96,7 +96,8 @@ public class ChatActivity extends AppCompatActivity {
 
         mRecyclerView.setAdapter(mAdapter);
         // Write a message to the database
-        final FirebaseDatabase database = FirebaseDatabase.getInstance(); // 데이터베이스 생성 및 선언
+//        final FirebaseDatabase database = FirebaseDatabase.getInstance(); // 데이터베이스 생성 및 선언
+        final FirebaseDatabase database2 = FirebaseDatabase.getInstance("https://shareparking-28989-default-rtdb.firebaseio.com/");
 
 //        System.out.println("parkingAdmin값 초기화 유무: " + sharedPreferences.getString("parkingAdmin", "user"));
 
@@ -111,7 +112,7 @@ public class ChatActivity extends AppCompatActivity {
 
         System.out.println("제대로들어갔니?: " + chatList_val_click);
 
-        chattingList = database.getReference("chattingList"); //채팅 리스트 database
+        chattingList = database2.getReference("chattingList"); //채팅 리스트 database
         chattingList.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -137,7 +138,7 @@ public class ChatActivity extends AppCompatActivity {
         chatRoomName = chatList_val_click;
         System.out.println("123123123: " + chatRoomName);
 
-        myRef = database.getReference(chatRoomName); // message받아오기
+        myRef = database2.getReference(chatRoomName); // message받아오기
         myRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {

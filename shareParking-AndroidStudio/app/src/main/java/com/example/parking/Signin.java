@@ -79,7 +79,7 @@ public class Signin extends AppCompatActivity {
 
     }
 
-    class AndroidBridge {
+    public class AndroidBridge {
         @JavascriptInterface
         public void goMain(String username) {
             //이렇게 받아서 핸드폰에 저장해
@@ -106,7 +106,7 @@ public class Signin extends AppCompatActivity {
 
             session.open(AuthType.KAKAO_LOGIN_ALL, Signin.this);
         }
-        
+
 //            mSessionCallback = new ISessionCallback() {
 //                @Override
 //                public void onSessionOpened() {
