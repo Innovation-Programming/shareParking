@@ -41,10 +41,6 @@ public class Signin extends AppCompatActivity {
 //    private Context nickname;
 //    private ISessionCallback mSessionCallback;
 
-
-    private SessionCallback sessionCallback = new SessionCallback();
-    Session session;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,50 +95,6 @@ public class Signin extends AppCompatActivity {
 
 //            return nickname;
         }
-
-        public void kakaoLogin(){
-            session = Session.getCurrentSession();
-            session.addCallback(sessionCallback);
-
-            session.open(AuthType.KAKAO_LOGIN_ALL, Signin.this);
-        }
-
-//            mSessionCallback = new ISessionCallback() {
-//                @Override
-//                public void onSessionOpened() {
-//                    //로그인 요청
-//                    UserManagement.getInstance().me(new MeV2ResponseCallback() {
-//                        @Override
-//                        public void onFailure(ErrorResult errorResult) {
-//                            //로그인 실패
-//                            Toast.makeText(Signin.this, "로그인 도중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show();
-//                        }
-//
-//                        @Override
-//                        public void onSessionClosed(ErrorResult errorResult) {
-//                            //세션이 닫힘
-//                            Toast.makeText(Signin.this, "세션이 닫혔습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
-//                        }
-//
-//                        @Override
-//                        public void onSuccess(MeV2Response result) {
-//                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//                            intent.putExtra("name", result.getKakaoAccount().getProfile().getNickname());
-//                            intent.putExtra("email", result.getKakaoAccount().getEmail());
-//                            startActivity(intent);
-//                            Toast.makeText(Signin.this, "환영합니다.", Toast.LENGTH_SHORT).show();
-//                        }
-//                    });
-//                }
-//
-//                @Override
-//                public void onSessionOpenFailed(KakaoException exception) {
-//                    Toast.makeText(Signin.this, "onSessionOpenFailed", Toast.LENGTH_SHORT).show();
-//                }
-//            };
-//            Session.getCurrentSession().addCallback(mSessionCallback);
-//            Session.getCurrentSession().checkAndImplicitOpen();
-//        }
     }
     private void getHashKey(){
         PackageInfo packageInfo = null;

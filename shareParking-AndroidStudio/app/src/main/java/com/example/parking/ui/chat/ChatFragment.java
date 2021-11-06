@@ -9,7 +9,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
@@ -54,6 +56,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class ChatFragment extends Fragment {
 
@@ -160,9 +164,26 @@ public class ChatFragment extends Fragment {
                 public final static String PACKAGE_SAMSUNG = "kr.co.samsungcard.mpocket";
             }
         });
+
+        myWebView.canGoBack();
+        myWebView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if (i == KeyEvent.KEYCODE_BACK
+                        && keyEvent.getAction() == MotionEvent.ACTION_UP
+                        && myWebView.canGoBack()) {
+                    myWebView.goBack();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+
+
         WebSettings webSettings = myWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
-        myWebView.addJavascriptInterface(new ChatFragment.AndroidBridge(), "androidPersonal");
+        myWebView.addJavascriptInterface(new AndroidBridge(), "Personal");
 
 //        myWebView.addJavascriptInterface(new SettingFragment.AndroidBridge(), "android");
         myWebView.loadUrl("https://shareparking.kr/mypage");
@@ -181,14 +202,31 @@ public class ChatFragment extends Fragment {
             System.out.println("TestActivity: 넘어갔음");
         }
 
-//        @JavascriptInterface
-//        public void goToMain() {
-//            Intent intent = new Intent(getActivity(), MainActivity.class);
-//            startActivity(intent);
-//        }
-    }
+        @JavascriptInterface
+        public void personalChatRoom(String parkingAdmin) {
+            //이렇게 받아서 핸드폰에 저장해
+            //sharedpreferences 이것을 써서
+            Intent intent = new Intent(getActivity(), ChatActivity.class);
+            startActivity(intent);
+            System.out.println("------------------------------parkingAdmin--------------------------------");
+            System.out.println(parkingAdmin);
+            System.out.println("------------------------------------------------------------------");
+//            PreferenceManager.setString(nickname, "loginId", nickuser);
+            SharedPreferences sharedPreferences = getContext().getSharedPreferences("sFile",MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            String adminUser = parkingAdmin;
+            editor.putString("parkingAdmin", adminUser);
+            editor.commit();
+            System.out.println("---------------------------------adminUser---------------------------------");
+            System.out.println(adminUser);
+            System.out.println("------------------------------------------------------------------");
 
+//            return adminUser;
+        }
     }
+}
+
+
 //    private DatabaseReference chattingList;
 //    private ChatViewModel chatViewModel;
 //    private ArrayList<String> list2, displayList;
