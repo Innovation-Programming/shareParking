@@ -119,7 +119,7 @@ def ForgotPwView(request):
             message = "초기화된 비밀번호 안내입니다. 비밀번호는 1111 입니다. 초기화된 비밀번호로 로그인하여 비밀번호를 재설정 해주세요."
             EmailMessage(subject=subject, body=message, to=to, from_email=from_email).send()
             print("1")
-            messages.info(request, "비밀번호 초기화 이메일을 확인해주세요. 기입한 이메일로 전송하였습니다.")
+            messages.info(request, "비밀번호 초기화 이메일을 확인해주세요.\n기입한 이메일로 전송하였습니다.")
             print("2")
         except Exception as e:
             print(e)
@@ -145,18 +145,23 @@ def login_main(request):
 
 # @unauthenticated_user
 def ForgotIDView(request):
-    context = {}
     if request.method == "POST":
         email = request.POST.get('email')
-        print(email)
-        try:
-            user = User.objects.get(email=email)
-            userId = user
-            if user is not None:
-                messages.info(request, "가입된 아이디는 " + str(user) + " 입니다.")
-        except:
+        print("입력된 이메일은 : " + email)
+        if len(email) == 0:
             messages.info(request, "가입된 정보가 없습니다.")
-    return render(request, 'common/findID.html', context)
+        else:
+            try:
+                user = User.objects.get(email=email)
+                userId = user
+                if user != "":
+                    messages.info(request, "가입된 아이디는 " + str(user) + " 입니다.")
+                else:
+                    messages.info(request, "가입된 정보가 없습니다.")
+            except:
+                print("")
+                # messages.info(request, "가입된 정보가 없습니다.")
+    return render(request, 'common/findID.html')
 
 
 def logout_view(request):

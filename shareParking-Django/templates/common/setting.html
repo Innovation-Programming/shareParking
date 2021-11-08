@@ -5,157 +5,226 @@
     body {
         font-family:넥슨 고딕;
         padding-top: 20px;
+        background-color: #f3f3f3;
+        color:rgb(61, 61, 61)
     }
 
-    #background {
-        background-color: #58C9B9;
-        color:white;
-        position: fixed;
-        top:0px;
-        height:100px;
-        width:100%;
-        z-index: -999;
-        text-align: center;
-        padding: 20px;
-    }
-    #page-info {
-        margin-top:20px;
+    .title {
+        margin:auto;
+        padding:10px;
+        width:80%;
     }
 
-    #page-name {
-        font-family: '넥슨 고딕 bold';
-        font-size:18px;
-    }
-
-    #page-desc {
-        font-size:12px;
-    }
-    #mypoint-text {
-        font-size:14px;
-    }
-    #header {
-        position: fixed;
-        padding:15px;
-        width:80px;
+    .group-box {
         background-color: white;
-        left:50%;
-        top:150px;
-        transform: translate(-50%, 0);
-        border-radius: 15px;;
-        box-shadow: 0px 10px 20px -10px #8b8b8b;
-    }
-    
-    #header > #mypoint {
-        color: #41958A;
-    }
-
-    #header > #mypoint > .row > #value {
-        
-        font-family: '넥슨 고딕 bold';
-        font-size:28px;
-    }
-    #header >  #mypoint > .row >  #charge {
-        background-color: #41958A;
-        border: none;
-        border-radius: 10px;
-        font-size:14px;
-        color: white;
-        padding:5px;
-    }
-    .setting-box{
-        margin-top: 100px;
-    }
-    .setting-item{
-        margin-left: 10px;
-        margin-right: 10px;
-        margin-top: 30px;
-        margin-bottom: 20px;
-        padding-top: 10px;
-        height: fit-content;
-    }
-    .setting-item > div{
-        margin-top: 30px;
-        margin-left: 50px;
-    }
-
-    .payment {
-
-        border-bottom: 1px solid rgb(177, 177, 177);
-        padding: 15px;
-        margin: 10px 0px;
-
-    }
-    
-    .row {
-        display: flex;
-        vertical-align: middle;
-    }
-    .btn {
         border-radius: 20px;
-
-        font-size:14px;
-        background-color: #33978a;
-        border:none;
+        margin:auto;
+        padding:10px;
+        width:90%;
+        min-width:250px;
+        max-width:500px;
+        /* display:table; */
     }
 
-    .btn:focus {
-        background-color: #1d685e;
-    }
-    .btn:hover {
-        background-color: #1d685e;
-    }    
-    
-    .left-text {
-        text-align: left;
+    .group-item {
+        display:table-row;
     }
 
-    .right-text {
-        text-align: right;
-        position: relative;
+    .item-image {
+        display: table-cell;
+        vertical-align: middle;
+        text-align: center;
+        font-size:32px;
+        width:52px;
+        height:48px;
+        /* color:#58C9B9; */
     }
-
-    #pay_amount {
-        position: absolute;
-        right: 20px;
-        top:50%;
-        transform:translate(0, -50%);
+    .item-text {
+        /* color:#41958A; */
+    }
+    .item-title {
+        font-family: 넥슨 고딕 bold;
         font-size:16px;
+        /* position: absolute;
+        top:3%; */
     }
 
-    .minus > .row > .right-text {
-        
-        color:#E06273;
-    }
-
-    .plus > .row > .right-text {
-        font-size:16px;
-        color:#163F76;
-    }
-
-    #pay_name {
-        font-size:16px;
-        color:#163F76;
-    }
-    
-    #pay_date {
-        margin-top:3px;
+    .item-desc {
         font-size:12px;
+        /* position: absolute;
+        bottom: 3%; */
     }
 
-    .moblie {
-        min-width:300px;
-        max-width:400px;
+    .page-image {
+        font-size:36px;
+        margin-bottom: 30px;
+    }
+
+    hr {
+        width:100% !important;
+        color:#b9b9b9;
     }
 </style>
-<div id="background">
-    <div id="page-info">
-        <text id="page-name">
-            환경설정
-        </text>
-        <br>
+<center>
+    <span class="material-icons page-image">
+        settings
+    </span>
+</center>
+
+<div class="group-box container">
+    <div class="group-item row">
+        <span class="material-icons item-image">
+            account_circle
+        </span>
+        <div id="personal_setting" class="item-text">
+            <text class="item-title">
+                계정관리
+            </text>
+            <br>
+            <text class="item-desc">
+                사용자의 계정 정보를 관리합니다.
+            </text>
+        </div>
     </div>
 </div>
-<div class='setting-box'>
+
+
+<br>
+<div class="group-box container">
+    <div class="group-item row">
+        <span class="material-icons item-image">
+            local_parking
+        </span>
+        <div id="parkingLot_manage" class="item-text">
+            <text class="item-title">
+                주차장 관리
+            </text>
+            <br>
+            <text class="item-desc">
+                공유 주차장을 등록 및 관리합니다.
+            </text>
+        </div>
+    </div>
+    <hr>
+
+    <div class="group-item row">
+        <span class="material-icons item-image ">
+            report_problem
+        </span>
+        <div class="item-text " >
+            <text class="item-title">
+                서비스 신고
+            </text>
+            <br>
+            <text class="item-desc" >
+                공유주차장 및 사용자를 신고합니다.
+            </text>
+        </div>
+    </div>
+</div>
+
+
+
+
+<br>
+<div class="group-box container">
+    <div class="group-item row">
+        <span class="material-icons item-image ">
+            logout
+        </span>
+        <div id="logout" class="item-text">
+            <text class="item-title">
+                로그아웃
+            </text>
+            <br>
+            <text class="item-desc" s>
+                해당 서비스에서 로그아웃합니다.
+            </text>
+        </div>
+    </div>
+    <hr>
+    <div class="group-item row">
+        <span class="material-icons item-image ">
+            info
+        </span>
+        <div id="app_info" class="item-text">
+            <text class="item-title">
+                앱 정보
+            </text>
+            <br>
+            <text class="item-desc" s>
+                어플리케이션 정보를 출력합니다.
+            </text>
+        </div>
+    </div>
+</div>
+
+<br>
+
+<div class="group-box container">
+    <div class="group-item row">
+        <span class="material-icons item-image ">
+            no_accounts
+        </span>
+        <div id="delete_user" class="item-text">
+            <text class="item-title">
+                회원탈퇴
+            </text>
+            <br>
+            <text class="item-desc" s>
+                해당 서비스에서 영구히 탈퇴합니다.
+            </text>
+        </div>
+    </div>
+    
+</div>
+
+<br>
+
+<div class="modal" id="info-modal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                    <b>어플리케이션 정보</b>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <image src="{% static 'icon/주차나라_로고.png' %}" style="background-color: #58C9B9; padding:20px; width: 100%; height:auto; margin-bottom: 30px;"></image>
+                <div class="info-application"  style="margin-bottom: 10px;">
+                    <text>
+                        <b>버전 정보</b>&nbsp;&nbsp;&nbsp;
+                    </text>
+                    <text>
+                        1.0.0 alpha
+                    </text>
+                </div>
+                <div class="setting-item leave" style="margin-bottom: 10px;">
+                    <text>
+                        <b>운영진</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </text>
+                    <text>
+                        sihyun, 
+                    </text>
+                    <text>
+                        takeny
+                    </text>
+                </div>
+                <div class="setting-item leave" style="margin-bottom: 10px;">
+                    <text>
+                        <b>문의연락처</b>&nbsp;
+                    </text>
+                    <text>
+                        tjtlgus5@gmail.com
+                    </text>
+                </div>
+            </div>
+      </div>
+    </div>
+  </div>
+
+<!-- <div class='setting-box'>
     <div class="setting-item payment-list">
         <strong>사용자 설정</strong>
         <div class="personal-setting">
@@ -163,7 +232,7 @@
                 계정관리
             </text>
         </div>
-        <hr>
+    <hr>
     </div>
     <div class="setting-item payment-list">
         <strong>판매자 등록</strong>
@@ -172,8 +241,8 @@
                 주차장 등록
             </text>
         </div>
-        <hr>
     </div>
+    <hr>
     <div class="setting-item app-info">
         <strong>기타</strong>
         <div class="logout">
@@ -222,23 +291,35 @@
                 희범이 이메일
             </text>
         </div>
-    </div>
+    </div> -->
 </div>
 
 <script>
     $(document).ready(function() {
-        $('.personal-setting').on('click', function() {
+        $('#personal_setting').on('click', function() {
             location.href = "{% url 'common:personal_info' %}"
         })
-        $('.logout').on('click', function() {
+        $('#logout').on('click', function() {
             location.href = "{% url 'common:logout' %}";
             android.returnMain();
         })
         $('#delete_user').on('click', function() {
             location.href = "{% url 'common:delete_user' %}"
         })
-        $('.add-parkingLot').on('click', function() {
+        $('#parkingLot_manage').on('click', function() {
             android.goToMain()
+        })
+        var modal = document.getElementById('info-modal')
+        var input = document.getElementById('app_info')
+
+        // odal.addEventListener('shown.bs.modal', function () {
+        //     input.focus()
+        // })
+
+        $('#app_info').on('click', function() {
+            var modal = document.getElementById('info-modal');
+
+            $('#info-modal').modal('show');
         })
         
     })

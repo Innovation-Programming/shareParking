@@ -19,6 +19,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from map import views
 
+from community.views import base_views
 
 urlpatterns = [
     path('', include('common.urls')),
@@ -27,5 +28,6 @@ urlpatterns = [
     path('chat/', include('chat.urls')),
     path('mypage/', include('mypage.urls')),
     path('pay/', include('pay.urls')),
+    path('community/', include('community.urls')),
     # path('', views.index, name='index'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

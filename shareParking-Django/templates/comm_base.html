@@ -1,0 +1,48 @@
+{% load static %}
+<!doctype html>
+<html lang="ko">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+    <!-- map CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    <title>Hello, map!</title>
+</head>
+<style>
+    
+    @font-face {
+        font-family: '넥슨 고딕';
+        src: url("{% static 'font/NEXONLv1GothicRegular.ttf' %}");
+        font-weight: normal;
+        font-style: normal;
+    }
+    @font-face {
+        font-family: '넥슨 고딕 bold';
+        src: url("{% static 'font/NEXONLv1GothicBold.ttf' %}");
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    .btn-primary {
+        background-color:#58C9B9 !important;
+        border-color: #58C9B9;
+    }
+</style>
+<body>
+{% include "navbar.html" %}
+<!-- 기본 템플릿 안에 삽입될 내용 Start -->
+{% block content %}
+{% endblock %}
+<!-- 기본 템플릿 안에 삽입될 내용 End -->
+<script src="{% static 'bootstrap.min.js' %}"></script>
+
+{% block script %}
+{% endblock %}
+
+
+</body>
+</html>

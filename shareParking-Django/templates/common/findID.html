@@ -3,95 +3,81 @@
 {% block content %}
 
 <style>
-    #background {
+    body {
         background-color: #58C9B9;
-        color:white;
-        position: fixed;
-        top:0px;
-        height:180px;
-        width:100%;
-        z-index: -999;
-        text-align: center;
+        font-family: 넥슨 고딕;
+    }
+
+    #content {
+        position:absolute;
+        left:50%;
+        top:40%;
+        transform: translate(-50%, -40%);
+        width:80%;
+        max-width:600px;
+        min-width:300px;
+        background-color: white;
         padding: 20px;
     }
-    #page-info {
-        margin-top:40px;
-    }
-    #page-name {
-        font-family: '넥슨 고딕 bold';
-        font-size:18px;
-    }
-    .payment-list {
-        position: fixed;
-        top: 180px;
-        width:100%;
-        min-width:300px;
-        max-width:500px;
-        margin: 0 auto;
-        left: 0;
-        right: 0;
-        padding:50px;
-        border: 10px solid #58C9B9;
-        justify-content: center;
+
+    #content-header {
         text-align: center;
     }
-    .personal-info {
 
-    }
-    #pay_name {
-        font-size:16px;
-        color:#163F76;
-    }
-    #page-desc {
-        font-size:12px;
-    }
-    #btn-sbm {
-        background-color: #58C9B9;
-        color: white;
-        border: 0;
-        padding: 4px;
-    }
-    #send-sms-btn,  #confirm-sms-btn, #btn-submit{
-        background-color: #58C9B9;
-        color:white;
-        border: 0;
-        outline: 0;
-        font-family: '넥슨 고딕 bold';
-    }
-    #id-info {
-        font-family: '넥슨 고딕 bold';
+    .title {
+        color: #58C9B9;
+        font-family: 넥슨 고딕 bold;
+        font-size: 21px;
     }
 
+    .desc {
+        color: rgb(75, 75, 75);
+        font-size:14px;
+    }
+
+#message-box {
+    position:absolute;
+    left:50%;
+    top:65%;
+    max-width:80%;
+    padding:15px;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border-radius: 999px;
+    text-align: center;
+}
 </style>
 
-<div id="background">
-    <div id="page-info">
-        <text id="page-name">
-            아이디 찾기
-        </text>
-        <br><br>
-        <text id="page-desc">
-            가입할때 사용한 이메일을 입력해 주세요!
-        </text>
+<form method="POST">
+{% csrf_token %}
+    <div id="content">
+        <div id="content-header">
+            <text class="title">
+                아이디 찾기
+            </text>
+            <br>
+            <text class="desc">
+                서비스에 가입할때 사용한 이메일 주소를 입력하세요.
+            </text>
+        </div>
+        <br>
+        <div id="content-body">
+            <div class="input-group mb-3">
+                <input type="email"  name="email" class="form-control" placeholder="example@shareparkng.kr">
+                <button class="btn btn-outline-secondary"  type="submit" name="email_submit"  value="조회" id="btn-sbm" >submit</button>
+            </div>
+        </div>
     </div>
+</form>
+<br>
+<div id="message-box">
+    {% for message in messages %}
+    <text id="message" class="desc">
+        {{ message }}
+    </text>
+    {% endfor %}
 </div>
 
-<div class="payment-list">
-    <form method="POST">
-        {% csrf_token %}
-        Email: <input type="email" name="email">
-        <input type="submit" name="email_submit" value="조회" id="btn-sbm">
-        
-    </form>
-    <br>
-    <div class="personal-info">
-        {% for message in messages %}
-        <text id="id-info">
-            {{ message }}
-        </text>
-        {% endfor %}
-    </div>
-</div>
-
-
+<script>
+</script>
 {% endblock %}
