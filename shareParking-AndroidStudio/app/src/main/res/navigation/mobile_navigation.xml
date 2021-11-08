@@ -19,7 +19,6 @@
 
     <fragment
         android:id="@+id/navigation_chat"
-        
         android:name="com.example.parking.ui.personal.PersonalFragment"
         android:label="@string/title_board"
         tools:layout="@layout/fragment_chat" />

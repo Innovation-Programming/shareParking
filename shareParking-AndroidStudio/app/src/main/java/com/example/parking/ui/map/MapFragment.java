@@ -7,9 +7,12 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.GeolocationPermissions;
@@ -23,6 +26,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -91,6 +95,22 @@ public class MapFragment extends Fragment {
                super.onGeolocationPermissionsShowPrompt(origin, callback);
                callback.invoke(origin, true, false);
            }
+        });
+
+//        myWebView.canGoBack();
+        myWebView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if (myWebView.canGoBack()) {
+                    ActivityCompat.finishAffinity(getActivity());
+                    android.os.Process.killProcess(android.os.Process.myPid());	// 앱 프로세스 종료
+                    return true;
+                }
+                else {
+
+                }
+                return false;
+            }
         });
 
         myWebView.loadUrl("https://shareparking.kr/map/main?userToken="+token);
