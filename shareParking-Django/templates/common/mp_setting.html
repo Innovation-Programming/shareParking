@@ -5,7 +5,7 @@
     body {
         font-family:넥슨 고딕;
         padding-top: 20px;
-        background-color: #ddf1ef;
+        background-color: #f3f3f3;
         color:rgb(61, 61, 61)
     }
 
@@ -71,7 +71,7 @@
     </span>
 </center>
 
-<div class="group-box container">
+<!-- <div class="group-box container">
     <div class="group-item row">
         <span class="material-icons item-image">
             account_circle
@@ -222,110 +222,7 @@
             </div>
       </div>
     </div>
-  </div>
-
-<!-- <div class='setting-box'>
-    <div class="setting-item payment-list">
-        <strong>사용자 설정</strong>
-        <div class="personal-setting">
-            <text>
-                계정관리
-            </text>
-        </div>
-    <hr>
-    </div>
-    <div class="setting-item payment-list">
-        <strong>판매자 등록</strong>
-        <div class="add-parkingLot">
-            <text>
-                주차장 등록
-            </text>
-        </div>
-    </div>
-    <hr>
-    <div class="setting-item app-info">
-        <strong>기타</strong>
-        <div class="logout">
-            <text>
-                로그아웃
-            </text>
-        </div>
-        <div class="setting-item leave" id="delete_user">
-            <text>
-                회원탈퇴
-            </text>
-        </div>
-        <hr>
-    </div>
-    <div class="setting-item app-info">
-        <strong>앱정보</strong>
-        <div class="info-application">
-            <text>
-                버전 정보
-            </text>
-            <text>
-                1.0.0
-            </text>
-        </div>
-        <div class="setting-item leave">
-            <text>
-                운영진
-            </text>
-            <text>
-                sihyun, 
-            </text>
-            <text>
-                takeny
-            </text>
-        </div>
-        <div class="setting-item leave">
-            <text>
-                문의연락처
-            </text>
-            <br>
-            <text>
-                tjtlgus5@gmail.com
-            </text>
-            <br>
-            <text>
-                희범이 이메일
-            </text>
-        </div>
-    </div> -->
-</div>
-
-<script>
-    $(document).ready(function() {
-        $('#personal_setting').on('click', function() {
-            location.href = "{% url 'common:personal_info' %}"
-        })
-        $('#logout').on('click', function() {
-            location.href = "{% url 'common:logout' %}";
-            android.returnMain();
-        })
-        $('#delete_user').on('click', function() {
-            location.href = "{% url 'common:delete_user' %}"
-        })
-        $('#parkingLot_manage').on('click', function() {
-            android.goToMain()
-        })
-        var modal = document.getElementById('info-modal')
-        var input = document.getElementById('app_info')
-
-        // odal.addEventListener('shown.bs.modal', function () {
-        //     input.focus()
-        // })
-
-        $('#app_info').on('click', function() {
-            var modal = document.getElementById('info-modal');
-
-            $('#info-modal').modal('show');
-        })
-        
-    })
-    
-
-</script>
-
+  </div> 
+</div> -->
 
 {% endblock %}

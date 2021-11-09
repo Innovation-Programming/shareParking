@@ -28,4 +28,10 @@ urlpatterns = [
     path('personal_info/', views.personal_info ,name="personal_info"),
     path('edit_personal_info/', views.edit_personal_info , name="edit_personal_info"),
     path('change_password/', views.change_password, name="change_password"),
+
+    #mobile_programming
+    path('mp_setting/', views.mp_setting, name="mp_setting"),
+    path('mp_board/', views.mp_board, name="mp_board"),
+    path('mp_personal/', views.mp_personal, name="mp_personal"),
+
 ]
