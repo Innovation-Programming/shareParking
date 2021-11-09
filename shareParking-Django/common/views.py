@@ -23,6 +23,15 @@ from django.contrib.auth.hashers import check_password
 from firebase_admin import messaging
 from pyfcm import FCMNotification
 
+def mp_personal(request):
+    return render(request, 'common/mp_personal.html')
+
+def mp_board(request):
+    return render(request, 'common/mp_board.html')
+
+def mp_setting(request):
+    return render(request, 'common/mp_setting.html')
+
 def change_password(request):
     if request.method == "POST":
         current_password = request.POST.get("origin_password")
@@ -41,31 +50,32 @@ def change_password(request):
 
 def edit_personal_info(request):
     user = request.user
-    req_user = Personal.objects.filter(user=user)
-    phone = req_user.first().phone
+    req_user = Personal.objects.get(user=user)
     context = {
-        "user_phone" : phone
+        "personal" : req_user
     }
 
     print("Personal로 조회한 기존 이메일")
-    bfEmail = req_user.first().email
+    bfEmail = req_user.email
     print(bfEmail)
 
     print("User로 조회한 기존 이메일")
-    req_user2 = User.objects.filter(username=user)
-    bfEmail2 = req_user2.first().email
+    req_user2 = User.objects.get(username=user)
+    bfEmail2 = req_user2.email
     print(bfEmail2)
 
     if request.method == "POST":
         newEmail = request.POST.get("email")
         newPhone = request.POST.get("user_phone")
+        newNickname = request.POST.get("nickname")
         print(newEmail)
         print(newPhone)
+        print(newNickname)
 
+        request.user.personal.nickname = newNickname
         request.user.personal.email = newEmail
         request.user.personal.phone = newPhone
         request.user.personal.save()
-
         request.user.email = newEmail
         request.user.save()
 
@@ -74,10 +84,9 @@ def edit_personal_info(request):
 
 def personal_info(request):
     user = request.user
-    req_user = Personal.objects.filter(user=user)
-    phone = req_user.first().phone
+    req_user = Personal.objects.get(user=user)
     context = {
-        "user_phone" : phone
+        'personal': req_user
     }
 
     return render(request, 'common/personal_info.html', context)
@@ -284,15 +293,6 @@ class SMSVerificationView(View):
 def sms(request):
     SmsSendView
     return HttpResponse('전송완료')
-
-
-def kakao_login(request):
-    client_id = os.environ.get("4a59f5ef88dfe45ae62d45d932d9f7c2")
-    redirect_uri = "http://127.0.0.1:8000/users/login/kakao/callback/"
-
-    return redirect(
-        f"https://kauth.kakao.com/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}&response_type=code"
-    )
 
 def send_to_firebase_cloud_messaging():
     # This registration token comes from the client FCM SDKs.

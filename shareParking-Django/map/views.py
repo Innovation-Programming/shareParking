@@ -17,7 +17,7 @@ from django.utils import timezone
 import datetime as dt
 import mypage.views as myview
 import math
-
+from pushy import PushyAPI
 
 def index(request):
     parking_lot_list = ParkingLot.objects.order_by('fee')
@@ -202,7 +202,8 @@ def confirm_ticket(request):
 
     return myview.mypage(request)
     
-    
+
+
 # def kakao_login_callback(request):
 #         code = request.GET.get("code", None)
 #         client_id = os.environ.get("4a59f5ef88dfe45ae62d45d932d9f7c2")

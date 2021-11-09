@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    body {
+        font-family:넥슨 고딕;
+    }
+
+    #background {
+        background-color: #58C9B9;
+        color:white;
+        position: fixed;
+        top:0px;
+        height:180px;
+        width:100%;
+        z-index: -999;
+        text-align: center;
+        padding: 20px;
+    }
+    #page-info {
+        margin-top:20px;
+    }
+
+    #page-name {
+        font-family: '넥슨 고딕 bold';
+        font-size:18px;
+    }
+
+    #page-desc {
+        font-size:12px;
+    }
+    #mypoint-text {
+        font-size:14px;
+    }
+    #header {
+        position: fixed;
+        padding:15px;
+        width:80px;
+        background-color: white;
+        left:50%;
+        top:150px;
+        transform: translate(-50%, 0);
+        border-radius: 15px;;
+        box-shadow: 0px 10px 20px -10px #8b8b8b;
+    }
+    
+    #header > #mypoint {
+        color: #41958A;
+    }
+
+    #header > #mypoint > .row > #value {
+        
+        font-family: '넥슨 고딕 bold';
+        font-size:28px;
+    }
+    #header >  #mypoint > .row >  #charge {
+        background-color: #41958A;
+        border: none;
+        border-radius: 10px;
+        font-size:14px;
+        color: white;
+        padding:5px;
+    }
+
+    .payment-list {
+        overflow: scroll;
+        position: fixed;
+        top:255px;
+        width:100%;
+        min-width:300px;
+        max-width:500px;
+        margin: 0 auto;
+        left: 0;
+        right: 0;
+        padding:20px;
+    }
+
+    .payment {
+
+        border-bottom: 1px solid rgb(177, 177, 177);
+        padding: 15px;
+        margin: 10px 0px;
+
+    }
+    
+    .row {
+        display: flex;
+        vertical-align: middle;
+    }
+    .btn {
+        border-radius: 20px;
+
+        font-size:14px;
+        background-color: #33978a;
+        border:none;
+    }
+
+    .btn:focus {
+        background-color: #1d685e;
+    }
+    .btn:hover {
+        background-color: #1d685e;
+    }    
+    
+    .left-text {
+        text-align: left;
+    }
+
+    .right-text {
+        text-align: right;
+        position: relative;
+    }
+
+    #pay_amount {
+        position: absolute;
+        right: 20px;
+        top:50%;
+        transform:translate(0, -50%);
+        font-size:16px;
+    }
+
+    .minus > .row > .right-text {
+        
+        color:#E06273;
+    }
+
+    .plus > .row > .right-text {
+        font-size:16px;
+        color:#163F76;
+    }
+
+    #pay_name {
+        font-size:16px;
+        color:#163F76;
+    }
+    
+    #pay_date {
+        margin-top:3px;
+        font-size:12px;
+    }
+
+    .moblie {
+        min-width:300px;
+        max-width:400px;
+    }
+</style>
+
+<div id="background">
+    <div class="btn-group buttons" role="group" aria-label="Basic example">
+        <button type="button" id=""  class="btn btn-primary shadow-none">포인트</button>
+        <button type="button" id=""  class="btn btn-primary shadow-none">주차권</button>
+    </div>
+    <div id="page-info">
+        <text id="page-name">
+            내 포인트 확인
+        </text>
+        <br>
+        <text id="page-desc">
+            내 포인트 충전 및 결제내역을 확인하세요!
+        </text>
+    </div>
+</div>
+<!-- 
+<div class="moblie" id="header">
+    <div id="mypoint" class="container">
+        <div class="row">
+                <text class="title col-12" id="mypoint-text">사용가능</text>
+        </div>
+        <div class="row">
+                <text class="value col-8" id="value">
+                    {{ user.point }}P
+                </text>
+                <button id="charge" class="col-4 align-middle" onclick="goToPay()">충 전 하 기</button>
+        </div>
+    </div>
+</div>
+
+<div class="payment-list">
+    
+</div>
+
+<div id="payment_plus"  class="payment plus container" style="display:none">
+    <div class="row" id="row">
+        <div class="col-8 left-text" >
+            <b><text id="pay_name"></text></b><br>
+            <text id="pay_date"></text>
+        </div>
+        <div class="col-4 right-text" id="">
+            <text id="pay_amount"></text></div>
+    </div>
+</div>
+
+<div id="payment_minus" class="payment minus container" style="display:none">
+    <div class="row" id="row">
+        <div class="col-7 left-text" >
+            <b><text id="pay_name"></text></b><br>
+            <text id="pay_date"></text>
+        </div>
+        <div class="col-5 right-text" id="">
+            <text id="pay_amount"></text></div>
+    </div>
+</div>
+<script>
+    "{% for payment in payments %}"
+        var pay_name = "{{ payment.name }}";
+        var date = "{{ payment.created }}";
+        var amount = "{{ payment.amount }}";
+
+        if(pay_name.indexOf("포인트 결제") != "-1") {
+            payment_div = $("#payment_plus").clone();
+            payment_div.find("#pay_amount").text("+" + amount);
+        } else {
+            payment_div = $("#payment_minus").clone();
+            payment_div.find("#pay_amount").text("-" + amount);
+        }
+        payment_div.attr("id", pay_name);
+            payment_div.find("#pay_name").text(pay_name);
+            payment_div.find("#pay_date").text(date);
+           
+            payment_div.css("display", "block")
+        $('.payment-list').prepend(payment_div);
+    "{% endfor %}"
+
+    header_height = (document.getElementById('header').clientHeight + 100); // 100px for margin-top
+    body_height = (window.innerHeight - header_height)  * 0.95;
+    $('.payment-list').css('height',body_height)
+
+    $(document).on('click', '#btn-myParkingLot', function(){
+		// var value = this.value;
+		// alert(value);
+		// console.log(value);
+		androidPersonal.myParkingLot();
+	});
+    
+</script> -->
+{% endblock %}
