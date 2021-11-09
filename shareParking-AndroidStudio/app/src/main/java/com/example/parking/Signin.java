@@ -1,20 +1,27 @@
 package com.example.parking;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.graphics.Bitmap;
 import android.net.http.SslError;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.util.Base64;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.JsResult;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -49,9 +56,28 @@ public class Signin extends AppCompatActivity {
         WebView webView = (WebView) findViewById(R.id.webvw);
         webView.setWebViewClient(new WebViewClient(){
             @Override
-            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-                handler.proceed();
+            public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(Signin.this);
+                builder.setMessage("이 사이트의 보안 인증서는 신뢰하는 보안 인증서가 아닙니다. 계속하시겠습니까?");
+                builder.setPositiveButton("계속하기", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        handler.proceed();
+                    }
+                });
+                builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        handler.cancel();
+                    }
+                });
+                final AlertDialog dialog = builder.create();
+                dialog.show();
             }
+//            @Override
+//            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+//                handler.proceed();
+//            }
 
         });
 
@@ -67,6 +93,20 @@ public class Signin extends AppCompatActivity {
 
         webView.addJavascriptInterface(new AndroidBridge(), "android");
         SharedPreferences sf = getSharedPreferences("sFile",MODE_PRIVATE);
+
+        webView.canGoBack();
+        webView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if (i == KeyEvent.KEYCODE_BACK
+                        && keyEvent.getAction() == MotionEvent.ACTION_UP
+                        && webView.canGoBack()) {
+                    webView.goBack();
+                    return true;
+                }
+                return false;
+            }
+        });
 
 
 //        webView.getSettings().setDomStorageEnabled(true);

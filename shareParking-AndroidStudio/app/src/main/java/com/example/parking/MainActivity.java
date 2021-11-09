@@ -142,6 +142,9 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("위도: "+latitude);
         System.out.println("경도: "+longitude);
 //        Toast.makeText(MainActivity.this, "현재위치 \n위도 " + latitude + "\n경도 " + longitude, Toast.LENGTH_LONG).show();
+
+
+
     }
 
     private class RegisterForPushNotificationsAsync extends AsyncTask<Void, Void, Object> {
@@ -155,6 +158,12 @@ public class MainActivity extends AppCompatActivity {
             try {
                 // Register the device for notifications
                 String deviceToken = Pushy.register(getApplicationContext());
+                System.out.println("deviceToken : " + deviceToken);
+
+                SharedPreferences sharedPreferences = getSharedPreferences("sFile", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("tokenFromPushy", deviceToken);
+                editor.commit();
 
                 System.out.println("deviceToken : " + deviceToken);
 
@@ -162,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("Pushy", "Pushy device token: " + deviceToken);
 
                 // Send the token to your backend server via an HTTP GET request
-//                new URL("https://{YOUR_API_HOSTNAME}/register/device?token=" + deviceToken).openConnection();
+//                new URL("https://shareparking.kr/map/main?userToken=" + deviceToken).openConnection();
 
                 // Provide token to onPostExecute()
                 return deviceToken;
@@ -181,6 +190,7 @@ public class MainActivity extends AppCompatActivity {
             if (result instanceof Exception) {
                 // Log to console
                 Log.e("Pushy", result.toString());
+                System.out.println("onPostExecute Token: " + result.toString());
 
                 SharedPreferences sharedPreferences = getSharedPreferences("sFile", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -192,14 +202,17 @@ public class MainActivity extends AppCompatActivity {
             }
             else {
                 message = "Pushy device token: " + result.toString() + "\n\n(copy from logcat)";
+
+                String token = result.toString();
+                System.out.println("resultSetOfToken : " + token);
             }
 
             // Registration succeeded, display an alert with the device token
-//            new android.app.AlertDialog.Builder(this.mActivity)
-//                    .setTitle("Pushy")
-//                    .setMessage(message)
-//                    .setPositiveButton(android.R.string.ok, null)
-//                    .show();
+            new android.app.AlertDialog.Builder(this.mActivity)
+                    .setTitle("Pushy")
+                    .setMessage(message)
+                    .setPositiveButton(android.R.string.ok, null)
+                    .show();
         }
     }
 
