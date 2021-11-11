@@ -32,7 +32,7 @@ class Personal(models.Model):
     phone = models.CharField(max_length=14)
     addr = models.CharField(max_length=200)
     postcode = models.IntegerField()
-    
+    push_token = models.CharField(max_length=100)
     def __str__(self):
         return self.nickname
     class Meta:

@@ -71,12 +71,12 @@
     </span>
 </center>
 
-<div class="group-box container">
+<div class="group-box container" id="personal_setting" >
     <div class="group-item row">
         <span class="material-icons item-image">
             account_circle
         </span>
-        <div id="personal_setting" class="item-text">
+        <div class="item-text">
             <text class="item-title">
                 계정관리
             </text>
@@ -90,12 +90,12 @@
 
 
 <br>
-<div class="group-box container">
-    <div class="group-item row">
+<div class="group-box container" >
+    <div class="group-item row" id="parkingLot_manage" >
         <span class="material-icons item-image">
             local_parking
         </span>
-        <div id="parkingLot_manage" class="item-text">
+        <div class="item-text">
             <text class="item-title">
                 주차장 관리
             </text>
@@ -107,7 +107,7 @@
     </div>
     <hr>
 
-    <div class="group-item row">
+    <div class="group-item row" id="report">
         <span class="material-icons item-image ">
             report_problem
         </span>
@@ -127,12 +127,12 @@
 
 
 <br>
-<div class="group-box container">
-    <div class="group-item row">
+<div class="group-box container" >
+    <div class="group-item row" id="logout" >
         <span class="material-icons item-image ">
             logout
         </span>
-        <div id="logout" class="item-text">
+        <div class="item-text">
             <text class="item-title">
                 로그아웃
             </text>
@@ -143,11 +143,11 @@
         </div>
     </div>
     <hr>
-    <div class="group-item row">
+    <div class="group-item row" id="app_info" >
         <span class="material-icons item-image ">
             info
         </span>
-        <div id="app_info" class="item-text">
+        <div class="item-text">
             <text class="item-title">
                 앱 정보
             </text>
@@ -161,12 +161,12 @@
 
 <br>
 
-<div class="group-box container">
+<div class="group-box container" id="delete_user" >
     <div class="group-item row">
         <span class="material-icons item-image ">
             no_accounts
         </span>
-        <div id="delete_user" class="item-text">
+        <div class="item-text">
             <text class="item-title">
                 회원탈퇴
             </text>
@@ -223,75 +223,6 @@
       </div>
     </div>
   </div>
-
-<!-- <div class='setting-box'>
-    <div class="setting-item payment-list">
-        <strong>사용자 설정</strong>
-        <div class="personal-setting">
-            <text>
-                계정관리
-            </text>
-        </div>
-    <hr>
-    </div>
-    <div class="setting-item payment-list">
-        <strong>판매자 등록</strong>
-        <div class="add-parkingLot">
-            <text>
-                주차장 등록
-            </text>
-        </div>
-    </div>
-    <hr>
-    <div class="setting-item app-info">
-        <strong>기타</strong>
-        <div class="logout">
-            <text>
-                로그아웃
-            </text>
-        </div>
-        <div class="setting-item leave" id="delete_user">
-            <text>
-                회원탈퇴
-            </text>
-        </div>
-        <hr>
-    </div>
-    <div class="setting-item app-info">
-        <strong>앱정보</strong>
-        <div class="info-application">
-            <text>
-                버전 정보
-            </text>
-            <text>
-                1.0.0
-            </text>
-        </div>
-        <div class="setting-item leave">
-            <text>
-                운영진
-            </text>
-            <text>
-                sihyun, 
-            </text>
-            <text>
-                takeny
-            </text>
-        </div>
-        <div class="setting-item leave">
-            <text>
-                문의연락처
-            </text>
-            <br>
-            <text>
-                tjtlgus5@gmail.com
-            </text>
-            <br>
-            <text>
-                희범이 이메일
-            </text>
-        </div>
-    </div> -->
 </div>
 
 <script>
@@ -305,6 +236,9 @@
         })
         $('#delete_user').on('click', function() {
             location.href = "{% url 'common:delete_user' %}"
+        })
+        $('#report').on('click', function() {
+            location.href = "{% url 'common:report' %}"
         })
         $('#parkingLot_manage').on('click', function() {
             android.goToMain()

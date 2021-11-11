@@ -368,7 +368,7 @@
                     let urlTag = "{% url 'map:buy_ticket' parking_lot_id=9999 %}"
                     let desc = locInfo.desc;
 
-                    if(desc.length != 0) {
+                    if(desc.length != 0 && desc != 'None') {
                         $('#' + infoWndowId).find('#info_desc').text(desc);
                     }
                     // let urlTag2 = "{% url 'chat:room' room_name='sihyun' %}"

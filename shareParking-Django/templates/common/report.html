@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<style>
+    body {
+        font-family: '넥슨 고딕';
+        background-color: #58C9B9;
+    }
+    .sign-up {
+        width:90%;
+        margin:auto;
+        min-width:300px;
+        max-width:500px;
+        padding:20px;
+        background-color:white;
+        border-radius: 20px;
+        margin-bottom: 30px !important;
+    }   
+
+    #send-sms-btn {
+        position:absolute;
+        right:10px;
+        top:10px;
+        font-family: '넥슨 고딕';
+    }
+
+    .input-btn {
+        background-color: #58C9B9;
+        color:white;
+        /* font-family: '넥슨 고딕 bold'; */
+        font-size:18px;
+        border-radius: 9999px;
+    }
+
+    .label-text {
+        position: absolute;
+        width: 100px;
+        left: 45px;
+        font-size:14px;
+    }
+
+    .material-icons {
+        font-size:18px;
+    }
+    .box-title {
+        margin-bottom: 10px;
+    }
+
+    #phone-div {
+        position: relative;
+    }
+
+    #btn-submit {
+        margin:20px;
+        border-radius: 9999px;
+        font-size:21px;
+        width:80%;
+    }
+
+    #logo {
+        max-width:600px;
+        width:20%;
+        height:auto;
+        margin-bottom: 10px;
+    }
+
+    #logo-div {
+        margin-bottom: 10px;
+    }
+
+</style>
+<br>
+<div id="logo-div">
+    <center>
+        <img src="{% static 'icon/주차나라_로고_apk.png' %}" id="logo">
+    </center>
+</div>
+
+<form method="post" class="post-form" action="{% url 'common:report' %}">
+    {% csrf_token %}
+    {% include "form_errors.html" %}
+        
+    <div class="sign-up">
+        <select class="form-select" id="inputType" name="type" style="margin-bottom: 10px;">
+            <option value="-1" selected>신고 유형을 선택하세요.</option>
+            <option value="service">서비스 신고</option>
+            <option value="parking_lot">공유 주차장 신고</option>
+            <option value="user">사용자 신고</option>
+        </select>
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="inputTitle" name="title" autocomplete="off" placeholder="제목">
+            <label for="inputTitle">
+                <text class="material-icons">report</text>
+                <text class="label-text">제목</text>
+            </label>
+        </div>
+        <div class="form-floating mb-3">
+            <textarea class="form-control" id="inputContent" name="content" placeholder="내용" style="height:200px"></textarea>
+            <label for="inputContent">
+                <text class="material-icons">report</text>
+                <text class="label-text">내용</text>
+            </label>
+        </div>
+        <center>
+            <button type="submit" class="btn input-btn" id="btn-submit" disabled>
+                신&nbsp;&nbsp;고&nbsp;&nbsp;하&nbsp;&nbsp;기
+            </button>
+        </center>
+    </div>
+</form>
+
+<script>
+    $('#inputType').change(function() {
+        if($(this).val() != "-1") {
+            $('#btn-submit').attr('disabled', false)
+        } else {
+            $('#btn-submit').attr('disabled', true)
+        }
+    })
+</script>
+{% endblock %}

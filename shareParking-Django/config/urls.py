@@ -18,7 +18,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from map import views
-
+from django.views.generic import TemplateView
 from community.views import base_views
 
 urlpatterns = [
@@ -30,4 +30,6 @@ urlpatterns = [
     path('pay/', include('pay.urls')),
     path('community/', include('community.urls')),
     # path('', views.index, name='index'),
+    path('service-worker.js', (TemplateView.as_view(template_name='service-worker.js',
+    content_type='application/javascript', )), name='sw.js'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

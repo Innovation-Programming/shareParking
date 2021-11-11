@@ -17,12 +17,18 @@ from django.utils import timezone
 import datetime as dt
 import mypage.views as myview
 import math
-from pushy import PushyAPI
 
 def index(request):
-    parking_lot_list = ParkingLot.objects.order_by('fee')
-    context = {'parking_lot_list': parking_lot_list}
-    return render(request, 'map/main.html', context)
+    if request.method == 'GET':
+        token = request.GET.get('userToken')
+
+        if token is not None:
+            personal = Personal.objects.get(user=request.user)
+            personal.push_token = token
+            personal.save()
+        parking_lot_list = ParkingLot.objects.order_by('fee')
+        context = {'parking_lot_list': parking_lot_list}
+        return render(request, 'map/main.html', context)
     # return render(request, 'map/main.html')
 
 
@@ -44,7 +50,7 @@ def parking_lot_create(request):
         image = request.FILES['image']
         user = request.user
         space = request.POST['space']
-        desc = request.POST['description']
+        desc = request.POST['desc']
 
         ParkingLot.objects.create(
             user = user,
@@ -58,9 +64,9 @@ def parking_lot_create(request):
             longitude = longitude,
             fee = fee,
             space=space,
-            description=desc
+            desc=desc
         )
-        return redirect('map:main')
+        # return redirect('map:main')
     context = {'parking_lot_list': parking_lot_list}
     return render(request, 'map/parking_lot_form.html', context)
 
@@ -134,11 +140,12 @@ def create_ticket(request):
         ticket_set = Ticket.objects.filter(parking_lot=parking_lot)
 
         tickets = len(ticket_set)
+
+        available_space = max_space - tickets
+
         if tickets > 1:
             return HttpResponse(json.dumps({'status': "failed", 'message': "이미 주차권을 보유중입니다."}),
                         content_type="application/json")
-
-        available_space = max_space - tickets
 
         if available_space < 1:
             return HttpResponse(json.dumps({'status': "failed", 'message': "해당 주차장에 자리가 없습니다."}),
@@ -158,7 +165,9 @@ def create_ticket(request):
         # 주차장 자리 처리
         parking_lot.space -= 1
         parking_lot.save()
-        send_to_firebase_cloud_messaging()
+        
+        send_push({'message': parking_lot.name + '에 입차하였습니다.'}, personal.push_token)
+        
         return HttpResponse(json.dumps({'status': "success"}),
                             content_type="application/json")
     else:
@@ -199,7 +208,7 @@ def confirm_ticket(request):
         amount = biliing_fee
     )
     ticket.delete()
-
+    send_push({'message': park.name + '에서 출차하였습니다. 사용금액: ' + str(biliing_fee) + '원'}, personal.push_token)
     return myview.mypage(request)
     
 

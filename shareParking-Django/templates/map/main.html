@@ -2,6 +2,8 @@
 {% load static %}
 {% block content %}
 <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase.js"></script>
+
+<script src="https://sdk.pushy.me/web/1.0.8/pushy-sdk.js"></script>
 <!-- <script type="module">
 	// Import the functions you need from the SDKs you need
 	import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js";
@@ -34,9 +36,8 @@
         font-family: '넥슨 고딕';
         border-radius: 20px 20px 0px 0px !important;
         height: auto !important;
-        min-width:420px;
+        min-width:90%;
 		width: 60%;
-		
         bottom:0px;
     }
 
@@ -203,7 +204,7 @@
 					<text style="font-size:14px; color:black;" id="info_time">+ 정보 추가하기</text>
 				</div>
 			</div>
-			<div class="mb-3 row" id="info-row" style="min-width:100%; border:1px solid #a7a7a7; padding:5px;">
+			<div class="mb-3 row" id="info-row" style="min-width:100%; border:1px solid #c5c5c5; padding:5px;">
 				<label class="col-4" style="font-size:12px; color:#58c9b9; ">
 					주차장 설명
 				</label>
@@ -216,20 +217,20 @@
 			<div class="row">
 				<div class="col-4" style="padding:0px 3px;">
 					<a href="#" id="info_a_pay">
-						<button type="button" class="btn"  id="info_btn_pay" style="background-color:#58c9b9; color:white; width:100%; font-family:넥슨 고딕 bold;">
+						<button type="button" class="btn"  id="info_btn_pay" style="background-color:#58c9b9; color:white; width:100%; font-size:14px; font-family:넥슨 고딕 bold;">
 							주차권 결제
 						</button>
 					</a>
 				</div>
 				<div class="col-4" style="padding:0px 3px;">
 					<a href="#" id="info_a_chat">
-						<button type="button" value="" class="btn" id="info_btn_chat" style="background-color:#58c9b9; color:white; width:100%; font-family:넥슨 고딕 bold;">
+						<button type="button" value="" class="btn" id="info_btn_chat" style="background-color:#58c9b9; color:white; width:100%; font-size:14px; font-family:넥슨 고딕 bold;">
 							채팅하기 
 						</button>
 					</a>
 				</div>
 				<div class="col-4" style="padding:0px 3px;">
-					<button type="button" class="btn" value="" id="info_btn_navi" style="background-color:#58c9b9; color:white; width:100%; font-family:넥슨 고딕 bold;">
+					<button type="button" class="btn" value="" id="info_btn_navi" style="background-color:#58c9b9; color:white; width:100%; font-size:14px; font-family:넥슨 고딕 bold;">
 						길찾기
 					</button>
 				</div>
@@ -256,7 +257,7 @@
 	</text>
 	<div id="parkList-addr">
 	</div>
-	<span class="badge rounded-pill " style="background-color:#bc58c9;">
+	<span class="badge rounded-pill " style="background-color:#bc58c9;  font-size:10px">
 		<span class="material-icons badge-icon">
 			place
 		</span>
@@ -264,14 +265,14 @@
 			공유
 		</span>
 	</span>
-	<span class="badge rounded-pill " style="background-color: #58c9b9;">
+	<span class="badge rounded-pill " style="background-color: #58c9b9;  font-size:10px">
 		<span class="material-icons badge-icon">
 			local_parking
 		</span>
 		<span id="parkList-fee">
 		</span>
 	</span>
-	<span class="badge rounded-pill" style="background-color: #58c9b9;">
+	<span class="badge rounded-pill" style="background-color: #58c9b9; font-size:10px">
 		<span class="material-icons badge-icon">
 			timer
 		</span>
@@ -280,35 +281,20 @@
 	</span>
 </div>
 <script>
-	// navigator.serviceWorker.register('{% static "js/firebase-messaging-sw.js" %}')
-    //         .then((registration) => {
-	// 			const config = {
-	// 				apiKey: "AIzaSyC5OcdZmLOnckPEbF-hqnjE8UyZ9zZnXr4",
-	// 				authDomain: "shareparking-e9e14.firebaseapp.com",
-	// 				projectId: "shareparking-e9e14",
-	// 				storageBucket: "shareparking-e9e14.appspot.com",
-	// 				messagingSenderId: "397100250344",
-	// 				appId: "1:397100250344:web:2b03d51f063f4cdc4c855d"
-	// 			};
-	// 			firebase.initializeApp(config);
-    //             var messaging = firebase.messaging();
-    //             messaging.useServiceWorker(registration);  
-			
-				
-	// 			//token값 알아내기
-	// 			messaging.requestPermission()
-	// 			.then(function(){
-	// 				console.log("Have permission");
-	// 				return messaging.getToken();
-	// 			})
-	// 			.then(function(token){
-	// 				document.write(token)
-	// 			})
-	// 			.catch(function(arr){
-	// 				console.log("Error Occured");
-	// 			});
-    //         }
-	// 	);
+	
+    // Register visitor's browser for push notifications
+    Pushy.register({ appId: '618a1debc38574d11c5983cc' }).then(function (deviceToken) {
+        // Print device token to console
+        console.log('Pushy device token: ' + deviceToken);
+		alert(deviceToken);
+        // Send the token to your backend server via an HTTP GET request
+        //fetch('https://your.api.hostname/register/device?token=' + deviceToken);
+
+        // Succeeded, optionally do something to alert the user
+    }).catch(function (err) {
+        // Handle registration errors
+        console.error(err);
+    });
 
 	$(document).on('click', '#info_btn_chat', function(){
 		var value = this.value;

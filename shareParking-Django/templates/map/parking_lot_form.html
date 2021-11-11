@@ -159,10 +159,6 @@
 
 <form method="post" class="post-form" id="park-form" enctype="multipart/form-data">
     <div id="header">
-        <div id="buttons" class="btn-group" role="group" aria-label="Basic example">
-            <button type="button" id="" onclick="goToPoint()" class="btn btn-primary round shadow-none">포인트</button>
-            <button type="button" id="" onclick="goToTicket()" class="btn btn-primary round shadow-none">주차권</button>
-        </div>
         <div id="page-info">
             <text id="page-name">
                 내 주차장 관리
@@ -246,7 +242,7 @@
         </div>
         <div class="row mb-3">
             <div class="col-4">
-                <button type="submit" onclick="submit()" id="btn-sumbit" class="btn  btn-submit">등&nbsp;&nbsp;&nbsp;&nbsp;록</button>
+                <button type="button" id="btn-submit" class="btn  btn-submit">등&nbsp;&nbsp;&nbsp;&nbsp;록</button>
             </div>
             <div class="col-4">
                 <button type="button" onclick="modify()" id="btn-modify" class="btn">수&nbsp;&nbsp;&nbsp;&nbsp;정</button>
@@ -303,6 +299,7 @@
             $('#input-name').val(parks[idx].name);
             $('#input-name').attr("disabled",true);
             $('#input-image').attr("disabled",true);
+            $('#btn-submit').prop("disabled", true)
             $('#input-addr').val(parks[idx].addr);
             $('#input-addr-detail').val(parks[idx].addr_detail);
             $('#input-fee').val(parks[idx].fee);
@@ -391,9 +388,6 @@
         precision: 5
     });
 
-    function submit() {
-        android.goToMain();
-    }
 
     function modify() {
         if(idx != -1) {
@@ -411,7 +405,7 @@
                     latitude : $('#inputLat').val(),
                     longitude : $('#inputLng').val(),
                     space : $('#input-space').val(),
-                    desc : $('#input-space').val(),
+                    desc : $('#input-desc').val(),
                 },
                 success: function (data) {
 
@@ -421,9 +415,8 @@
                         text: '수정이 완료되었습니다.',
                         confirmButtonColor: '#58C9B9',
                     }).then((result) => {
-                        if (result.isConfirmed) {
-                            submit();
-                        }
+                        
+                        androidParking.goToSetting();
                     })
                 },
                 error: function() {
@@ -433,15 +426,37 @@
                         text: '수정이 실패했습니다.',
                         confirmButtonColor: '#58C9B9',
                     }).then((result) => {
-                        if (result.isConfirmed) {
-                            goToMain();
-                        }
+                        androidParking.goToSetting();
                     })
                 }
             })
         }
         
     }
+
+    $(document).ready(function() {
+        $('#btn-submit').on('click', function() {
+            $('input').each(function() {
+            var value = $(this).val()
+            if(value.length == 0) {
+                Swal.fire({
+                        icon: 'error',
+                        title: '입력 실패',
+                        text: '정확하게 입력했는지 확인하세요.',
+                        confirmButtonColor: '#F27474',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.reload()
+                    }
+                })
+            } else {
+                $('#park-form').submit();
+                androidParking.goToSetting();
+            }
+        })
+        })
+    });
+        
 </script>
 
 {% endblock %} 

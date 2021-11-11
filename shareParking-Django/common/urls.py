@@ -17,7 +17,7 @@ urlpatterns = [
     path('sms/', views.sms, name="sms"),
     path('sendSMS/',views.SmsSendView.as_view(), name="sendSMS"),
     path('confirmSMS/', views.SMSVerificationView.as_view(), name="confirmSMS"),
-
+    path('report', views.report, name="report"),
     # path('send_email/', views.send_email, name='send_email'),
     
     path('forgot_id/', views.ForgotIDView, name="forgot_id"),

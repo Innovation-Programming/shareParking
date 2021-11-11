@@ -19,9 +19,10 @@ from django.contrib import messages
 from django.core.mail import EmailMessage, message
 from django.template.loader import render_to_string
 from django.contrib.auth.hashers import check_password
+from .pushy import PushyAPI
 
-from firebase_admin import messaging
-from pyfcm import FCMNotification
+def send_push(data, to):
+    PushyAPI.sendPushNotification(data, to, {})
 
 def mp_personal(request):
     return render(request, 'common/mp_personal.html')
@@ -109,32 +110,67 @@ def send_email(request):
     message = "초기화된 비밀번호 안내입니다. 비밀번호는 1111 입니다. 초기화된 비밀번호로 로그인하여 비밀번호를 재설정 해주세요."
     EmailMessage(subject=subject, body=message, to=to, from_email=from_email).send()
 
+def report(request):
+    if request.method == "POST":
+        user_email = request.user.email
+
+        print("request_user : " + user_email)
+
+        type = request.POST.get("type")
+        title = request.POST.get("title")
+        content = request.POST.get("content")
+
+        send_content = content + "\n" + "신고한 사용자 정보 : " + user_email
+
+        if type == "service":
+            send_type = "서비스 신고"
+        elif type == "parking_lot":
+            send_type = "공유 주차장 신고"
+        else:
+            send_type = "사용자 신고"
+
+        print(type)
+        print(send_type)
+        print(title)
+        print(content)
+
+        subject = "(" + send_type + ") " + title
+        to = ["tjtlgus5@gmail.com"]
+        from_email = user_email
+        message = send_content
+        EmailMessage(subject=subject, body=message, to=to, from_email=from_email).send()
+        
+    return render(request, 'common/report.html')
+
 def ForgotPwView(request):
     if request.method == "POST":
         email = request.POST.get('email')
         print(email)
-        # current_password = request.POST.get("origin_password")
-        try:
-            user = User.objects.get(email=email)
-            print(user)
-            newUser = User.objects.get(username = user)
-            newUser.set_password("1111")
-            newUser.save()
-            print("이메일 전송")
-            # send_email(request)
-            subject = "주차나라 비밀번호 초기화 안내"
-            to = [email]
-            from_email = "tjtlgus5@gmail.com"
-            message = "초기화된 비밀번호 안내입니다. 비밀번호는 1111 입니다. 초기화된 비밀번호로 로그인하여 비밀번호를 재설정 해주세요."
-            EmailMessage(subject=subject, body=message, to=to, from_email=from_email).send()
-            print("1")
-            messages.info(request, "비밀번호 초기화 이메일을 확인해주세요.\n기입한 이메일로 전송하였습니다.")
-            print("2")
-        except Exception as e:
-            print(e)
-            messages.info(request, "이메일을 확인해 주세요.")
+        if len(email) == 0:
+            messages.info(request, "이메일을 입력해 주세요.")
+        else:
+            # current_password = request.POST.get("origin_password")
+            try:
+                user = User.objects.get(email=email)
+                print(user)
+                newUser = User.objects.get(username = user)
+                newUser.set_password("1111")
+                newUser.save()
+                print("이메일 전송")
+                # send_email(request)
+                subject = "주차나라 비밀번호 초기화 안내"
+                to = [email]
+                from_email = "tjtlgus5@gmail.com"
+                message = "초기화된 비밀번호 안내입니다. 비밀번호는 1111 입니다. 초기화된 비밀번호로 로그인하여 비밀번호를 재설정 해주세요."
+                EmailMessage(subject=subject, body=message, to=to, from_email=from_email).send()
+                print("1")
+                messages.info(request, "비밀번호 초기화 이메일을 확인해주세요.\n기입한 이메일로 전송하였습니다.")
+                print("2")
+            except Exception as e:
+                print(e)
+                messages.info(request, "이메일을 확인해 주세요.")
     return render(request, 'common/findPw.html')
-    
+
 
 # Create your views here.
 def login_main(request):
@@ -169,7 +205,7 @@ def ForgotIDView(request):
                     messages.info(request, "가입된 정보가 없습니다.")
             except:
                 print("")
-                # messages.info(request, "가입된 정보가 없습니다.")
+                messages.info(request, "가입된 정보가 없습니다.")
     return render(request, 'common/findID.html')
 
 
@@ -310,6 +346,7 @@ def send_to_firebase_cloud_messaging():
     response = messaging.send(message)
     # Response is a message ID string.
     print('Successfully sent message:', response)
+
 
 # def send_message():
 #     APIKEY = "Your Server Key"
